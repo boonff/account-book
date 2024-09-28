@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -78,6 +79,8 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        implementation(libs.androidx.navigation.compose)
+
     }
 }
 
@@ -90,5 +93,8 @@ compose.desktop {
             packageName = "me.accountbook"
             packageVersion = "1.0.0"
         }
+    }
+    dependencies{
+        implementation(libs.androidx.navigation.compose)
     }
 }
