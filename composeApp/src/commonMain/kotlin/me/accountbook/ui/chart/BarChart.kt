@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.chart
+package me.accountbook.ui.chart
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
+//条形图
 @Composable
 fun BarChart(
     modifier: Modifier = Modifier,

@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.chart
+package me.accountbook.ui.chart
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 
 private const val DividerLengthInDegrees = 1.8f
 
+//带箭头的环形图
 @Composable
 fun MarkerDonutChart(
     modifier: Modifier = Modifier,

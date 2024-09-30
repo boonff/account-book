@@ -1,7 +1,12 @@
 package me.accountbook
 
-class JVMPlatform: Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
-}
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.IntSize
 
-actual fun getPlatform(): Platform = JVMPlatform()
+// actual 实现
+actual fun getPlatform(): Platform = Platform.Desktop
+
+@Composable
+actual fun getHomeLazyVerticalStaggeredGridColumns(): Int {
+    return 2
+}

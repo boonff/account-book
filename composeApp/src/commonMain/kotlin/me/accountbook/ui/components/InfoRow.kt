@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.components
+package me.accountbook.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,17 +9,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.text.DecimalFormat
 
@@ -27,8 +27,8 @@ import java.text.DecimalFormat
 @Composable
 fun InfoRow(
     color: Color,
-    title: String,
-    subtitle: String = "",
+    title: String = "null",
+    subtitle: String = "null",
     save: Float,
 ) {
     val dollarSign = if (save < 0) "–￥ " else "￥ "
@@ -81,6 +81,32 @@ fun InfoRow(
     Line()
 }
 
+@Composable
+fun CompactInfoRow(
+    color: Color,
+    save: Float
+) {
+    val dollarSign = if (save < 0) "–￥ " else "￥ "
+    val formattedAmount = formatAmount(save)
+
+    Row(
+        modifier = Modifier.height(48.dp), // 调整高度以使其更小
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ColorBar(color = color)
+
+        Spacer(Modifier.width(8.dp)) // 减少间隔
+
+        // 显示金额
+        Text(
+            text = dollarSign + formattedAmount,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f) // 让金额文本占据剩余空间
+        )
+    }
+}
+
+
 /**
  * A vertical colored line that is used in a [InfoRow] to differentiate accounts.
  */
@@ -88,14 +114,18 @@ fun InfoRow(
 private fun ColorBar(color: Color, modifier: Modifier = Modifier) {
     Spacer(
         modifier
-            .size(4.dp, 36.dp)
+            .size(4.dp, 16.dp)
             .background(color = color)
     )
 }
 
 @Composable
 fun Line(modifier: Modifier = Modifier) {
-    Divider(color = MaterialTheme.colorScheme.background, thickness = 1.dp, modifier = modifier)
+    HorizontalDivider(
+        modifier = modifier,
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.background
+    )
 }
 
 fun formatAmount(amount: Float): String {
@@ -104,12 +134,3 @@ fun formatAmount(amount: Float): String {
 
 private val AccountDecimalFormat = DecimalFormat("####")
 private val AmountDecimalFormat = DecimalFormat("#,###.##")
-
-
-
-
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-fun PreviewBillRow() {
-    InfoRow(title ="银行", subtitle = "ssss", save =  88.5f, color =  Color.Red)
-}

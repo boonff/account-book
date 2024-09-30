@@ -16,12 +16,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -29,8 +29,9 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
             implementation(compose.ui)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
@@ -80,8 +81,15 @@ android {
     dependencies {
         debugImplementation(compose.uiTooling)
         implementation(libs.androidx.navigation.compose)
+        implementation(compose.material3)
 
     }
+}
+dependencies {
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.window)
+
 }
 
 compose.desktop {
@@ -95,6 +103,6 @@ compose.desktop {
         }
     }
     dependencies{
-        implementation(libs.androidx.navigation.compose)
+        implementation(libs.androidx.material3.android)
     }
 }
