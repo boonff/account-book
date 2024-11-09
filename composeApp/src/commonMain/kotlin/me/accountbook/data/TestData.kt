@@ -3,9 +3,9 @@ package me.accountbook.data
 import androidx.compose.ui.graphics.Color
 import me.accountbook.database.bean.Tag
 
-object TestData{
+object TestData {
     val Save = 1000.0f
-    val WarnSave =600.0f
+    val WarnSave = 600.0f
     val TargetSave = 800.0f
 
     val SaveColor = Color(0xFF04B97F)
@@ -15,33 +15,21 @@ object TestData{
     val day_limit: Double = 1000.0
 
     // 标签列表
-    val Tags: List<Tag> = listOf(
-        Tag("生活", Color(0xFF04B97F)),
-        Tag("医疗", Color(0xFFFF6951)),
-        Tag("娱乐", Color(0xFF3CB0EE)),
-        Tag("餐饮", Color(0xFFCE8F8F)),
-        Tag("交通", Color(0xFF6D6E71)),
-        Tag("购物", Color(0xFFBD8C8C)),
-        Tag("教育", Color(0xFF8B6F8F)),
-        Tag("旅行", Color(0xFF8CC6F7)),
-        Tag("保险", Color(0xFFC4C6CF)),
-        Tag("健身", Color(0xFF7D8C9D))
+    val TagList = listOf(
+        Tag("生活", Color(0xFF04B97F), 0),
+        Tag("医疗", Color(0xFFFF6951), 1),
+        Tag("娱乐", Color(0xFF3CB0EE),2),
+        Tag("餐饮", Color(0xFFCE8F8F),3),
+        Tag("交通", Color(0xFF6D6E71),4),
+        Tag("购物", Color(0xFFBD8C8C),5),
+        Tag("教育", Color(0xFF8B6F8F),6),
+        Tag("旅行", Color(0xFF8CC6F7),7),
+        Tag("保险", Color(0xFFC4C6CF),8),
+        Tag("健身", Color(0xFF7D8C9D),9)
     )
 
     //银行卡列表
-    val cardDataList = listOf(
-        "Card 1" to 50f,
-        "Card 2" to 100f,
-        "Card 3" to 150f,
-        "Card 4" to 50f,
-        "Card 5" to 100f,
-        "Card 6" to 150f,
-        "Card 1" to 50f,
-        "Card 2" to 100f,
-        "Card 3" to 150f,
-        "Card 4" to 50f,
-        "Card 5" to 100f,
-        "Card 6" to 150f,
+    val CardDataList = listOf(
         "Card 1" to 50f,
         "Card 2" to 100f,
         "Card 3" to 150f,
@@ -49,4 +37,6 @@ object TestData{
         "Card 5" to 100f,
         "Card 6" to 150f,
     )
+
+
 }

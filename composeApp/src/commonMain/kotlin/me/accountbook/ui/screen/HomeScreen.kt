@@ -2,36 +2,26 @@ package me.accountbook.ui.screen
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
-import me.accountbook.Platform
-import me.accountbook.data.TestData.cardDataList
-import me.accountbook.getHomeLazyVerticalStaggeredGridColumns
-import me.accountbook.getPlatform
+import me.accountbook.platform.Platform
+import me.accountbook.data.TestData.CardDataList
+import me.accountbook.data.TestData.TagList
+import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
+import me.accountbook.platform.getPlatform
 import me.accountbook.ui.components.BarCard
 
 import me.accountbook.ui.components.FunCart
-import me.accountbook.ui.components.InfoRow
-import me.accountbook.ui.components.ScrollProgressScreen
+import me.accountbook.ui.components.HorizontalScrollWithBar
+import me.accountbook.ui.components.ReorderTag
+import me.accountbook.ui.components.TagFlowRow
 
 @Composable
 fun HomeScreen(isLandscape: Boolean) {
@@ -63,16 +53,28 @@ fun HomeScreen(isLandscape: Boolean) {
                 // FunCart 内容
                 item {
                     FunCart("银行卡") {
-                        HorizontalScrollExample {
-                            cardDataList.forEach { (title, save) ->
-                                BarCard(title = title, save = save) // 将 BarCard 作为参数传递
+                        HorizontalScrollWithBar() {
+                            CardDataList.forEach { (title, save) ->
+                                BarCard(title = title, save = save)
                             }
                         }
+
                     }
                 }
+
                 item {
                     FunCart("明细") {
-                        InfoRow(color = Color.Red, title = "sss", subtitle = "sss", save = 100.0f)
+                        FunCart("标签") {
+                            Box(
+                                modifier = Modifier
+                                    .height(500.dp)
+                                    .fillMaxWidth()
+                            )
+                            {
+                                ReorderTag(TagList.map{it.name})
+                            }
+
+                        }
                     }
                 }
             }
@@ -95,20 +97,3 @@ fun title(title: String, modifier: Modifier = Modifier) {
             .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
     )
 }
-
-@Composable
-fun HorizontalScrollExample(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    val scrollState = rememberScrollState()
-
-
-    ScrollProgressScreen() {
-        // 包裹 Row 的 Box 用于计算宽度
-        content()
-
-    }
-}
-
-

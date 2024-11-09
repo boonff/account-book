@@ -9,6 +9,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+
+    }
+}
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -20,28 +30,35 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
 
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.material3)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+        val commonMain by getting {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.ui)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.material3)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.jetbrains)
+                implementation(libs.reorderable)
 
+            }
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+        val androidMain by getting {
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+            }
+        }
+        val desktopMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.reorderable)
+            }
         }
     }
 }
@@ -89,6 +106,7 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.window)
+    implementation(libs.androidx.ui.android)
 
 }
 
@@ -102,7 +120,7 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
-    dependencies{
+    dependencies {
         implementation(libs.androidx.material3.android)
     }
 }

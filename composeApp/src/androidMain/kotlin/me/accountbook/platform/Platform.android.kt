@@ -1,12 +1,10 @@
-package me.accountbook
+package me.accountbook.platform
 
-import android.content.res.Resources
-import android.os.Build
+import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalView
+import me.accountbook.platform.Platform
 import me.accountbook.utils.DeviceUtils
 
 // actual 实现

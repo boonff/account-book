@@ -4,5 +4,6 @@ import androidx.compose.ui.graphics.Color
 
 data class Tag(
     var name: String,
-    var color: Color
+    var color: Color,
+    var order: Int,
 )

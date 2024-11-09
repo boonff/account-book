@@ -1,4 +1,4 @@
-package me.accountbook
+package me.accountbook.platform
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
