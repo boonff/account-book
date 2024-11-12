@@ -63,18 +63,9 @@ fun HomeScreen(isLandscape: Boolean) {
                 }
 
                 item {
-                    FunCart("明细") {
-                        FunCart("标签") {
-                            Box(
-                                modifier = Modifier
-                                    .height(500.dp)
-                                    .fillMaxWidth()
-                            )
-                            {
-                                ReorderTag(TagList.map{it.name})
-                            }
+                    FunCart("标签") {
+                        ReorderTag(TagList.map { it.name })
 
-                        }
                     }
                 }
             }

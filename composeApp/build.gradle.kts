@@ -9,15 +9,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-
-    }
-}
 
 kotlin {
     androidTarget {
@@ -30,7 +21,13 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-
+        repositories {
+            google()
+            mavenCentral()
+            maven {
+                url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
+            }
+        }
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
@@ -40,6 +37,8 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
+                implementation(libs.firebase.database.ktx)
+                implementation(libs.androidx.window)
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.androidx.lifecycle.runtime.compose)
                 implementation(libs.jetbrains)
@@ -49,7 +48,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(compose.preview)
+                implementation(libs.androidx.navigation.compose)
                 implementation(libs.androidx.activity.compose)
             }
         }
@@ -57,7 +56,6 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
-                implementation(libs.reorderable)
             }
         }
     }
@@ -95,19 +93,6 @@ android {
     buildFeatures {
         compose = true
     }
-    dependencies {
-        debugImplementation(compose.uiTooling)
-        implementation(libs.androidx.navigation.compose)
-        implementation(compose.material3)
-
-    }
-}
-dependencies {
-    implementation(libs.firebase.database.ktx)
-    implementation(libs.androidx.foundation.android)
-    implementation(libs.androidx.window)
-    implementation(libs.androidx.ui.android)
-
 }
 
 compose.desktop {
@@ -119,8 +104,5 @@ compose.desktop {
             packageName = "me.accountbook"
             packageVersion = "1.0.0"
         }
-    }
-    dependencies {
-        implementation(libs.androidx.material3.android)
     }
 }

@@ -12,10 +12,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DragHandle
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -35,7 +31,10 @@ actual fun ReorderTag(list: List<String>) {
     }
 
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .heightIn(max = 500.dp)
+            .fillMaxHeight(),
         state = lazyGridState,
         columns = GridCells.Fixed(3), // 设置为 3 列
         contentPadding = PaddingValues(8.dp),
@@ -48,12 +47,11 @@ actual fun ReorderTag(list: List<String>) {
 
                 Surface(shadowElevation = elevation) {
                     Row {
-                        TagCard(name = it)
-                        IconButton(
-                            onClick = {},
-                        ) {
-                            Icon(Icons.Rounded.DragHandle, contentDescription = "Reorder")
-                        }
+                        TagCard(
+                            name = it,
+                            modifier = Modifier
+                                .draggableHandle()
+                        )
                     }
                 }
             }

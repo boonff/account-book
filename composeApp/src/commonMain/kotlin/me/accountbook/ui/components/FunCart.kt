@@ -27,7 +27,9 @@ fun FunCart(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface) // 设置外边框
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             Text(
                 text = title,

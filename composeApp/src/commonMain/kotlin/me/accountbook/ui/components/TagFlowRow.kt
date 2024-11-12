@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import me.accountbook.database.bean.Tag
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.text.style.TextOverflow
 import me.accountbook.data.TestData.TagList
 import kotlin.math.roundToInt
 
@@ -123,7 +124,7 @@ fun TagCard(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.secondary,
-                RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp)
             )
     ) {
         Text(
