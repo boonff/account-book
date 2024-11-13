@@ -16,15 +16,15 @@ object TestData {
 
     // 标签列表
     val TagList = listOf(
-        Tag("生活", Color(0xFF04B97F), 0),
+        Tag("点外卖", Color(0xFF04B97F), 0),
         Tag("医疗", Color(0xFFFF6951), 1),
-        Tag("娱乐", Color(0xFF3CB0EE),2),
-        Tag("餐饮", Color(0xFFCE8F8F),3),
+        Tag("steam", Color(0xFF3CB0EE),2),
+        Tag("零食", Color(0xFFCE8F8F),3),
         Tag("交通", Color(0xFF6D6E71),4),
-        Tag("购物的", Color(0xFFBD8C8C),5),
-        Tag("教育", Color(0xFF8B6F8F),6),
-        Tag("旅行胆大党", Color(0xFF8CC6F7),7),
-        Tag("保险", Color(0xFFC4C6CF),8),
+        Tag("住房基金", Color(0xFFBD8C8C),5),
+        Tag("医疗保险", Color(0xFF8B6F8F),6),
+        Tag("意外险", Color(0xFF8CC6F7),7),
+        Tag("人寿险", Color(0xFFC4C6CF),8),
         Tag("健身", Color(0xFF7D8C9D),9)
     )
 

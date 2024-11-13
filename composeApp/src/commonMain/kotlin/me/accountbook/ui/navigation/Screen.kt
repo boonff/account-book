@@ -3,9 +3,9 @@ package me.accountbook.ui.navigation
 import androidx.compose.runtime.saveable.Saver
 
 sealed class Screen {
-    object HomeScreen : Screen()
-    object TranscationScreen : Screen()
-    object SettingScreen: Screen()
+    data object HomeScreen : Screen()
+    data object TranscationScreen : Screen()
+    data object SettingScreen: Screen()
 
 
 }

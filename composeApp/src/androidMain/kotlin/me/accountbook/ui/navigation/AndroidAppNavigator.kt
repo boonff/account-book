@@ -3,8 +3,8 @@ package me.accountbook.ui.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,10 +20,6 @@ import me.accountbook.ui.screen.HomeScreen
 import me.accountbook.ui.screen.SettingsScreen
 import me.accountbook.ui.screen.TransactionScreen
 import me.accountbook.utils.DeviceUtils
-
-
-
-
 
 @Composable
 fun AndroidNav() {
@@ -45,7 +41,7 @@ fun AndroidNav() {
                         NavigationBarItem(
                             selected = selectedScreen == navItem.screen,
                             onClick = { selectedScreen = navItem.screen },
-                            icon = navItem.icon,
+                            icon = { Icon(imageVector = navItem.iconImageVector, contentDescription = null)},
                             label = navItem.label
                         )
                     }

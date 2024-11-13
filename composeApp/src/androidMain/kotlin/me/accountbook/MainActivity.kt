@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import me.accountbook.ui.navigation.AndroidNav
-import me.accountbook.ui.theme.AppTheme
+import me.accountbook.ui.theme.AndroidTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    AppTheme {
+    AndroidTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()

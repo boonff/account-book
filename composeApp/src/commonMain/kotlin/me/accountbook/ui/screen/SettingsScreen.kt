@@ -40,54 +40,7 @@ fun SettingsScreen() {
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(8.dp),
         ) {
-            item {
-                FunCart("test")
-                {
-                        BarCard(title = "f", save = 100.0f)
-                        BarCard(title = "f", save = 100.0f) }
-            }
-            item {
-                FunCart("test")
-                {
-                    BarCard(title = "f", save = 100.0f)
-                }
-            }
-            item {
-                FunCart("test")
-                {
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                }
-            }
-            item {
-                FunCart("test")
-                {
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                }
-            }
-            item {
-                FunCart("test")
-                {
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
 
-                }
-            }
-            item {
-                FunCart("test")
-                {
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                    BarCard(title = "f", save = 100.0f)
-                }
-            }
 
         }
 
