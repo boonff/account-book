@@ -1,0 +1,13 @@
+CREATE TABLE User (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,  -- 用户 ID
+    name TEXT,  -- 用户名
+    age INTEGER, -- 年龄
+    gender INTEGER, -- 性别
+    phoneNumber TEXT -- 电话
+);
+
+insertUser:
+INSERT INTO User(name, age, gender, phoneNumber) VALUES(?,?,?,?);
+
+queryById:
+SELECT * FROM User WHERE id = ?;

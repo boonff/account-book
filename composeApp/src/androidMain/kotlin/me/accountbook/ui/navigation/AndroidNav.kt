@@ -16,18 +16,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import me.accountbook.ui.screen.HomeScreen
 import me.accountbook.ui.screen.SettingsScreen
-import me.accountbook.ui.screen.TransactionScreen
+import me.accountbook.ui.screen.TranslationScreen
 import me.accountbook.utils.DeviceUtils
 
 @Composable
 fun AndroidNav() {
+    //获取屏幕尺寸信息
+    rememberNavController()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
     val screenHeight = configuration.screenHeightDp
-    var selectedScreen by rememberSaveable(stateSaver = ScreenSaver) { mutableStateOf<Screen>(Screen.HomeScreen) }
     var isLandscape = DeviceUtils.isTablet(screenWidth, screenHeight) || DeviceUtils.isPortrait(screenWidth, screenHeight)
+
+    var
     if (isLandscape) {
         Scaffold(
             bottomBar = {
@@ -51,15 +55,16 @@ fun AndroidNav() {
             Box(
                 modifier = Modifier.padding(paddingValues)) {
                 when (selectedScreen) {
-                    is Screen.HomeScreen -> HomeScreen(isLandscape)
-                    is Screen.TranscationScreen -> TransactionScreen(isLandscape)
+                    is Screen.HomeScreen -> HomeScreen(isLandscape, selectedScreen)
+                    is Screen.TranslationScreen -> TranslationScreen(isLandscape)
                     is Screen.SettingScreen -> SettingsScreen()
+                    Screen.TagDetails -> TODO()
                 }
             }
         }
 
     } else {
-       Navigator()
+       Navigator(selectedScreen)
     }
 }
 
