@@ -1,7 +1,9 @@
 package me.accountbook.data
 
 import androidx.compose.ui.graphics.Color
+import me.accountbook.database.bean.BankCard
 import me.accountbook.database.bean.Tag
+import java.math.BigDecimal
 
 object TestData {
     val Save = 1000.0f
@@ -37,6 +39,7 @@ object TestData {
         "Card 5" to 100f,
         "Card 6" to 150f,
     )
+
 
 
 }

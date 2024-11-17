@@ -1,7 +1,6 @@
 package me.accountbook.ui.components
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +10,6 @@ import sh.calvin.reorderable.ReorderableItem
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +21,7 @@ import me.accountbook.database.bean.Tag
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
-fun ReorderTag(tags: List<Tag>) {
+fun TagReorder(tags: List<Tag>) {
 
     var tagNames by remember { mutableStateOf(tags.map { it.name }) }
 

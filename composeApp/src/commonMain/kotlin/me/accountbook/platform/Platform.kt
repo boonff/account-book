@@ -19,5 +19,9 @@ sealed class Platform {
 // getPlatform.kt
 expect fun getPlatform(): Platform
 
+fun isAndroid():Boolean{
+    return getPlatform() == Platform.Android
+}
+
 @Composable
 expect fun getHomeLazyVerticalStaggeredGridColumns(): Int

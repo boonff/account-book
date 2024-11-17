@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 
 import androidx.compose.ui.unit.dp
-import me.accountbook.ui.components.BarCard
-import me.accountbook.ui.components.FunCart
 
 @Composable
 fun SettingsScreen() {

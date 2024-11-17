@@ -1,15 +1,13 @@
 package me.accountbook.database.bean
 
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.math.BigDecimal
+import java.util.*
 
 data class Transaction(
-    var id: Int,
-    var tag: Tag,
-    var save: Double,
-    var date: Date
-) {
-    companion object {
-        val DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd")
-    }
-}
+    val transactionId: Int,           // 交易ID
+    val cardID: Int,              // 关联的银行卡ID
+    val amount: BigDecimal,              // 交易金额
+    val date: Date,                      // 交易日期
+    val description: String,             // 交易描述
+)
+

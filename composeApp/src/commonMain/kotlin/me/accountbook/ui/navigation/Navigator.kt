@@ -13,29 +13,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import me.accountbook.ui.screen.HomeScreen
 import me.accountbook.ui.screen.SettingsScreen
+import me.accountbook.ui.screen.TagDetails
 import me.accountbook.ui.screen.TranslationScreen
 import me.accountbook.ui.screen.isDesktop
 
 
 sealed class Screen(val route: String) {
-    object HomeScreen : Screen("home")
-    object TranslationScreen : Screen("transaction")
-    object SettingScreen : Screen("settings")
-    object TagDetails : Screen("tagDetails")
+    data object HomeScreen : Screen("home")
+    data object TranslationScreen : Screen("transaction")
+    data object SettingScreen : Screen("settings")
+    data object TagDetails : Screen("tagDetails")
 }
 
 @Composable
-fun Navigator(navController: NavHostController) {
+fun Navigator(navHostController: NavHostController) {
     Row(modifier = Modifier.fillMaxSize()) {
         // 导航栏
         NavigationRail(
@@ -44,11 +45,14 @@ fun Navigator(navController: NavHostController) {
             containerColor = MaterialTheme.colorScheme.background,
         ) {
             navItems.forEach { navItem ->
+                // 使用 currentBackStackEntryAsState 获取当前选中的导航项
+                val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val selected = currentBackStackEntry?.destination?.route == navItem.screen.route
                 NavigationRailItem(
-                    selected = navController.currentBackStackEntry?.destination?.route == navItem.screen.route,
+                    selected = selected,
                     onClick = {
                         // 使用 NavController 导航
-                        navController.navigate(navItem.screen.route) {
+                        navHostController.navigate(navItem.screen.route) {
                             // 防止重复添加相同的屏幕
                             launchSingleTop = true
                             restoreState = true
@@ -69,9 +73,9 @@ fun Navigator(navController: NavHostController) {
         // 在导航栏旁边放置内容区域
         Box(modifier = Modifier.fillMaxSize()) {
             // 使用 NavHost 来显示屏幕
-            NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+            NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
                 composable(Screen.HomeScreen.route) {
-                    HomeScreen(isDesktop())
+                    HomeScreen(isDesktop(), navHostController)
                 }
                 composable(Screen.TranslationScreen.route) {
                     TranslationScreen(isDesktop())
@@ -80,7 +84,7 @@ fun Navigator(navController: NavHostController) {
                     SettingsScreen()
                 }
                 composable(Screen.TagDetails.route) {
-                    // TODO: 需要实现 TagDetailsScreen
+                    TagDetails(navHostController)
                 }
             }
         }
@@ -94,7 +98,6 @@ data class NavItem(
     val iconContentDescription: String,
     val label: @Composable () -> Unit
 )
-
 
 
 

@@ -1,4 +1,7 @@
 package me.accountbook.sqldelight
 
-class DatabaseDriverFactory {
+import app.cash.sqldelight.db.SqlDriver
+
+interface DatabaseDriverFactory {
+    fun createDriver(): SqlDriver
 }

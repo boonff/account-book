@@ -1,36 +1,42 @@
 package me.accountbook.ui.screen
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Label
-import androidx.compose.material.icons.rounded.CreditCard
-import androidx.compose.material.icons.rounded.Label
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import me.accountbook.platform.Platform
-import me.accountbook.data.TestData.CardDataList
 import me.accountbook.data.TestData.TagList
+import me.accountbook.database.Account
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.platform.getPlatform
-import me.accountbook.ui.components.BarCard
+import me.accountbook.sqldelight.DatabaseDriverFactory
+import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.ui.components.AccountCard
 import me.accountbook.ui.components.BasicPage
-
-import me.accountbook.ui.components.FunCart
+import me.accountbook.ui.components.FunCard
 import me.accountbook.ui.components.HorizontalScrollWithBar
-import me.accountbook.ui.components.ReorderTag
 import me.accountbook.ui.components.TagFlowRow
+import me.accountbook.ui.navigation.Screen
+import org.koin.compose.koinInject
 
 @Composable
-fun HomeScreen(isLandscape: Boolean) {
+fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
+    val databaseDriverFactory: DatabaseDriverFactory = koinInject()
+    val databaseHelper: DatabaseHelper = koinInject()
     val gridCellsAdaptive = if (isDesktop()) 256 else 256
+    var accounts by remember { mutableStateOf<List<Account>>(emptyList()) }
     BasicPage(isLandscape, title = "首页") {
 
         // 使用 LazyVerticalGrid 创建自适应列
@@ -45,13 +51,17 @@ fun HomeScreen(isLandscape: Boolean) {
         ) {
             // FunCart 内容
             item {
-                FunCart(
-                    title = "银行卡",
-                    icon = Icons.Rounded.CreditCard,
+                FunCard(
+                    title = "钱包",
+                    icon = Icons.Outlined.AccountBalanceWallet,
                     content = {
                         HorizontalScrollWithBar() {
-                            CardDataList.forEach { (title, save) ->
-                                BarCard(title = title, save = save)
+                            LaunchedEffect(Unit){
+                                accounts = databaseHelper.queryAllAccount()
+                                databaseHelper.close()
+                                }
+                            accounts.forEach { (id, user_id, account_name, balance, created_at) ->
+                                AccountCard(title = account_name, balance = balance)
                             }
                         }
                     }
@@ -59,13 +69,17 @@ fun HomeScreen(isLandscape: Boolean) {
             }
 
             item {
-                FunCart(title = "标签",
-                    icon = Icons.AutoMirrored.Rounded.Label,
+                FunCard(title = "标签",
+                    icon = Icons.AutoMirrored.Outlined.Label,
                     content = {
-                        ReorderTag(TagList)
+                        TagFlowRow(TagList)
                     },
                     onClick = {
-
+                        navController.navigate(Screen.TagDetails.route) {
+                            // 防止重复添加相同的屏幕
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 )
             }
@@ -77,16 +91,3 @@ fun HomeScreen(isLandscape: Boolean) {
 fun isDesktop(): Boolean {
     return getPlatform() == Platform.Desktop
 }
-
-
-@Composable
-fun title(title: String, modifier: Modifier = Modifier) {
-    Text(
-        text = title,
-        color = MaterialTheme.colorScheme.onBackground,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-            .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
-    )
-}
-

@@ -1,4 +1,4 @@
 package com.accountbook
 
-class MyTest {
+class MyTest{
 }

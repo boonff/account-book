@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -84,10 +83,10 @@ fun InfoRow(
 @Composable
 fun CompactInfoRow(
     color: Color,
-    save: Float
+    balance: Double
 ) {
-    val dollarSign = if (save < 0) "–￥ " else "￥ "
-    val formattedAmount = formatAmount(save)
+    val dollarSign = if (balance < 0) "–￥ " else "￥ "
+    val formattedAmount = formatAmount(balance.toFloat())
 
     Row(
         modifier = Modifier.height(48.dp), // 调整高度以使其更小
@@ -107,9 +106,6 @@ fun CompactInfoRow(
 }
 
 
-/**
- * A vertical colored line that is used in a [InfoRow] to differentiate accounts.
- */
 @Composable
 private fun ColorBar(color: Color, modifier: Modifier = Modifier) {
     Spacer(

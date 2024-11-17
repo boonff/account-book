@@ -1,61 +1,87 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
+    }
+}
 
-kotlin {
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("me.accountbook.database")
         }
     }
+}
 
-    jvm("desktop")
-
+kotlin {
     sourceSets {
-        repositories {
-            google()
-            mavenCentral()
-            maven {
-                url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
+        all {
+            languageSettings {
+                optIn("kotlin.Experimental")
             }
         }
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.ui)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.material3)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-                implementation(libs.firebase.database.ktx)
-                implementation(libs.androidx.window)
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.androidx.lifecycle.runtime.compose)
-                implementation(libs.jetbrains)
-                implementation(libs.reorderable)
+        androidTarget()
 
+        jvm("desktop")
+
+        sourceSets {
+            val commonMain by getting {
+                dependencies {
+                    implementation(compose.runtime)
+                    implementation(compose.foundation)
+                    implementation(compose.ui)
+                    implementation(compose.materialIconsExtended)
+                    implementation(compose.material3)
+                    implementation(compose.components.resources)
+                    implementation(compose.components.uiToolingPreview)
+                    implementation(libs.firebase.database.ktx)
+                    implementation(libs.androidx.window)
+                    implementation(libs.jetbrains)
+                    implementation(libs.reorderable)
+                    implementation(libs.androidx.navigation.compose)
+                    implementation(libs.kotlinx.coroutines.core)
+                    implementation(libs.ktor.client.core)
+                    implementation(libs.ktor.client.content.negotiation)
+                    implementation(libs.ktor.serialization.kotlinx.json)
+                    implementation(libs.runtime)
+                    implementation(libs.kotlinx.datetime)
+                    implementation(libs.koin.core)
+                    implementation(libs.koin.compose)
+                    implementation(libs.koin.compose.viewmodel)
+                    implementation(libs.koin.compose.viewmodel.navigation)
+                    implementation(libs.slf4j.api)
+                    implementation(libs.slf4j.simple)
+                    implementation(libs.zaxxer.hikariCP)
+                }
             }
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.androidx.navigation.compose)
-                implementation(libs.androidx.activity.compose)
+            val androidMain by getting {
+                dependencies {
+                    implementation(libs.androidx.lifecycle.viewmodel)
+                    implementation(libs.androidx.lifecycle.runtime.compose)
+                    implementation(libs.androidx.activity.compose)
+                    implementation(libs.ktor.client.android)
+                    implementation(libs.sqldelight.android.driver)
+                }
             }
-        }
-        val desktopMain by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutines.swing)
+            val desktopMain by getting {
+                dependencies {
+                    implementation(compose.desktop.currentOs)
+                    implementation(libs.kotlinx.coroutines.swing)
+                    implementation(libs.ktor.client.java)
+                    implementation(libs.sqldelight.driver)
+                }
             }
         }
     }
@@ -87,8 +113,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true

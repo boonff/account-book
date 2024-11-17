@@ -9,63 +9,81 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import me.accountbook.ui.screen.HomeScreen
 import me.accountbook.ui.screen.SettingsScreen
+import me.accountbook.ui.screen.TagDetails
 import me.accountbook.ui.screen.TranslationScreen
+import me.accountbook.ui.screen.isDesktop
 import me.accountbook.utils.DeviceUtils
 
 @Composable
-fun AndroidNav() {
-    //获取屏幕尺寸信息
-    rememberNavController()
+fun AndroidNav(navController: NavHostController) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
     val screenHeight = configuration.screenHeightDp
-    var isLandscape = DeviceUtils.isTablet(screenWidth, screenHeight) || DeviceUtils.isPortrait(screenWidth, screenHeight)
+    val isLandscape = DeviceUtils.isTablet(screenWidth, screenHeight) || DeviceUtils.isPortrait(screenWidth, screenHeight)
 
-    var
     if (isLandscape) {
         Scaffold(
             bottomBar = {
                 BottomAppBar(
-                    modifier = Modifier
-                        .height(64.dp),
+                    modifier = Modifier.height(64.dp),
                     containerColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.onBackground
                 ) {
                     navItems.forEach { navItem ->
+                        // 使用 currentBackStackEntryAsState 获取当前选中的导航项
+                        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+                        val selected = currentBackStackEntry?.destination?.route == navItem.screen.route
                         NavigationBarItem(
-                            selected = selectedScreen == navItem.screen,
-                            onClick = { selectedScreen = navItem.screen },
-                            icon = { Icon(imageVector = navItem.iconImageVector, contentDescription = null)},
+                            selected = selected,
+                            onClick = {
+                                navController.navigate(navItem.screen.route) {
+                                    // 防止重复添加相同的屏幕
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = { Icon(imageVector = navItem.iconImageVector, contentDescription = null) },
                             label = navItem.label
                         )
                     }
                 }
             }
         ) { paddingValues ->
-            Box(
-                modifier = Modifier.padding(paddingValues)) {
-                when (selectedScreen) {
-                    is Screen.HomeScreen -> HomeScreen(isLandscape, selectedScreen)
-                    is Screen.TranslationScreen -> TranslationScreen(isLandscape)
-                    is Screen.SettingScreen -> SettingsScreen()
-                    Screen.TagDetails -> TODO()
+            // 内容区域，通过 NavController 管理的 NavHost 来显示不同的屏幕
+            Box(modifier = Modifier.padding(paddingValues)) {
+                NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+                    composable(Screen.HomeScreen.route) {
+                        HomeScreen(isLandscape, navController)
+                    }
+                    composable(Screen.TranslationScreen.route) {
+                        TranslationScreen(isLandscape)
+                    }
+                    composable(Screen.SettingScreen.route) {
+                        SettingsScreen()
+                    }
+                    composable(Screen.TagDetails.route) {
+                        TagDetails(navController)
+                    }
                 }
             }
         }
-
     } else {
-       Navigator(selectedScreen)
+        // 如果是竖屏或其他条件，直接使用Navigator（如果你有其他导航方式的话）
+        Navigator(navController)
     }
 }
-
 

@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
-fun FunCart(
+fun FunCard(
     title: String,
     icon: ImageVector,
     content: @Composable () -> Unit, //主要内容
@@ -38,7 +38,7 @@ fun FunCart(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            FunChartTopBar(title, icon) { onClick() }
+            FunCardtTopBar(title, icon) { onClick() }
             content()
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -47,7 +47,7 @@ fun FunCart(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FunChartTopBar(
+fun FunCardtTopBar(
     title: String,
     icon: ImageVector = Icons.Rounded.Warning,
     onClick: () -> Unit,
