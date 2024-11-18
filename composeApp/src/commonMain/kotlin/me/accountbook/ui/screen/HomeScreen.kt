@@ -21,7 +21,6 @@ import me.accountbook.data.TestData.TagList
 import me.accountbook.database.Account
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.platform.getPlatform
-import me.accountbook.sqldelight.DatabaseDriverFactory
 import me.accountbook.sqldelight.DatabaseHelper
 import me.accountbook.ui.components.AccountCard
 import me.accountbook.ui.components.BasicPage
@@ -33,10 +32,13 @@ import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
-    val databaseDriverFactory: DatabaseDriverFactory = koinInject()
     val databaseHelper: DatabaseHelper = koinInject()
-    val gridCellsAdaptive = if (isDesktop()) 256 else 256
     var accounts by remember { mutableStateOf<List<Account>>(emptyList()) }
+    LaunchedEffect(Unit){
+        accounts = databaseHelper.queryAllAccount()
+        databaseHelper.close()
+    }
+
     BasicPage(isLandscape, title = "首页") {
 
         // 使用 LazyVerticalGrid 创建自适应列
@@ -56,10 +58,7 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                     icon = Icons.Outlined.AccountBalanceWallet,
                     content = {
                         HorizontalScrollWithBar() {
-                            LaunchedEffect(Unit){
-                                accounts = databaseHelper.queryAllAccount()
-                                databaseHelper.close()
-                                }
+
                             accounts.forEach { (id, user_id, account_name, balance, created_at) ->
                                 AccountCard(title = account_name, balance = balance)
                             }

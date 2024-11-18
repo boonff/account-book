@@ -13,7 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import me.accountbook.koin.androidModule
 import me.accountbook.ui.navigation.AndroidNav
 import me.accountbook.ui.theme.AndroidTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
 class MainActivity : ComponentActivity() {
@@ -22,19 +22,18 @@ class MainActivity : ComponentActivity() {
 
         // 初始化 Koin
         startKoin {
-            printLogger()
+            androidContext(this@MainActivity)
             modules(androidModule)
         }
 
         setContent {
-            AppAndroidPreview()
+            AppAndroidContent()
         }
     }
 }
 
-@Preview
 @Composable
-fun AppAndroidPreview() {
+fun AppAndroidContent() {
     AndroidTheme {
         Box(
             modifier = Modifier

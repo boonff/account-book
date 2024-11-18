@@ -8,7 +8,6 @@ import me.accountbook.ui.screen.HomeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
         Navigator(rememberNavController())

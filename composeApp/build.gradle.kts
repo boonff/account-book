@@ -14,6 +14,7 @@ repositories {
     mavenCentral()
     maven {
         url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
+        url = uri("https://mvnrepository.com/artifact/io.insert-koin/koin-compose-viewmodel")
     }
 }
 
@@ -57,13 +58,14 @@ kotlin {
                     implementation(libs.ktor.serialization.kotlinx.json)
                     implementation(libs.runtime)
                     implementation(libs.kotlinx.datetime)
+                    runtimeOnly(libs.slf4j.api)
+                    runtimeOnly(libs.slf4j.simple)
+                    implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
                     implementation(libs.koin.compose)
                     implementation(libs.koin.compose.viewmodel)
                     implementation(libs.koin.compose.viewmodel.navigation)
-                    implementation(libs.slf4j.api)
-                    implementation(libs.slf4j.simple)
-                    implementation(libs.zaxxer.hikariCP)
+
                 }
             }
             val androidMain by getting {
@@ -73,6 +75,8 @@ kotlin {
                     implementation(libs.androidx.activity.compose)
                     implementation(libs.ktor.client.android)
                     implementation(libs.sqldelight.android.driver)
+                    implementation(libs.koin.androidx.compose)
+                    implementation(libs.koin.androidx.compose.navigation)
                 }
             }
             val desktopMain by getting {
