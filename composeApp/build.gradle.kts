@@ -26,6 +26,8 @@ sqldelight {
     }
 }
 
+
+
 kotlin {
     sourceSets {
         all {
@@ -47,6 +49,7 @@ kotlin {
                     implementation(compose.material3)
                     implementation(compose.components.resources)
                     implementation(compose.components.uiToolingPreview)
+                    implementation(compose.preview)
                     implementation(libs.firebase.database.ktx)
                     implementation(libs.androidx.window)
                     implementation(libs.jetbrains)
@@ -58,8 +61,8 @@ kotlin {
                     implementation(libs.ktor.serialization.kotlinx.json)
                     implementation(libs.runtime)
                     implementation(libs.kotlinx.datetime)
-                    runtimeOnly(libs.slf4j.api)
-                    runtimeOnly(libs.slf4j.simple)
+                    implementation(libs.slf4j.api)
+                    implementation(libs.slf4j.simple)
                     implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
                     implementation(libs.koin.compose)
@@ -123,6 +126,9 @@ android {
     buildFeatures {
         compose = true
     }
+}
+dependencies {
+    debugImplementation(libs.androidx.ui.tooling)
 }
 
 compose.desktop {

@@ -11,6 +11,6 @@ import org.koin.dsl.module
 
 val androidModule = module {
     single<DatabaseDriverFactory> { AndroidDatabaseDriverFactory(get()) }
-    single<SqlDriver>{get<AndroidDatabaseDriverFactory>().createDriver()}
-    single<DatabaseHelper>{get()}
+    single<SqlDriver> { get<DatabaseDriverFactory>().createDriver() }
+    single<DatabaseHelper> { DatabaseHelper(get()) }
 }

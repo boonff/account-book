@@ -11,9 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -21,12 +18,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import me.accountbook.sqldelight.DatabaseDriverFactory
+import me.accountbook.sqldelight.DatabaseHelper
 import me.accountbook.ui.screen.HomeScreen
 import me.accountbook.ui.screen.SettingsScreen
 import me.accountbook.ui.screen.TagDetails
 import me.accountbook.ui.screen.TranslationScreen
-import me.accountbook.ui.screen.isDesktop
 import me.accountbook.utils.DeviceUtils
+import org.koin.compose.koinInject
 
 @Composable
 fun AndroidNav(navController: NavHostController) {
@@ -34,6 +33,7 @@ fun AndroidNav(navController: NavHostController) {
     val screenWidth = configuration.screenWidthDp
     val screenHeight = configuration.screenHeightDp
     val isLandscape = DeviceUtils.isTablet(screenWidth, screenHeight) || DeviceUtils.isPortrait(screenWidth, screenHeight)
+
 
     if (isLandscape) {
         Scaffold(

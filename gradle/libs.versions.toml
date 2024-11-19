@@ -3,7 +3,6 @@ agp = "8.3.1"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-hikaricpVersion = "6.1.0"
 slf4jApi = "2.0.9"
 sqlDelight = "2.0.2"
 androidx-activityCompose = "1.9.1"
@@ -18,6 +17,7 @@ reorderable = "2.4.0"
 jetbrains = "0.6.1"
 ktor = "2.3.7"
 koin-bom = "4.0.0"
+uiTooling = "1.7.5"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -49,6 +49,7 @@ koin-androidx-compose-navigation = {module = "io.insert-koin:koin-androidx-compo
 koin-core = { module = "io.insert-koin:koin-core"}
 koin-compose-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel"}
 koin-compose-viewmodel-navigation = {module = "io.insert-koin:koin-compose-viewmodel-navigation"}
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

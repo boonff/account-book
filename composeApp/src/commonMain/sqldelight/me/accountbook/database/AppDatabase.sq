@@ -1,54 +1,81 @@
--- User 表
-CREATE TABLE IF NOT EXISTS User (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    email TEXT,
-    password_hash TEXT,
-    created_at TEXT DEFAULT (DATETIME('now')) -- ISO 8601 格式
+-- Account 表
+CREATE TABLE IF NOT EXISTS Account (
+    account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_name TEXT NOT NULL,  -- 账户名称，如现金、银行卡等
+    balance REAL NOT NULL DEFAULT 0,
+    created_at TEXT DEFAULT (DATETIME('now'))
 );
 
--- 插入用户
-insertUser:
-INSERT INTO User (username, email, password_hash, created_at)
-VALUES (:username, :email, :password_hash, :created_at);
+-- 获取所有账户
+queryAllAccount:
+SELECT * FROM Account;
 
--- 获取所有用户
-queryAllUsers:
-SELECT * FROM User;
+-- 插入账户
+insertAccount:
+INSERT INTO Account (account_name, balance, created_at)
+VALUES (:accountName, :balance, :createdAt);
 
--- 按 ID 获取用户
-queryUserById:
-SELECT * FROM User WHERE user_id = :userId;
+-- 获取某用户的所有账户
+queryAccounts:
+SELECT * FROM Account;
 
--- 更新用户
-updateUser:
-UPDATE User
-SET username = :username, email = :email, password_hash = :password_hash
-WHERE user_id = :userId;
+-- 更新账户余额
+updateAccountBalance:
+UPDATE Account
+SET balance = :balance
+WHERE account_id = :accountId;
 
--- 删除用户
-deleteUser:
-DELETE FROM User WHERE user_id = :userId;
--- 根据用户名获取用户
-queryUserByUsername:
-SELECT * FROM User WHERE username = :username;
+-- 删除账户
+deleteAccount:
+DELETE FROM Account WHERE account_id = :accountId;
+-- 获取账户余额
+queryAccountBalance:
+SELECT balance FROM Account WHERE account_id = :accountId;
 
--- 更新用户的密码哈希
-updatePasswordHash:
-UPDATE User
-SET password_hash = :password_hash
-WHERE user_id = :userId;
+-- 更新账户名称
+updateAccountName:
+UPDATE Account
+SET account_name = :accountName
+WHERE account_id = :accountId;
 
--- 删除所有用户
-deleteAllUsers:
-DELETE FROM User;
+-- 删除所有账户
+deleteAllAccounts:
+DELETE FROM Account;
 
+-- TagBox 表
+CREATE TABLE IF NOT EXISTS Tagbox (
+    tagbox_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    color INTEGER NOT NULL,
+    position INTEGER -- position 字段可以为 NULL，稍后触发器设置其值
+);
+
+-- 触发器
+DROP TRIGGER IF EXISTS SetSortOrder;
+CREATE TRIGGER SetSortOrder
+AFTER INSERT ON Tagbox
+FOR EACH ROW
+BEGIN
+    UPDATE Tagbox
+    SET position = new.tagbox_id
+    WHERE tagbox_id = new.tagbox_id AND new.position IS NULL;
+END;
+
+-- 插入标签
+insertTagbox:
+INSERT INTO Tagbox(name, color)
+VALUES(:name, :color);
+
+-- 获取全部标签
+queryAllTagbox:
+SELECT * FROM Tagbox;
+deleteAllTagBox:
+DELETE FROM Tagbox;
 
 
 -- Envelope 表
 CREATE TABLE IF NOT EXISTS Envelope (
     envelope_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES User(user_id),
     name TEXT NOT NULL,
     total_budget REAL NOT NULL,
     used_budget REAL DEFAULT 0,
@@ -58,12 +85,8 @@ CREATE TABLE IF NOT EXISTS Envelope (
 
 -- 插入信封
 insertEnvelope:
-INSERT INTO Envelope (user_id, name, total_budget, used_budget, remaining_budget, created_at)
-VALUES (:userId, :name, :total_budget, :used_budget, :remaining_budget, :created_at);
-
--- 获取某用户的所有信封
-queryEnvelopesByUserId:
-SELECT * FROM Envelope WHERE user_id = :userId;
+INSERT INTO Envelope (name, total_budget, used_budget, remaining_budget, created_at)
+VALUES (:name, :total_budget, :used_budget, :remaining_budget, :created_at);
 
 -- 更新信封的预算
 updateEnvelopeBudget:
@@ -92,29 +115,23 @@ DELETE FROM Envelope;
 -- Bill 表
 CREATE TABLE IF NOT EXISTS Bill (
     bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES User(user_id),
     envelope_id INTEGER NOT NULL REFERENCES Envelope(envelope_id),
     amount REAL NOT NULL,
     bill_type TEXT NOT NULL,  -- 支出或收入
     bill_date TEXT DEFAULT (DATETIME('now')), -- 交易日期
     payment_method TEXT,  -- 交易支付方式
     description TEXT,
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (envelope_id) REFERENCES Envelope(envelope_id)
 );
 
 -- 插入账单
 insertBill:
-INSERT INTO Bill (user_id, envelope_id, amount, bill_type, bill_date, payment_method, description)
-VALUES (:userId, :envelopeId, :amount, :billType, :billDate, :paymentMethod, :description);
+INSERT INTO Bill (envelope_id, amount, bill_type, bill_date, payment_method, description)
+VALUES (:envelopeId, :amount, :billType, :billDate, :paymentMethod, :description);
 
 -- 获取某信封下的所有账单
 queryBillsByEnvelopeId:
 SELECT * FROM Bill WHERE envelope_id = :envelopeId;
-
--- 获取某用户的所有账单
-queryBillsByUserId:
-SELECT * FROM Bill WHERE user_id = :userId;
 
 -- 更新账单
 updateBill:
@@ -135,51 +152,4 @@ SELECT * FROM Bill WHERE bill_date BETWEEN :startDate AND :endDate;
 
 -- 获取账单总额
 queryBillTotalAmount:
-SELECT SUM(amount) FROM Bill WHERE user_id = :userId;
-
-
--- Account 表
-CREATE TABLE IF NOT EXISTS Account (
-    account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES User(user_id),
-    account_name TEXT NOT NULL,  -- 账户名称，如现金、银行卡等
-    balance REAL NOT NULL DEFAULT 0,
-    created_at TEXT DEFAULT (DATETIME('now')),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-);
-
--- 获取所有账户
-queryAllAccount:
-SELECT * FROM Account;
-
--- 插入账户
-insertAccount:
-INSERT INTO Account (user_id, account_name, balance, created_at)
-VALUES (:userId, :accountName, :balance, :createdAt);
-
--- 获取某用户的所有账户
-queryAccountsByUserId:
-SELECT * FROM Account WHERE user_id = :userId;
-
--- 更新账户余额
-updateAccountBalance:
-UPDATE Account
-SET balance = :balance
-WHERE account_id = :accountId;
-
--- 删除账户
-deleteAccount:
-DELETE FROM Account WHERE account_id = :accountId;
--- 获取账户余额
-queryAccountBalance:
-SELECT balance FROM Account WHERE account_id = :accountId;
-
--- 更新账户名称
-updateAccountName:
-UPDATE Account
-SET account_name = :accountName
-WHERE account_id = :accountId;
-
--- 删除所有账户
-deleteAllAccounts:
-DELETE FROM Account;
+SELECT SUM(amount) FROM Bill;

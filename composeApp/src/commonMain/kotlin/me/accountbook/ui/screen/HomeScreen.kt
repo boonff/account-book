@@ -1,6 +1,5 @@
 package me.accountbook.ui.screen
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -17,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import me.accountbook.platform.Platform
-import me.accountbook.data.TestData.TagList
 import me.accountbook.database.Account
+import me.accountbook.database.Tagbox
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.platform.getPlatform
 import me.accountbook.sqldelight.DatabaseHelper
@@ -32,11 +31,13 @@ import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
-    val databaseHelper: DatabaseHelper = koinInject()
+    val dbHelper: DatabaseHelper = koinInject()
     var accounts by remember { mutableStateOf<List<Account>>(emptyList()) }
-    LaunchedEffect(Unit){
-        accounts = databaseHelper.queryAllAccount()
-        databaseHelper.close()
+    var tagbox by remember { mutableStateOf<List<Tagbox>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        accounts = dbHelper.queryAllAccount()
+        tagbox = dbHelper.queryAllTagBox()
     }
 
     BasicPage(isLandscape, title = "首页") {
@@ -59,7 +60,7 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                     content = {
                         HorizontalScrollWithBar() {
 
-                            accounts.forEach { (id, user_id, account_name, balance, created_at) ->
+                            accounts.forEach { (id, account_name, balance, created_at) ->
                                 AccountCard(title = account_name, balance = balance)
                             }
                         }
@@ -71,7 +72,7 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                 FunCard(title = "标签",
                     icon = Icons.AutoMirrored.Outlined.Label,
                     content = {
-                        TagFlowRow(TagList)
+                        TagFlowRow(tagbox)
                     },
                     onClick = {
                         navController.navigate(Screen.TagDetails.route) {

@@ -5,8 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import me.accountbook.ui.navigation.Navigator
 import me.accountbook.ui.screen.HomeScreen
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
 @Composable
 fun App() {
     MaterialTheme {
