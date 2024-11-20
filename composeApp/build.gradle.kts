@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.ide.kmp.KotlinAndroidSourceSetMarker.Companion.android
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -68,13 +69,12 @@ kotlin {
                     implementation(libs.koin.compose)
                     implementation(libs.koin.compose.viewmodel)
                     implementation(libs.koin.compose.viewmodel.navigation)
+                    implementation(libs.lifecycle.viewmodel.compose)
 
                 }
             }
             val androidMain by getting {
                 dependencies {
-                    implementation(libs.androidx.lifecycle.viewmodel)
-                    implementation(libs.androidx.lifecycle.runtime.compose)
                     implementation(libs.androidx.activity.compose)
                     implementation(libs.ktor.client.android)
                     implementation(libs.sqldelight.android.driver)

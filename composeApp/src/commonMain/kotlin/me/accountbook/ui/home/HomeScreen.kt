@@ -1,4 +1,4 @@
-package me.accountbook.ui.screen
+package me.accountbook.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -15,17 +15,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import me.accountbook.platform.Platform
 import me.accountbook.database.Account
 import me.accountbook.database.Tagbox
+import me.accountbook.platform.Platform
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.platform.getPlatform
 import me.accountbook.sqldelight.DatabaseHelper
-import me.accountbook.ui.components.AccountCard
-import me.accountbook.ui.components.BasicPage
-import me.accountbook.ui.components.FunCard
-import me.accountbook.ui.components.HorizontalScrollWithBar
-import me.accountbook.ui.components.TagFlowRow
+import me.accountbook.ui.common.components.AccountCard
+import me.accountbook.ui.common.components.BasicPage
+import me.accountbook.ui.common.components.FunCard
+import me.accountbook.ui.common.components.HorizontalScrollWithBar
+import me.accountbook.ui.common.components.TagFlowRow
 import me.accountbook.ui.navigation.Screen
 import org.koin.compose.koinInject
 

@@ -43,28 +43,18 @@ deleteAllAccounts:
 DELETE FROM Account;
 
 -- TagBox 表
+
 CREATE TABLE IF NOT EXISTS Tagbox (
     tagbox_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
     color INTEGER NOT NULL,
-    position INTEGER -- position 字段可以为 NULL，稍后触发器设置其值
+    position INTEGER NOT NULL -- position 字段可以为 NULL，稍后触发器设置其值
 );
-
--- 触发器
-DROP TRIGGER IF EXISTS SetSortOrder;
-CREATE TRIGGER SetSortOrder
-AFTER INSERT ON Tagbox
-FOR EACH ROW
-BEGIN
-    UPDATE Tagbox
-    SET position = new.tagbox_id
-    WHERE tagbox_id = new.tagbox_id AND new.position IS NULL;
-END;
 
 -- 插入标签
 insertTagbox:
-INSERT INTO Tagbox(name, color)
-VALUES(:name, :color);
+INSERT INTO Tagbox(name, color, position)
+VALUES(:name, :color, :position);
 
 -- 获取全部标签
 queryAllTagbox:

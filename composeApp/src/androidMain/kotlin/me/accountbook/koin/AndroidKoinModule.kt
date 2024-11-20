@@ -6,6 +6,8 @@ import app.cash.sqldelight.db.SqlDriver
 import me.accountbook.sqldelight.AndroidDatabaseDriverFactory
 import me.accountbook.sqldelight.DatabaseDriverFactory
 import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.ui.home.viewmodel.TagDetailsViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 

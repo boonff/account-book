@@ -3,6 +3,7 @@ agp = "8.3.1"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
+lifecycleViewmodelCompose = "2.8.2"
 slf4jApi = "2.0.9"
 sqlDelight = "2.0.2"
 androidx-activityCompose = "1.9.1"
@@ -27,6 +28,7 @@ androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", nam
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
+lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 jetbrains = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "jetbrains" }
 coroutines-extensions-jvm = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqlDelight" }

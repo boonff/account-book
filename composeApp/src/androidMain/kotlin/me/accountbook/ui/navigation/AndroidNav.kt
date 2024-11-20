@@ -9,26 +9,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import me.accountbook.sqldelight.DatabaseDriverFactory
-import me.accountbook.sqldelight.DatabaseHelper
-import me.accountbook.ui.screen.HomeScreen
-import me.accountbook.ui.screen.SettingsScreen
-import me.accountbook.ui.screen.TagDetails
-import me.accountbook.ui.screen.TranslationScreen
+import androidx.navigation.compose.rememberNavController
+import me.accountbook.ui.home.HomeScreen
+import me.accountbook.ui.setting.SettingsScreen
+import me.accountbook.ui.home.DetailsTagbox
+import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.utils.DeviceUtils
-import org.koin.compose.koinInject
 
 @Composable
-fun AndroidNav(navController: NavHostController) {
+fun AndroidNav() {
+    val navController = rememberNavController()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
     val screenHeight = configuration.screenHeightDp
@@ -76,13 +73,12 @@ fun AndroidNav(navController: NavHostController) {
                         SettingsScreen()
                     }
                     composable(Screen.TagDetails.route) {
-                        TagDetails(navController)
+                        DetailsTagbox(navController)
                     }
                 }
             }
         }
     } else {
-        // 如果是竖屏或其他条件，直接使用Navigator（如果你有其他导航方式的话）
         Navigator(navController)
     }
 }

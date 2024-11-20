@@ -21,11 +21,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import me.accountbook.ui.screen.HomeScreen
-import me.accountbook.ui.screen.SettingsScreen
-import me.accountbook.ui.screen.TagDetails
-import me.accountbook.ui.screen.TranslationScreen
-import me.accountbook.ui.screen.isDesktop
+import me.accountbook.ui.home.HomeScreen
+import me.accountbook.ui.setting.SettingsScreen
+import me.accountbook.ui.home.DetailsTagbox
+import me.accountbook.ui.translation.TranslationScreen
+import me.accountbook.ui.home.isDesktop
 
 
 sealed class Screen(val route: String) {
@@ -84,7 +84,7 @@ fun Navigator(navHostController: NavHostController) {
                     SettingsScreen()
                 }
                 composable(Screen.TagDetails.route) {
-                    TagDetails(navHostController)
+                    DetailsTagbox(navHostController)
                 }
             }
         }

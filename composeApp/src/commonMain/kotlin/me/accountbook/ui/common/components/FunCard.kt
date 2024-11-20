@@ -1,4 +1,4 @@
-package me.accountbook.ui.components
+package me.accountbook.ui.common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi

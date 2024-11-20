@@ -1,13 +1,13 @@
-package me.accountbook.ui.components
+package me.accountbook.ui.common.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -16,16 +16,23 @@ import me.accountbook.database.Tagbox
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TagFlowRow(tags: List<Tagbox>) {
+fun TagFlowRow(
+    tagbox: List<Tagbox>,
+) {
     FlowRow(
         modifier = Modifier
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        tags.forEach {  it ->
+        tagbox.forEach { it ->
             TagCard(it.name, Color(it.color))
         }
+        TagCard(
+            name = "add",
+            color = MaterialTheme.colorScheme.primary.copy(0.9f),
+            modifier = Modifier
+        )
     }
 }
 

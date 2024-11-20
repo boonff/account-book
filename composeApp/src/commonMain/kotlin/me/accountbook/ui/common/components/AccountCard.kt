@@ -1,4 +1,4 @@
-package me.accountbook.ui.components
+package me.accountbook.ui.common.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import me.accountbook.data.TestData
 
 @Composable
 fun AccountCard(
@@ -35,7 +34,7 @@ fun AccountCard(
                 modifier = Modifier.padding(bottom=4.dp)
             )
 
-            CompactInfoRow(color = TestData.SaveColor, balance = balance)
+            //CompactInfoRow(color = TestData.SaveColor, balance = balance)
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(

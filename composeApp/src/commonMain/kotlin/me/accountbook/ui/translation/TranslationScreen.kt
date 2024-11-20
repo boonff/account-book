@@ -1,4 +1,4 @@
-package me.accountbook.ui.screen
+package me.accountbook.ui.translation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package me.accountbook.ui.chart
+package me.accountbook.ui.common.chart
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
