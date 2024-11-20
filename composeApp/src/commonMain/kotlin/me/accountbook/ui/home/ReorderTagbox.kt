@@ -115,10 +115,10 @@ fun ReorderTagbox(
                             text = text,
                             onClick = {
                                 scope.launch {
-                                    // Add new tag to the database
+
                                     dbHelper.insertTagBox(text.value, 0x932720)
-                                    // Update the tagboxs list directly
                                     tagboxList = dbHelper.queryAllTagBox()
+                                    text.value = ""
                                 }
                             }
                         )
