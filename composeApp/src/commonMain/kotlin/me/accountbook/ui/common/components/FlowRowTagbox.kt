@@ -43,7 +43,7 @@ fun TagCard(name: String, color: Color, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = color) // 使用 CardDefaults 设置背景色
+        colors = CardDefaults.cardColors(containerColor = Color(0x12345678)) // 使用 CardDefaults 设置背景色
     ) {
         Text(
             text = name,

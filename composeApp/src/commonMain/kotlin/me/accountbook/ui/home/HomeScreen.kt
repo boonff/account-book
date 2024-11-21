@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import me.accountbook.database.Account
 import me.accountbook.database.Tagbox
@@ -26,19 +27,19 @@ import me.accountbook.ui.common.components.BasicPage
 import me.accountbook.ui.common.components.FunCard
 import me.accountbook.ui.common.components.HorizontalScrollWithBar
 import me.accountbook.ui.common.components.TagFlowRow
+import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
 import me.accountbook.ui.navigation.Screen
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
-    val dbHelper: DatabaseHelper = koinInject()
-    var accounts by remember { mutableStateOf<List<Account>>(emptyList()) }
-    var tagbox by remember { mutableStateOf<List<Tagbox>>(emptyList()) }
-
-    LaunchedEffect(Unit) {
-        accounts = dbHelper.queryAllAccount()
-        tagbox = dbHelper.queryAllTagBox()
+    val viewModel: HomeScreenViewModel = koinViewModel()
+    LaunchedEffect(Unit){
+        viewModel.loadAccount()
+        viewModel.loadSortedTagbox()
     }
+
 
     BasicPage(isLandscape, title = "首页") {
 
@@ -47,7 +48,8 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
             columns = StaggeredGridCells.Fixed(getHomeLazyVerticalStaggeredGridColumns()),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(8.dp)
+                .imePadding(),
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalItemSpacing = 8.dp
@@ -59,8 +61,7 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                     icon = Icons.Outlined.AccountBalanceWallet,
                     content = {
                         HorizontalScrollWithBar() {
-
-                            accounts.forEach { (id, account_name, balance, created_at) ->
+                            viewModel.accounts.forEach { (id, account_name, balance, created_at) ->
                                 AccountCard(title = account_name, balance = balance)
                             }
                         }
@@ -72,7 +73,7 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                 FunCard(title = "标签",
                     icon = Icons.AutoMirrored.Outlined.Label,
                     content = {
-                        TagFlowRow(tagbox)
+                        TagFlowRow(viewModel.tagbox)
                     },
                     onClick = {
                         navController.navigate(Screen.TagDetails.route) {

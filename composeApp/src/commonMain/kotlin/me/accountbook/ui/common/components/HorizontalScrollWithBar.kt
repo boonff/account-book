@@ -34,11 +34,17 @@ fun HorizontalScrollWithBar(
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     var scrollBarOffset by remember { mutableStateOf(0f) }
-    var isDragging by remember { mutableStateOf(false) } // 是否正在拖动滚动条
+    LaunchedEffect(scrollState.value) {
+        scrollBarOffset =
+            (scrollState.value.toFloat() / scrollState.maxValue) * maxScrollBarOffset
+        scrollBarOffset = scrollBarOffset.coerceIn(0f, maxScrollBarOffset) // 确保在可见范围内
 
+    }
     Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+        modifier = Modifier
+            .fillMaxWidth()
+    )
+    {
         // 主体可滚动内容
         Box(
             modifier = Modifier
@@ -46,7 +52,8 @@ fun HorizontalScrollWithBar(
                     viewportWidth = it.width //获取视图宽度
                 }
                 .onSizeChanged {
-                    scrollBarOffset = (scrollBarOffset - 1).coerceIn(0F, maxScrollBarOffset) //防止缩小窗口时滚动条消失
+                    scrollBarOffset =
+                        (scrollBarOffset - 1).coerceIn(0F, maxScrollBarOffset) //防止缩小窗口时滚动条消失
                 }
                 .horizontalScroll(scrollState) // 添加横向滚动
         ) {
@@ -65,13 +72,7 @@ fun HorizontalScrollWithBar(
             val scrollBarWidth = (viewportWidth.toFloat() / contentWidth) * viewportWidth
             maxScrollBarOffset = viewportWidth - scrollBarWidth
             // 同步滚动条位置
-            if (!isDragging)
-                LaunchedEffect(scrollState.value) {
-                    scrollBarOffset =
-                        (scrollState.value.toFloat() / scrollState.maxValue) * maxScrollBarOffset
-                    scrollBarOffset = scrollBarOffset.coerceIn(0f, maxScrollBarOffset) // 确保在可见范围内
 
-                }
             //滚动条
             Box(
                 modifier = Modifier
@@ -81,10 +82,7 @@ fun HorizontalScrollWithBar(
                     .offset(x = pxToDp(scrollBarOffset))
                     .background(Color.Gray, RoundedCornerShape(16.dp)) // 直接对背景应用圆角
                     .pointerInput(Unit) {
-                        detectHorizontalDragGestures(
-                            onDragStart = { isDragging = true }, // 开始拖动
-                            onDragEnd = { isDragging = false } // 结束拖动
-                        ) { change, dragAmount ->
+                        detectHorizontalDragGestures { change, dragAmount ->
                             change.consume()
                             // 根据拖拽的距离更新 scrollState
                             coroutineScope.launch {

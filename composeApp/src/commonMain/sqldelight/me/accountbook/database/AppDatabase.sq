@@ -61,6 +61,10 @@ queryAllTagbox:
 SELECT * FROM Tagbox;
 deleteAllTagBox:
 DELETE FROM Tagbox;
+updateTagboxPosition:
+UPDATE Tagbox
+SET position = :position
+WHERE tagbox_id = :tagboxID;
 
 
 -- Envelope 表

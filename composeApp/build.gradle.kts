@@ -127,9 +127,7 @@ android {
         compose = true
     }
 }
-dependencies {
-    debugImplementation(libs.androidx.ui.tooling)
-}
+
 
 compose.desktop {
     application {
