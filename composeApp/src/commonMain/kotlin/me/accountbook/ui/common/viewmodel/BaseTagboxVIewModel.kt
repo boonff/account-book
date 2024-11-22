@@ -5,39 +5,47 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import me.accountbook.database.Database
+import kotlinx.coroutines.withContext
 import me.accountbook.database.Tagbox
 import me.accountbook.sqldelight.DatabaseHelper
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 abstract class BaseTagboxVIewModel(
     protected val dbHelper: DatabaseHelper
 ) : ViewModel() {
-    var tagbox by mutableStateOf<List<Tagbox>>(emptyList())
+    var tagboxs by mutableStateOf<List<Tagbox>>(emptyList())
         protected set
 
     suspend fun loadTagbox() {
-        tagbox = dbHelper.queryAllTagBox()
+        tagboxs = dbHelper.queryAllTagBox()
 
     }
+
     suspend fun loadSortedTagbox() {
-        tagbox = dbHelper.queryAllTagBox()
-        tagbox = tagbox.toMutableList().apply {
+        tagboxs = dbHelper.queryAllTagBox()
+        tagboxs = tagboxs.toMutableList().apply {
             sortBy {
                 it.position
             }
 
         }
-
     }
 
     suspend fun insertTagbox(name: String, color: Color) {
         if (name.length in 1..9)
-            dbHelper.insertTagBox(name, color.value.toLong())
+            dbHelper.insertTagBox(name, color)
 
+    }
+
+    suspend fun updateTagboxName(name: String, tagboxId:Int) {
+        dbHelper.updateTagboxName(name, tagboxId)
+    }
+
+    suspend fun updateTagboxColor(color: Color, tagboxId:Int) {
+        dbHelper.updateTagboxColor(color, tagboxId)
+    }
+
+    suspend fun deleteTagboxById(tagboxId: Int){
+        dbHelper.deleteTagBoxById(tagboxId)
     }
 }

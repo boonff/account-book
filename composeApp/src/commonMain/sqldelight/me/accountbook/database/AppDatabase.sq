@@ -47,7 +47,7 @@ DELETE FROM Account;
 CREATE TABLE IF NOT EXISTS Tagbox (
     tagbox_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
-    color INTEGER NOT NULL,
+    color TEXT NOT NULL,
     position INTEGER NOT NULL -- position 字段可以为 NULL，稍后触发器设置其值
 );
 
@@ -56,15 +56,30 @@ insertTagbox:
 INSERT INTO Tagbox(name, color, position)
 VALUES(:name, :color, :position);
 
--- 获取全部标签
 queryAllTagbox:
 SELECT * FROM Tagbox;
-deleteAllTagBox:
-DELETE FROM Tagbox;
+
 updateTagboxPosition:
 UPDATE Tagbox
 SET position = :position
 WHERE tagbox_id = :tagboxID;
+
+updateTagboxName:
+UPDATE Tagbox
+SET name = :name
+WHERE tagbox_id = :tagboxID;
+
+updateTagboxColor:
+UPDATE Tagbox
+SET color = :color
+WHERE tagbox_id = :tagboxID;
+
+deleteTagBoxByID:
+DELETE FROM Tagbox WHERE tagbox_id = :tagboxID;
+
+
+deleteAllTagBox:
+DELETE FROM Tagbox;
 
 
 -- Envelope 表

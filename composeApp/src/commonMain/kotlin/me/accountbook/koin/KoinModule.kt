@@ -1,6 +1,7 @@
 package me.accountbook.koin
 
 import me.accountbook.ui.common.viewmodel.BaseTagboxVIewModel
+import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
 import me.accountbook.ui.home.viewmodel.FormBarViewModel
 import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
 import me.accountbook.ui.home.viewmodel.ReorderTagboxViewModel
@@ -13,4 +14,5 @@ val commonModule = module {
     viewModel { ReorderTagboxViewModel(get()) }
     viewModel { HomeScreenViewModel(get()) }
     viewModel { FormBarViewModel() }
+    viewModel { EditTagboxViewModel(get()) }
 }
