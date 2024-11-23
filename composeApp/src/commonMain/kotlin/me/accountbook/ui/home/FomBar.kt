@@ -63,7 +63,7 @@ fun FormBar(
             //添加tagbox的按钮
             Button(
                 onClick = {
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         val random = Random.nextInt(0, colors.size)
                         viewModel.insertTagbox(viewModel.text, colors[random])
                         viewModel.loadSortedTagbox() //添加tagbox后触发tagboxs的更新，

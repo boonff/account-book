@@ -93,7 +93,6 @@ kotlin {
         }
     }
 }
-
 android {
     namespace = "me.accountbook"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -109,24 +108,33 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+
+    signingConfigs {
+        create("release") {
+            keyAlias = "my-key-alias"
+            keyPassword = "qxxpdada" // 密钥密码
+            storeFile = file("C:/Users/qxxpd/source/android/my-release-key.jks") // 密钥文件路径
+            storePassword = "qxxpdada" // 密钥库密码
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release") // 正确引用 signingConfigs
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
     }
 }
+
 
 
 compose.desktop {

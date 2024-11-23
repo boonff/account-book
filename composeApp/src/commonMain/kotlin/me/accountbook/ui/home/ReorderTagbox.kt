@@ -57,8 +57,7 @@ fun ReorderTagbox() {
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
         viewModel.moveTagbox(from.index, to.index)
     }
-    // 获取当前的输入法控制器
-    val keyboardController = LocalSoftwareKeyboardController.current
+
     LaunchedEffect(Unit)
     {
         viewModel.loadSortedTagbox()
@@ -132,8 +131,7 @@ fun ReorderTagbox() {
             }
             FormBar {
                 scope.launch {
-                    val lastIndex = viewModel.tagboxs.size - 1
-                    lazyGridState.scrollToItem(lastIndex)
+                    lazyGridState.scrollToItem(viewModel.tagboxs.size)
                 }
             }
         }
