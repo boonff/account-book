@@ -27,7 +27,6 @@ import me.accountbook.ui.home.DetailsTagbox
 import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.ui.home.isDesktop
 
-
 sealed class Screen(val route: String) {
     data object HomeScreen : Screen("home")
     data object TranslationScreen : Screen("transaction")
@@ -37,23 +36,21 @@ sealed class Screen(val route: String) {
 
 @Composable
 fun Navigator(navHostController: NavHostController) {
+    val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
+
     Row(modifier = Modifier.fillMaxSize()) {
-        // 导航栏
         NavigationRail(
             modifier = Modifier
                 .width(64.dp),
             containerColor = MaterialTheme.colorScheme.background,
         ) {
             navItems.forEach { navItem ->
-                // 使用 currentBackStackEntryAsState 获取当前选中的导航项
-                val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
                 val selected = currentBackStackEntry?.destination?.route == navItem.screen.route
+
                 NavigationRailItem(
                     selected = selected,
                     onClick = {
-                        // 使用 NavController 导航
                         navHostController.navigate(navItem.screen.route) {
-                            // 防止重复添加相同的屏幕
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -69,8 +66,6 @@ fun Navigator(navHostController: NavHostController) {
                 )
             }
         }
-
-        // 在导航栏旁边放置内容区域
         Box(modifier = Modifier.fillMaxSize()) {
             // 使用 NavHost 来显示屏幕
             NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
@@ -98,7 +93,6 @@ data class NavItem(
     val iconContentDescription: String,
     val label: @Composable () -> Unit
 )
-
 
 
 // 定义导航项列表

@@ -1,6 +1,7 @@
 package me.accountbook.sqldelight
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +23,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
         try {
             withContext(Dispatchers.IO) {
                 database.transaction {
-                    queries.insertTagbox(name, color.value.toString(), 0)
+                    queries.insertTagbox(name, color.toArgb().toUInt().toLong(), 0)
                 }
             }
         } catch (e: Exception) {
@@ -55,7 +56,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     suspend fun updateTagboxColor(color: Color, tagboxID: Int) {
         try {
             withContext(Dispatchers.IO) {
-                queries.updateTagboxColor(color.value.toString(), tagboxID.toLong())
+                queries.updateTagboxColor(color.toArgb().toUInt().toLong(), tagboxID.toLong())
             }
         } catch (e: Exception) {
             println("Error updateTagboxColor${e.message}")

@@ -2,6 +2,7 @@ package me.accountbook.ui.common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,11 +28,10 @@ fun FunCard(
     onClick: () -> Unit = {}, // 点击事件的回调
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
-        shape = RoundedCornerShape(8.dp), // 设置圆角
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant)//外边框
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
     ) {
         Column(
             modifier = Modifier

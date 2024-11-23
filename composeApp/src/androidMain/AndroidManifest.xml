@@ -12,7 +12,8 @@
         <activity
             android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,5 +29,6 @@
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>

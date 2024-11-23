@@ -20,7 +20,7 @@ class EditTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelp
     fun initByTagbox(tagbox: Tagbox) {
         tagboxId = tagbox.tagbox_id.toInt()
         name = tagbox.name
-        color = Color(tagbox.color.toULong())
+        color = Color(tagbox.color)
     }
 
 }

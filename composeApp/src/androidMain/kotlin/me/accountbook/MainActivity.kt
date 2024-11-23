@@ -9,15 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import me.accountbook.database.Database
 import me.accountbook.koin.androidModule
 import me.accountbook.koin.commonModule
 import me.accountbook.sqldelight.DatabaseHelper
 import me.accountbook.ui.navigation.AndroidNav
 import me.accountbook.ui.theme.AndroidTheme
 import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 

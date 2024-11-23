@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
+import me.accountbook.ui.home.ColorPalette.colors
 import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
 import me.accountbook.ui.home.viewmodel.ReorderTagboxViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -68,33 +69,49 @@ fun EditTagbox() {
                         }
                     }
 
-                    colorBar() { newColor ->
+                    colorBar { newColor ->
                         viewModel.color = newColor
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row {
-                        Button(onClick = {
-                            scope.launch {
-                                viewModel.updateTagboxName(viewModel.name, viewModel.tagboxId)
-                                viewModel.updateTagboxColor(viewModel.color, viewModel.tagboxId)
-                                reorderTagboxViewModel.loadSortedTagbox()
-                            }
-                            viewModel.togglePopupVisible()
-                        }
+                        Button(
+                            onClick = {
+                                viewModel.togglePopupVisible()
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                contentColor = MaterialTheme.colorScheme.onTertiary,
+                            )
                         ) {
-                            Text("确定")
+                            Text("取消")
                         }
-                        Box(modifier = Modifier.fillMaxWidth()) {
+                        Box(modifier = Modifier.fillMaxWidth()){
                             Button(
+                                onClick = {
+                                    scope.launch {
+                                        viewModel.updateTagboxName(
+                                            viewModel.name,
+                                            viewModel.tagboxId
+                                        )
+                                        viewModel.updateTagboxColor(
+                                            viewModel.color,
+                                            viewModel.tagboxId
+                                        )
+                                        reorderTagboxViewModel.loadSortedTagbox()
+                                    }
+                                    viewModel.togglePopupVisible()
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                ),
                                 modifier = Modifier
                                     .align(Alignment.CenterEnd),
-                                onClick = {
-                                    viewModel.togglePopupVisible()
-                                }
                             ) {
-                                Text("取消")
+                                Text("确定")
                             }
                         }
+
                     }
 
                 }
@@ -103,12 +120,7 @@ fun EditTagbox() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun colorBar(
-    modifier: Modifier = Modifier,
-    onClick: (color: Color) -> Unit
-) {
+object ColorPalette {
     val colors = listOf(
         Color(0xFFFF0000), // 红色
         Color(0xFFFF7F00), // 橙色
@@ -119,6 +131,14 @@ fun colorBar(
         Color(0xFFEE82EE), // 紫色
         Color(0xFFFF1493)  // 深粉色
     )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun colorBar(
+    modifier: Modifier = Modifier,
+    onClick: (color: Color) -> Unit
+) {
 
     FlowRow(
         modifier = modifier,

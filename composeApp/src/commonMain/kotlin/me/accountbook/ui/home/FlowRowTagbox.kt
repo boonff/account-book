@@ -35,32 +35,28 @@ fun FlowRowTagbox(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         tagbox.forEach { it ->
-            TagboxCard(it.name, Color(it.color.toULong()))
+            TagboxCard(it.name, Color(it.color))
         }
-        TagboxCard(
-            name = "add",
-            color = MaterialTheme.colorScheme.primary.copy(0.9f),
-            modifier = Modifier
-        )
     }
 }
 
 @Composable
 fun TagboxCard(name: String, color: Color, modifier: Modifier = Modifier) {
-    // 计算背景颜色的亮度，决定文字颜色
-    val textColor = if (color.luminance() > 0) Color.Black else Color.White
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = color) // 使用 CardDefaults 设置背景色
-    ) {
-        Text(
-            text = name,
-            color = textColor,
-            modifier = Modifier
-                .padding(8.dp)
-        )
+    Box(modifier = modifier){
+        Card(
+            modifier = Modifier,
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(containerColor = color) // 使用 CardDefaults 设置背景色
+        ) {
+            Text(
+                text = name,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(8.dp)
+            )
+        }
     }
+
 }
 
 @Composable

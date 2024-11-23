@@ -47,7 +47,7 @@ DELETE FROM Account;
 CREATE TABLE IF NOT EXISTS Tagbox (
     tagbox_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
-    color TEXT NOT NULL,
+    color INTEGER NOT NULL,
     position INTEGER NOT NULL -- position 字段可以为 NULL，稍后触发器设置其值
 );
 

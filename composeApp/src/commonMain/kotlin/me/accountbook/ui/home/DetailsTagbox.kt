@@ -14,8 +14,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailsTagbox(navHostController: NavHostController) {
     val viewModel: TagDetailsViewModel = koinViewModel()
-
-
     DetailsPage("标签管理", navHostController) {
         ReorderTagbox()
     }
