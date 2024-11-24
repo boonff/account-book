@@ -60,6 +60,8 @@ kotlin {
                     implementation(libs.ktor.client.core)
                     implementation(libs.ktor.client.content.negotiation)
                     implementation(libs.ktor.serialization.kotlinx.json)
+                    implementation(libs.ktor.server.netty)
+                    implementation(libs.ktor.server.core)
                     implementation(libs.runtime)
                     implementation(libs.kotlinx.datetime)
                     implementation(libs.slf4j.api)
@@ -70,7 +72,7 @@ kotlin {
                     implementation(libs.koin.compose.viewmodel)
                     implementation(libs.koin.compose.viewmodel.navigation)
                     implementation(libs.lifecycle.viewmodel.compose)
-
+                    implementation(libs.kotlinx.serialization.json)
                 }
             }
             val androidMain by getting {

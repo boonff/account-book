@@ -1,13 +1,10 @@
-package me.accountbook.sqldelight
+package me.accountbook.database
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.accountbook.database.Account
-import me.accountbook.database.Database
-import me.accountbook.database.Tagbox
 
 class DatabaseHelper(private val driver: SqlDriver) {
     private val triggerHelper = TriggerHelper(driver)

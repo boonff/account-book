@@ -1,9 +1,8 @@
-package me.accountbook.sqldelight
+package me.accountbook.database
 
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import me.accountbook.database.Database
 
 // JvmDatabaseDriverFactory.kt
 class JvmDatabaseDriverFactory() : DatabaseDriverFactory {

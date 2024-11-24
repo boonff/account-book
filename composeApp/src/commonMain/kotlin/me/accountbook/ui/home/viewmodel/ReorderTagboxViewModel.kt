@@ -1,10 +1,9 @@
 package me.accountbook.ui.home.viewmodel
 
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.database.DatabaseHelper
 import me.accountbook.ui.common.viewmodel.BaseTagboxVIewModel
 
 class ReorderTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelper) {

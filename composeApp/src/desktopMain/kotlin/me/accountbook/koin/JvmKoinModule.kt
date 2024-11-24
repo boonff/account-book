@@ -1,9 +1,9 @@
 package me.accountbook.koin
 
 import app.cash.sqldelight.db.SqlDriver
-import me.accountbook.sqldelight.JvmDatabaseDriverFactory
-import me.accountbook.sqldelight.DatabaseDriverFactory
-import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.database.JvmDatabaseDriverFactory
+import me.accountbook.database.DatabaseDriverFactory
+import me.accountbook.database.DatabaseHelper
 import org.koin.dsl.module
 
 val jvmModule = module {

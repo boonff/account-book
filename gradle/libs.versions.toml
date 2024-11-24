@@ -3,6 +3,8 @@ agp = "8.3.1"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
+kotlinxSerializationJson = "1.7.3"
+ktorServerNetty = "2.2.4"
 lifecycleViewmodelCompose = "2.8.2"
 slf4jApi = "2.0.9"
 sqlDelight = "2.0.2"
@@ -29,6 +31,9 @@ androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", nam
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 jetbrains = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "jetbrains" }
@@ -46,15 +51,14 @@ ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
-koin-compose = {module = "io.insert-koin:koin-compose"}
+koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
-koin-androidx-compose-navigation = {module = "io.insert-koin:koin-androidx-compose"}
-koin-core = { module = "io.insert-koin:koin-core"}
-koin-compose-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel"}
-koin-compose-viewmodel-navigation = {module = "io.insert-koin:koin-compose-viewmodel-navigation"}
+koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

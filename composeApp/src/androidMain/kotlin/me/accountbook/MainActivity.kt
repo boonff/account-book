@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import me.accountbook.koin.androidModule
 import me.accountbook.koin.commonModule
-import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.database.DatabaseHelper
 import me.accountbook.ui.navigation.AndroidNav
 import me.accountbook.ui.theme.AndroidTheme
 import org.koin.android.ext.android.get

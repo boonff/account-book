@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import me.accountbook.database.Tagbox
-import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.database.DatabaseHelper
 
 abstract class BaseTagboxVIewModel(
     protected val dbHelper: DatabaseHelper

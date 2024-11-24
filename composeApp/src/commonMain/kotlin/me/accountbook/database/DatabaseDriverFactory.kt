@@ -1,4 +1,4 @@
-package me.accountbook.sqldelight
+package me.accountbook.database
 
 import app.cash.sqldelight.db.SqlDriver
 

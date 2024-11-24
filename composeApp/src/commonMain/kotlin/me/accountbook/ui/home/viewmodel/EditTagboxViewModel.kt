@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import me.accountbook.database.Tagbox
-import me.accountbook.sqldelight.DatabaseHelper
+import me.accountbook.database.DatabaseHelper
 import me.accountbook.ui.common.viewmodel.BaseTagboxVIewModel
 
 class EditTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelper) {
