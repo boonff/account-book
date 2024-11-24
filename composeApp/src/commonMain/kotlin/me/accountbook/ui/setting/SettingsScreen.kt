@@ -1,24 +1,18 @@
 package me.accountbook.ui.setting
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.vector.ImageVector
 
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import me.accountbook.ui.common.components.BasicPage
 import me.accountbook.ui.navigation.Screen
@@ -27,7 +21,7 @@ import me.accountbook.ui.navigation.Screen
 fun SettingsScreen(navHostController: NavHostController) {
     BasicPage(title = "设置") {
         Column {
-            optionsCard(
+            OptionsCard(
                 name = "同步",
                 Icons.Outlined.Sync,
                 Screen.SyncDetails.route,
@@ -38,7 +32,7 @@ fun SettingsScreen(navHostController: NavHostController) {
 }
 
 @Composable
-fun optionsCard(
+fun OptionsCard(
     name: String,
     icon: ImageVector,
     route: String,

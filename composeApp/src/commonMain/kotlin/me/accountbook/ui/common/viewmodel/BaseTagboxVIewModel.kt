@@ -12,9 +12,9 @@ abstract class BaseTagboxVIewModel(
     protected val dbHelper: DatabaseHelper
 ) : ViewModel() {
     var errorMessage by mutableStateOf("")
-    protected set
+        protected set
     var tagboxs by mutableStateOf<List<Tagbox>>(emptyList())
-    protected set
+        protected set
 
     suspend fun loadTagbox() {
         tagboxs = dbHelper.queryAllTagBox()

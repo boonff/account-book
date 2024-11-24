@@ -16,6 +16,7 @@ repositories {
     maven {
         url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
         url = uri("https://mvnrepository.com/artifact/io.insert-koin/koin-compose-viewmodel")
+        url = uri("https://mvnrepository.com/artifact/com.microsoft.identity.client/msal")
     }
 }
 
@@ -68,6 +69,13 @@ kotlin {
                     implementation(libs.koin.compose.viewmodel.navigation)
                     implementation(libs.lifecycle.viewmodel.compose)
                     implementation(libs.kotlinx.serialization.json)
+                    implementation(libs.okhttp)
+                    implementation(libs.okhttp.logging.interceptor)
+                    implementation(libs.ktor.client.core)
+                    implementation(libs.ktor.client.content.negotiation)
+                    implementation(libs.ktor.serialization.kotlinx.json)
+                    implementation(libs.ktor.server.netty)
+                    implementation(libs.ktor.server.core)
                 }
             }
             val androidMain by getting {
@@ -76,6 +84,7 @@ kotlin {
                     implementation(libs.sqldelight.android.driver)
                     implementation(libs.koin.androidx.compose)
                     implementation(libs.koin.androidx.compose.navigation)
+                    implementation(libs.ktor.client.android)
                 }
             }
             val desktopMain by getting {
@@ -83,6 +92,8 @@ kotlin {
                     implementation(compose.desktop.currentOs)
                     implementation(libs.kotlinx.coroutines.swing)
                     implementation(libs.sqldelight.driver)
+                    implementation(project.dependencies.platform(libs.okhttp.bom))
+                    implementation(libs.ktor.client.java)
                 }
             }
         }
