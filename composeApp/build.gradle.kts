@@ -44,41 +44,38 @@ kotlin {
         sourceSets {
             val commonMain by getting {
                 dependencies {
-                    implementation(compose.preview)
                     implementation(compose.runtime)
                     implementation(compose.foundation)
                     implementation(compose.ui)
-                    implementation(compose.material3)
                     implementation(compose.materialIconsExtended)
+                    implementation(compose.material3)
                     implementation(compose.components.resources)
-
+                    implementation(compose.components.uiToolingPreview)
+                    implementation(compose.preview)
                     implementation(libs.firebase.database.ktx)
                     implementation(libs.androidx.window)
-                    implementation(libs.androidx.navigation.compose)
-                    implementation(libs.lifecycle.viewmodel.compose)
                     implementation(libs.jetbrains)
                     implementation(libs.reorderable)
-
-                    implementation(libs.slf4j.api)
-                    implementation(libs.slf4j.simple)
-
+                    implementation(libs.androidx.navigation.compose)
                     implementation(libs.kotlinx.coroutines.core)
+                    implementation(libs.runtime)
                     implementation(libs.kotlinx.datetime)
                     implementation(libs.slf4j.api)
-                    implementation(libs.kotlinx.serialization.json)
-
-                    // Ktor: 只放通用部分
-                    implementation(libs.ktor.server.netty)
-
-                    // Koin: 简化依赖
+                    implementation(libs.slf4j.simple)
                     implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
                     implementation(libs.koin.compose)
                     implementation(libs.koin.compose.viewmodel)
-
-                    implementation(project.dependencies.platform(libs.okhttp.bom))
+                    implementation(libs.koin.compose.viewmodel.navigation)
+                    implementation(libs.lifecycle.viewmodel.compose)
+                    implementation(libs.kotlinx.serialization.json)
                     implementation(libs.okhttp)
                     implementation(libs.okhttp.logging.interceptor)
+                    implementation(libs.ktor.client.core)
+                    implementation(libs.ktor.client.content.negotiation)
+                    implementation(libs.ktor.serialization.kotlinx.json)
+                    implementation(libs.ktor.server.netty)
+                    implementation(libs.ktor.server.core)
                 }
             }
             val androidMain by getting {
@@ -86,6 +83,8 @@ kotlin {
                     implementation(libs.androidx.activity.compose)
                     implementation(libs.sqldelight.android.driver)
                     implementation(libs.koin.androidx.compose)
+                    implementation(libs.koin.androidx.compose.navigation)
+                    implementation(libs.ktor.client.android)
                 }
             }
             val desktopMain by getting {
@@ -93,6 +92,8 @@ kotlin {
                     implementation(compose.desktop.currentOs)
                     implementation(libs.kotlinx.coroutines.swing)
                     implementation(libs.sqldelight.driver)
+                    implementation(project.dependencies.platform(libs.okhttp.bom))
+                    implementation(libs.ktor.client.java)
                 }
             }
         }
