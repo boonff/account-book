@@ -57,11 +57,6 @@ kotlin {
                     implementation(libs.reorderable)
                     implementation(libs.androidx.navigation.compose)
                     implementation(libs.kotlinx.coroutines.core)
-                    implementation(libs.ktor.client.core)
-                    implementation(libs.ktor.client.content.negotiation)
-                    implementation(libs.ktor.serialization.kotlinx.json)
-                    implementation(libs.ktor.server.netty)
-                    implementation(libs.ktor.server.core)
                     implementation(libs.runtime)
                     implementation(libs.kotlinx.datetime)
                     implementation(libs.slf4j.api)
@@ -78,7 +73,6 @@ kotlin {
             val androidMain by getting {
                 dependencies {
                     implementation(libs.androidx.activity.compose)
-                    implementation(libs.ktor.client.android)
                     implementation(libs.sqldelight.android.driver)
                     implementation(libs.koin.androidx.compose)
                     implementation(libs.koin.androidx.compose.navigation)
@@ -88,7 +82,6 @@ kotlin {
                 dependencies {
                     implementation(compose.desktop.currentOs)
                     implementation(libs.kotlinx.coroutines.swing)
-                    implementation(libs.ktor.client.java)
                     implementation(libs.sqldelight.driver)
                 }
             }
