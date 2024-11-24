@@ -26,13 +26,7 @@ import me.accountbook.ui.setting.SettingsScreen
 import me.accountbook.ui.home.DetailsTagbox
 import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.ui.home.isDesktop
-
-sealed class Screen(val route: String) {
-    data object HomeScreen : Screen("home")
-    data object TranslationScreen : Screen("transaction")
-    data object SettingScreen : Screen("settings")
-    data object TagDetails : Screen("tagDetails")
-}
+import me.accountbook.ui.setting.sync.SyncDetails
 
 @Composable
 fun Navigator(navHostController: NavHostController) {
@@ -66,24 +60,40 @@ fun Navigator(navHostController: NavHostController) {
                 )
             }
         }
-        Box(modifier = Modifier.fillMaxSize()) {
-            // 使用 NavHost 来显示屏幕
-            NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
-                composable(Screen.HomeScreen.route) {
-                    HomeScreen(isDesktop(), navHostController)
-                }
-                composable(Screen.TranslationScreen.route) {
-                    TranslationScreen(isDesktop())
-                }
-                composable(Screen.SettingScreen.route) {
-                    SettingsScreen()
-                }
-                composable(Screen.TagDetails.route) {
-                    DetailsTagbox(navHostController)
-                }
+        MyNavController(navHostController, Screen.HomeScreen.route)
+    }
+}
+
+@Composable
+fun MyNavController(navHostController: NavHostController, startDestination: String, modifier: Modifier = Modifier) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        // 使用 NavHost 来显示屏幕
+        NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
+            composable(Screen.HomeScreen.route) {
+                HomeScreen(isDesktop(), navHostController)
+            }
+            composable(Screen.TranslationScreen.route) {
+                TranslationScreen(isDesktop())
+            }
+            composable(Screen.SettingScreen.route) {
+                SettingsScreen(isDesktop(), navHostController)
+            }
+            composable(Screen.TagDetails.route) {
+                DetailsTagbox(navHostController)
+            }
+            composable(Screen.SyncDetails.route) {
+                SyncDetails(navHostController)
             }
         }
     }
+}
+
+sealed class Screen(val route: String) {
+    data object HomeScreen : Screen("home")
+    data object TranslationScreen : Screen("transaction")
+    data object SettingScreen : Screen("settings")
+    data object TagDetails : Screen("tagDetails")
+    data object SyncDetails : Screen("syncDetails")
 }
 
 // 定义每个导航项

@@ -68,7 +68,6 @@ fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
                     },
                     onClick = {
                         navController.navigate(Screen.TagDetails.route) {
-                            // 防止重复添加相同的屏幕
                             launchSingleTop = true
                             restoreState = true
                         }
