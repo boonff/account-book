@@ -1,17 +1,29 @@
 package me.accountbook.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
+
 object DeviceUtils {
-    fun isTablet(screenWidth: Int, screenHeight: Int): Boolean {
+    @Composable
+    fun isTablet(): Boolean {
+        val configuration = LocalConfiguration.current
+        val screenWidth = configuration.screenWidthDp
+        val screenHeight = configuration.screenHeightDp
         // 判断是否为平板设备
         return minOf(screenWidth, screenHeight) >= 1280
     }
 
-    fun isPortrait(screenWidth: Int, screenHeight: Int): Boolean {
+    @Composable
+    fun isPortrait(): Boolean {
+        val configuration = LocalConfiguration.current
+        val screenWidth = configuration.screenWidthDp
+        val screenHeight = configuration.screenHeightDp
         // 判断设备是否为竖屏，宽高比大于 4/3 视为竖屏
         return screenHeight / screenWidth.toFloat() > 4 / 3
     }
     
-    fun isLandscape(screenWidth: Int, screenHeight: Int): Boolean {
-        return isTablet(screenWidth, screenHeight) || isPortrait(screenWidth, screenHeight)
+    @Composable
+    fun isLandscape(): Boolean {
+        return isTablet() || isPortrait()
     }
 }

@@ -36,37 +36,24 @@ import me.accountbook.ui.setting.sync.SyncDetails
 import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.utils.DeviceUtils
 
-@OptIn(ExperimentalAnimationApi::class)
-@SuppressLint("UnrememberedMutableState", "UnusedContentLambdaTargetStateParameter")
+
 @Composable
 fun AndroidNav() {
     val navHostController = rememberNavController()
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
-    val screenHeight = configuration.screenHeightDp
-    val isLandscape = DeviceUtils.isTablet(screenWidth, screenHeight) || DeviceUtils.isPortrait(
-        screenWidth,
-        screenHeight
-    )
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
     var bottomBarVisible by remember {
         mutableStateOf(true)
     }
     LaunchedEffect(currentBackStackEntry) {
-        if (currentBackStackEntry?.destination?.route !in listOf(
-                Screen.HomeScreen.route,
-                Screen.TranslationScreen.route,
-                Screen.SettingScreen.route
-            )
-        ) {
-            bottomBarVisible = false
-        } else {
-            bottomBarVisible = true
-        }
+        bottomBarVisible = currentBackStackEntry?.destination?.route in listOf(
+            Screen.HomeScreen.route,
+            Screen.TranslationScreen.route,
+            Screen.SettingScreen.route
+        )
     }
 
-    if (isLandscape) {
+    if (DeviceUtils.isLandscape()) {
         Scaffold(
             bottomBar = {
                 if (bottomBarVisible)

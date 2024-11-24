@@ -24,8 +24,8 @@ import me.accountbook.ui.common.components.BasicPage
 import me.accountbook.ui.navigation.Screen
 
 @Composable
-fun SettingsScreen(isLandscape: Boolean, navHostController: NavHostController) {
-    BasicPage(isLandscape = isLandscape, title = "设置") {
+fun SettingsScreen(navHostController: NavHostController) {
+    BasicPage(title = "设置") {
         Column {
             optionsCard(
                 name = "同步",

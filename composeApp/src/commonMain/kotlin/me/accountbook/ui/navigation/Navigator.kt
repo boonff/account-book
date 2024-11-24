@@ -70,13 +70,13 @@ fun MyNavController(navHostController: NavHostController, startDestination: Stri
         // 使用 NavHost 来显示屏幕
         NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
             composable(Screen.HomeScreen.route) {
-                HomeScreen(isDesktop(), navHostController)
+                HomeScreen(navHostController)
             }
             composable(Screen.TranslationScreen.route) {
-                TranslationScreen(isDesktop())
+                TranslationScreen()
             }
             composable(Screen.SettingScreen.route) {
-                SettingsScreen(isDesktop(), navHostController)
+                SettingsScreen(navHostController)
             }
             composable(Screen.TagDetails.route) {
                 DetailsTagbox(navHostController)

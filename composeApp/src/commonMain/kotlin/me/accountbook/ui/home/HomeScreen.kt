@@ -26,13 +26,13 @@ import me.accountbook.utils.serialization.toSerializable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(isLandscape: Boolean, navController: NavHostController) {
+fun HomeScreen(navController: NavHostController) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     LaunchedEffect(Unit){
         viewModel.loadAccount()
         viewModel.loadSortedTagbox()
     }
-    BasicPage(isLandscape, title = "首页") {
+    BasicPage(title = "首页") {
 
         // 使用 LazyVerticalGrid 创建自适应列
         LazyVerticalStaggeredGrid(

@@ -20,11 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import me.accountbook.platform.BasicPageVisible
 
 
 @Composable
 fun BasicPage(
-    isLandscape: Boolean = false,
     title: String,
     content: @Composable () -> Unit //主要内容
 ) {
@@ -38,7 +38,7 @@ fun BasicPage(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            if (isLandscape) {
+            if (BasicPageVisible()) {
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onBackground,

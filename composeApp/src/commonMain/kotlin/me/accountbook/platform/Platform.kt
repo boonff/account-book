@@ -3,6 +3,7 @@ package me.accountbook.platform
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 
+//设备类型
 sealed class Platform {
     abstract val name: String
 
@@ -16,12 +17,13 @@ sealed class Platform {
 
 }
 
-// getPlatform.kt
+//获取当前设备类型
 expect fun getPlatform(): Platform
+//是否显BasicPage标题
+@Composable
+expect fun BasicPageVisible():Boolean
 
-fun isAndroid():Boolean{
-    return getPlatform() == Platform.Android
-}
 
+//屏幕不同状态时主页LazyVerticalStaggeredGrid行数
 @Composable
 expect fun getHomeLazyVerticalStaggeredGridColumns(): Int

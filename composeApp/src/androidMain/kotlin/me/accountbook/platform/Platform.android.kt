@@ -7,19 +7,17 @@ import androidx.compose.ui.platform.LocalView
 import me.accountbook.platform.Platform
 import me.accountbook.utils.DeviceUtils
 
-// actual 实现
 actual fun getPlatform(): Platform = Platform.Android
 
+//是否显BasicPage标题
+@Composable
+actual fun BasicPageVisible(): Boolean {
+    return DeviceUtils.isLandscape()
+}
 
+//屏幕不同状态时主页LazyVerticalStaggeredGrid行数
 @Composable
 actual fun getHomeLazyVerticalStaggeredGridColumns(): Int {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp
-    val screenHeight = configuration.screenHeightDp
-    val isLandscape = DeviceUtils.isLandscape(screenWidth, screenHeight)
-
-    return if (isLandscape)
-        1
-    else
-        2
+    return if (DeviceUtils.isLandscape()) 1 else 2
 }
+

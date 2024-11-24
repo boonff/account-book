@@ -11,10 +11,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import me.accountbook.platform.BasicPageVisible
 
 
 @Composable
-fun TranslationScreen(isLandscape: Boolean) {
+fun TranslationScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -27,7 +28,7 @@ fun TranslationScreen(isLandscape: Boolean) {
             verticalArrangement = Arrangement.Top
         )
         {
-            if (isLandscape) {
+            if (BasicPageVisible()) {
 
             }
 
