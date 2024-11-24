@@ -5,8 +5,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.awt.Desktop
-import java.io.IOException
 import java.net.URI
 
 
@@ -17,11 +15,11 @@ class LoginManager(
 ): KoinComponent {
     private val httpClient = OkHttpClient()
     private val serverManager = ServerManager()
-    private val browserScaffold:BrowserScaffold by inject()
+    private val networkScaffold:NetworkScaffold by inject()
 
     // 用来构建 OAuth2 授权请求的 URL
     private fun getAuthorizationUrl(): String {
-        return "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=$clientId&response_type=code&redirect_uri=$redirectUri&scope=files.read"
+        return "https://github.com/login/oauth/authorize?client_id=$clientId&response_type=code&redirect_uri=$redirectUri&scope=files.read"
     }
 
     // 打开浏览器进行登录授权
@@ -31,7 +29,7 @@ class LoginManager(
         val uri = URI.create(authorizationUrl)
 
         serverManager.startServer()//启动回调服务器监听授权码
-        browserScaffold.openBrowser(uri.toString())
+        networkScaffold.openBrowser(uri.toString())
     }
 
     // 用授权码请求访问令牌
@@ -48,13 +46,13 @@ class LoginManager(
                 .build()
 
             val request = Request.Builder()
-                .url("https://oauth2provider.com/token")
+                .url("https://github.com/login/oauth/access_token")//这里需要解耦
                 .post(requestBody)
                 .build()
             val response = httpClient.newCall(request).execute()
             if (response.isSuccessful) {
                 // 解析响应体中的访问令牌
-                val jsonResponse = response.body?.string()
+                val jsonResponse = response.body!!.string()//response在极端情况下可能为空？
                 // 提取访问令牌（这里只是示例，实际解析可能需要使用 JSON 库）
                 return parseAccessTokenFromJson(jsonResponse)
                     ?: throw Exception("Failed to parse access token from response: $jsonResponse")
@@ -66,6 +64,7 @@ class LoginManager(
             throw e
         }
     }
+
 
     // 解析访问令牌（这里假设返回的 JSON 中有 access_token 字段）
     private fun parseAccessTokenFromJson(jsonResponse: String?): String? {

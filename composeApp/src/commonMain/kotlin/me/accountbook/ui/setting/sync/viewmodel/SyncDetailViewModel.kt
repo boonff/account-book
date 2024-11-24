@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -19,6 +20,7 @@ import org.koin.core.component.inject
 class SyncDetailViewModel(private val dbHelper: DatabaseHelper) : ViewModel(), KoinComponent {
     private val fileStorage: FileStorage by inject()
     private val loginManager: LoginManager by inject()
+    private var accessToken by mutableStateOf("")
     suspend fun serialization() {
         val tagbox = dbHelper.queryAllTagBox()
         val serializableTagbox =
@@ -31,9 +33,9 @@ class SyncDetailViewModel(private val dbHelper: DatabaseHelper) : ViewModel(), K
         fileStorage.saveJsonToFile("database_tagbox.json", json)
     }
 
-    suspend fun login(){
+    suspend fun login() {
         loginManager.openLoginPage()
-        loginManager.getAccessToken()
+        accessToken = loginManager.getAccessToken()
     }
 
 
