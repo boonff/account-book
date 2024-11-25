@@ -1,0 +1,82 @@
+package me.accountbook.network
+
+import me.accountbook.koin.OAuthConfig
+import me.accountbook.koin.getRedirectUri
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.koin.core.component.KoinComponent
+import java.awt.Desktop
+import java.net.URI
+
+
+class DesktopLoginManager(
+    override val httpClient: OkHttpClient,
+    override val browserScaffold: BrowserScaffold,
+    override val oauthConfig: OAuthConfig,
+) : LoginManager, KoinComponent {
+    private val serverManager = DeskTopServerManager()
+
+
+    // 用来构建 OAuth2 授权请求的 URL
+    override fun getAuthorizationUrl(): String {
+        val baseUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+        val scope = "files.read"
+        return "$baseUrl?client_id=${oauthConfig.clientId}&response_type=code&redirect_uri=${oauthConfig.getRedirectUri()}&scope=$scope"
+    }
+
+
+    private fun openBrowser(url: String) {
+        val uri = URI.create(url)
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().browse(uri)
+        }
+    }
+
+    override fun openLoginPage() {
+        val authorizationUrl = getAuthorizationUrl()
+        val uri = URI.create(authorizationUrl)
+
+        serverManager.startServer()//启动回调服务器监听授权码
+        openBrowser(uri.toString())
+    }
+
+    // 用授权码请求访问令牌
+    override suspend fun getAccessToken(): String {
+        try {
+            val authorizationCode = serverManager.getAuthorizationCode()
+
+            val requestBody = FormBody.Builder()
+                .add("grant_type", "authorization_code")
+                .add("code", authorizationCode) // 获取授权码
+                .add("redirect_uri", oauthConfig.getRedirectUri())
+                .add("client_id", oauthConfig.clientId)
+                .add("client_secret", oauthConfig.clientSecret)
+                .build()
+
+            val request = Request.Builder()
+                .url("https://oauth2provider.com/token")
+                .post(requestBody)
+                .build()
+            val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful) {
+                // 解析响应体中的访问令牌
+                val jsonResponse = response.body?.string()
+                // 提取访问令牌（这里只是示例，实际解析可能需要使用 JSON 库）
+                return parseAccessTokenFromJson(jsonResponse)
+                    ?: throw Exception("Failed to parse access token from response: $jsonResponse")
+            } else {
+                throw Exception("Token request failed: ${response.code}")
+            }
+        } catch (e: Exception) {
+            println("Error requesting access token: ${e.message}")
+            throw e
+        }
+    }
+
+    // 解析访问令牌（这里假设返回的 JSON 中有 access_token 字段）
+    private fun parseAccessTokenFromJson(jsonResponse: String?): String? {
+        // 简单示例，使用正则从 JSON 中提取 access_token
+        return jsonResponse?.substringAfter("\"access_token\":\"")?.substringBefore("\"")
+    }
+}

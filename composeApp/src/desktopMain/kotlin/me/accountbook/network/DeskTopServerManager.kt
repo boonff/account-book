@@ -8,13 +8,12 @@ import io.ktor.server.response.*
 import io.ktor.http.*
 import io.ktor.server.application.call
 import kotlinx.coroutines.CompletableDeferred
+import me.accountbook.koin.OAuthConfig
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 
-class ServerManager() : KoinComponent {
-    private val port: Int by inject(named("port"))
-    private val rootDirectory: String by inject(named("rootDirectory"))
+class DeskTopServerManager : KoinComponent {
+    private val oAuthConfig:OAuthConfig by inject()
 
     // 持有服务器实例
     private var server: ApplicationEngine? = null
@@ -28,10 +27,10 @@ class ServerManager() : KoinComponent {
             return // 如果服务器已启动，则不重复启动
         }
 
-        server = embeddedServer(Netty, port) {
+        server = embeddedServer(Netty, oAuthConfig.port) {
             routing {
                 // 静默处理获取 OAuth2 授权码
-                get("/$rootDirectory") {
+                get(oAuthConfig.rootDirectory) {
                     val code = call.parameters["code"]
                     if (code != null) {
                         authorizationCodeDeferred.complete(code) // 异步传递授权码

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -9,26 +9,55 @@
         android:roundIcon="@mipmap/icon_wallet_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
+
         <activity
-            android:exported="true"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
+                <!-- 定义应用的启动入口 -->
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".OAuthCallbackActivity"
+            android:exported="true">
+            <intent-filter>
+                <!-- 用于监听 OAuth 回调的 Intent 过滤器 -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <!-- 表示此 Activity 可以通过外部浏览器或应用跳转访问 -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- 自定义的回调 URI Scheme，例如 myapp://callback -->
+                <data
+                    android:host="callback"
+                    android:scheme="myapp" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".WebViewActivity"
+            android:exported="true">
+            <!-- 可根据需要添加主题 -->
+        </activity>
     </application>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+
+    <!-- 用于读取和写入外部存储权限（在 Android 32 以下使用） -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ManifestOrder" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
 
+    <!-- 用于触觉反馈的权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-
 </manifest>
