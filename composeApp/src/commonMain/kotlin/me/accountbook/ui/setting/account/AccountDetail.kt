@@ -71,37 +71,6 @@ fun SyncDetails(navHostController: NavHostController) {
                         viewModel.error?.let { Text("Error: $it") }
                     }
                 }
-                Text(
-                    text = "创建私有仓库",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .clickable {
-                            scope.launch(Dispatchers.IO) {
-                                viewModel.createPrivateRepo()
-                            }
-                        }
-                )
-                Text(
-                    text="上传数据库",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .clickable {
-                            scope.launch(Dispatchers.IO) {
-                                viewModel.uploadProtoBufToRepo()
-                            }
-                        }
-                )
-
-                Text(
-                    text = "获取数据库",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .clickable {
-                            scope.launch(Dispatchers.IO) {
-                                viewModel.fetchFile()
-                            }
-                        }
-                )
 
                 Text(
                     text = "同步",
@@ -112,6 +81,38 @@ fun SyncDetails(navHostController: NavHostController) {
                                 SyncUtil.sync()
                             }
                         }
+                )
+                Text(
+                    text = "硬删除",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .clickable {
+                            scope.launch(Dispatchers.IO) {
+                                SyncUtil.hardDelete()
+                            }
+                        }
+                )
+                Text(
+                    text = "登出",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .clickable {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.revokeAccessToken()
+                            }
+                        }
+                )
+
+                Text(
+                    text = "检查登录",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .clickable {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.checkToken()
+                            }
+                        }
+
                 )
             }
         }

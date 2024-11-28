@@ -55,14 +55,16 @@ CREATE TABLE IF NOT EXISTS Tagbox (
     timestamp INTEGER DEFAULT (strftime('%s', 'now')),  -- 自动设置时间戳
     deleted INTEGER DEFAULT 0
 );
+dropSetPositionTrigger:
+DROP TRIGGER IF EXISTS Setposition;
 createSetPositionTrigger:
 CREATE TRIGGER IF NOT EXISTS Setposition
     AFTER INSERT ON Tagbox
     FOR EACH ROW
     BEGIN
         UPDATE Tagbox
-        SET position = new.uuid
-        WHERE uuid = new.uuid;
+        SET position = (SELECT COUNT(*) FROM Tagbox) - 1
+        WHERE uuid = new.uuid AND position = -1;
     END;
 createTagboxTimstampTragger:
 CREATE TRIGGER IF NOT EXISTS TagboxTimstamp
@@ -81,7 +83,7 @@ DROP TRIGGER IF EXISTS TagboxTimstamp;
 -- 示例：插入标签时生成 uuid 和时间戳，默认状态为未删除
 insertTagbox:
 INSERT INTO Tagbox(uuid, name, color, position, deleted)
-VALUES(:uuid, :name, :color, 0, 0);
+VALUES(:uuid, :name, :color, -1, 0);
 
 insertTagboxWithTimetamp:
 INSERT INTO Tagbox(uuid, name, color, position, timestamp, deleted)
@@ -142,13 +144,13 @@ UPDATE Tagbox
 SET deleted = 0
 WHERE uuid = :uuid;
 
--- 删除所有标签（不触发软删除）
+-- 删除所有标签
 deleteAllTagbox:
 DELETE FROM Tagbox;
 
--- 获取未删除的所有标签
+-- 删除被标记为软删除的属性
 deleteAllDeletedTagbox:
-SELECT * FROM Tagbox WHERE deleted = 0;
+DELETE FROM Tagbox WHERE deleted = 1;
 
 
 -- Envelope 表
@@ -193,7 +195,7 @@ DELETE FROM Envelope;
 -- Bill 表
 CREATE TABLE IF NOT EXISTS Bill (
     bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    envelope_id INTEGER NOT NULL REFERENCES Envelope(envelope_id),
+    envelope_id INTEGER  NOT NULL REFERENCES Envelope(envelope_id),
     amount REAL NOT NULL,
     bill_type TEXT NOT NULL,  -- 支出或收入
     bill_date TEXT DEFAULT (DATETIME('now')), -- 交易日期

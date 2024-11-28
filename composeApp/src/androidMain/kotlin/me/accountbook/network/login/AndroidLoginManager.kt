@@ -31,11 +31,11 @@ class AndroidLoginManager(
 
     override suspend fun saveAccessToken() {
         val encryptToken = keystoreUtil.encryptData(getAccessToken())
-        fileStore.saveJsonToFile("token", encryptToken) //文件名需要解耦
+        fileStore.saveJsonToFile(tokenPath, encryptToken) //文件名需要解耦
     }
 
     override fun readAccessToken(): String? {
-        val encryptToken = fileStore.readJsonFromFile("token")
+        val encryptToken = fileStore.readJsonFromFile(tokenPath)
         return if (encryptToken == null) null
         else
             keystoreUtil.decryptData(encryptToken)

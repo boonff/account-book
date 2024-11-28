@@ -10,6 +10,10 @@ interface LoginManager {
 
     fun openLoginPage()
     suspend fun saveAccessToken()
+
+    suspend fun revokeAccessToken():Boolean
+
+    suspend fun checkAccessToken():Boolean
     fun readAccessToken(): String?
 
 }

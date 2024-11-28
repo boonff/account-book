@@ -30,8 +30,13 @@ class AccountDetailViewModel(
     var error by mutableStateOf<String?>(null)
         private set
 
-    suspend fun fetchFile(){
+    suspend fun revokeAccessToken(){
+        loginManager.revokeAccessToken()
 
+    }
+
+    suspend fun checkToken(){
+        loginManager.checkAccessToken()
     }
 
     suspend fun uploadProtoBufToRepo() {

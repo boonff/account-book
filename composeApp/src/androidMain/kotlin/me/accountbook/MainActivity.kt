@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.accountbook.koin.androidModule
 import me.accountbook.koin.commonModule
 import me.accountbook.database.DatabaseHelper
@@ -29,7 +33,7 @@ class MainActivity : ComponentActivity() {
             modules(androidModule, commonModule)
         }
         //初始化数据库
-        val dbHelper:DatabaseHelper = get()
+        val dbHelper: DatabaseHelper = get()
         dbHelper.initializeDatabase()
 
         setContent {
@@ -41,6 +45,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppAndroidContent() {
     App()
+
     AndroidTheme {
         Box(
             modifier = Modifier

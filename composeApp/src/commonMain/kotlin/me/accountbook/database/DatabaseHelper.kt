@@ -3,175 +3,199 @@ package me.accountbook.database
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.cash.sqldelight.db.SqlDriver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import me.accountbook.utils.SyncUtil
+import me.accountbook.utils.serialization.SerializableDatabase
 import me.accountbook.utils.serialization.SerializableTagbox
 import java.sql.SQLException
 import java.util.UUID
 
+
+//需要在添加和修改数据库的方法上使用 setNoSynced()
 class DatabaseHelper(private val driver: SqlDriver) {
-    private val triggerHelper = TriggerHelper(driver)
+
     private val database = Database(driver) // 自动生成的数据库类
     private val queries = database.appDatabaseQueries
 
+    private fun setNoSynced() {
+        SyncUtil.setNoSynced()
+    }
+
     fun initializeDatabase() {
 
-        queries.dropTagboxTimstampTragger()
+        queries.dropSetPositionTrigger()
 
         queries.createSetPositionTrigger()
         queries.createTagboxTimstampTragger()
     }
 
     // tagbox表的方法
-    suspend fun insertTagBox(name: String, color: Color) {
+    fun insertTagBox(name: String, color: Color) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.insertTagbox(
-                    UUID.randomUUID().toString(),
-                    name,
-                    color.toArgb().toUInt().toLong(),
-                )
-            }
+            queries.insertTagbox(
+                UUID.randomUUID().toString(),
+                name,
+                color.toArgb().toUInt().toLong(),
+            )
+            setNoSynced()
+
         } catch (e: SQLException) {
             println("Error inserting tag box: ${e.message}")
             throw e
         }
     }
 
-    suspend fun insertTagBox(tagbox: Tagbox) {
+    fun insertTagBox(tagbox: Tagbox) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.insertTagboxWithTimetamp(
-                    tagbox.uuid,
-                    tagbox.name,
-                    tagbox.color,
-                    tagbox.position,
-                    tagbox.timestamp,
-                    tagbox.deleted,
-                )
-            }
+            queries.insertTagboxWithTimetamp(
+                tagbox.uuid,
+                tagbox.name,
+                tagbox.color,
+                tagbox.position,
+                tagbox.timestamp,
+                tagbox.deleted,
+            )
+            setNoSynced()
         } catch (e: SQLException) {
             println("Error inserting tagbox: ${e.message}")
         }
     }
 
-    suspend fun insertTagBox(tagbox: SerializableTagbox) {
+    fun insertTagBox(tagbox: SerializableTagbox) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.insertTagboxWithTimetamp(
-                    tagbox.uuid,
-                    tagbox.name,
-                    tagbox.color,
-                    tagbox.position,
-                    tagbox.timestamp,
-                    tagbox.deleted,
-                )
-            }
+            queries.insertTagboxWithTimetamp(
+                tagbox.uuid,
+                tagbox.name,
+                tagbox.color,
+                tagbox.position,
+                tagbox.timestamp,
+                tagbox.deleted,
+            )
+            setNoSynced()
         } catch (e: SQLException) {
             println("Error inserting tagbox: ${e.message}")
         }
     }
 
-    suspend fun queryUndeletedTagBox(): List<Tagbox> {
+    fun queryUndeletedTagBox(): List<Tagbox> {
         return try {
-            withContext(Dispatchers.IO) {
-                queries.queryUndeletedTagbox().executeAsList()
-            }
+            queries.queryUndeletedTagbox().executeAsList()
         } catch (e: SQLException) {
             println("Error querying undeleted tag boxes: ${e.message}")
             emptyList()
         }
     }
 
-    suspend fun queryAllTagbox(): List<Tagbox> {
+    fun queryAllTagbox(): List<Tagbox> {
         return try {
-            withContext(Dispatchers.IO) {
-                queries.queryAllTagbox().executeAsList()
-            }
+            queries.queryAllTagbox().executeAsList()
         } catch (e: SQLException) {
             println("Error querying all tagbox: ${e.message}")
             emptyList()
         }
     }
 
-    suspend fun updateTagboxName(name: String, uuid: String) {
+    fun updateTagboxName(name: String, uuid: String) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.updateTagboxName(name, uuid)
-            }
+            queries.updateTagboxName(name, uuid)
+            setNoSynced()
+
         } catch (e: SQLException) {
             println("Error updateTagboxName:${e.message}")
         }
     }
 
-    suspend fun updateTagboxColor(color: Color, uuid: String) {
+    fun updateTagboxColor(color: Color, uuid: String) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.updateTagboxColor(color.toArgb().toUInt().toLong(), uuid)
-            }
+            queries.updateTagboxColor(color.toArgb().toUInt().toLong(), uuid)
+            setNoSynced()
+
         } catch (e: SQLException) {
             println("Error updateTagboxColor${e.message}")
         }
     }
 
-    suspend fun updateTagboxPosition(position: Int, uuid: String) {
+    fun updateTagboxPosition(position: Int, uuid: String) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.updateTagboxPosition(position.toLong(), uuid)
-            }
+            queries.updateTagboxPosition(position.toLong(), uuid)
+            setNoSynced()
+
         } catch (e: SQLException) {
             println("Error updateTagboxPosition: ${e.message}")
         }
     }
 
-    suspend fun updateTagbox(tagbox: Tagbox) {
+    fun updateTagbox(tagbox: Tagbox) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.updateTagboxById(
-                    tagbox.name,
-                    tagbox.color,
-                    tagbox.position,
-                    tagbox.deleted,
-                    tagbox.uuid
-                )
-            }
+            queries.updateTagboxById(
+                tagbox.name,
+                tagbox.color,
+                tagbox.position,
+                tagbox.deleted,
+                tagbox.uuid
+            )
+            setNoSynced()
         } catch (e: SQLException) {
             println("Error updateTagbox: ${e.message}")
         }
     }
 
-    suspend fun updateTagbox(tagbox: SerializableTagbox) {
+    fun updateTagbox(tagbox: SerializableTagbox) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.updateTagboxByUuid(
-                    tagbox.name,
-                    tagbox.color,
-                    tagbox.position,
-                    tagbox.deleted,
-                    tagbox.uuid
-                )
-            }
+            queries.updateTagboxByUuid(
+                tagbox.name,
+                tagbox.color,
+                tagbox.position,
+                tagbox.deleted,
+                tagbox.uuid
+            )
+            setNoSynced()
         } catch (e: SQLException) {
             println("Error updateTagbox: ${e.message}")
         }
     }
 
-    suspend fun softDeleteTagbox(uuid: String) {
+    fun softDeleteTagbox(uuid: String) {
         try {
-            withContext(Dispatchers.IO) {
-                queries.softDeleteTagbox(uuid)
-            }
+            queries.softDeleteTagbox(uuid)
+            setNoSynced()
         } catch (e: SQLException) {
             println("Error softDeleteTagbox")
         }
     }
 
-    // 账户表的方法
-    suspend fun queryAllAccount(): List<Account> {
-        return try {
-            withContext(Dispatchers.IO) {
-                queries.queryAllAccount().executeAsList()
+    fun deleteAllTagbox() {
+        try {
+            queries.deleteAllTagbox()
+            setNoSynced()
+        } catch (e: SQLException) {
+            println("Error delete all tagbox :${e.message}")
+        }
+    }
+
+    fun deleteAllDeletedTagbox(){
+        try{
+            queries.deleteAllDeletedTagbox()
+            setNoSynced()
+        }catch (e:SQLException){
+            println("Error delete all deleted tagbox: ${e.message}")
+        }
+    }
+
+    fun refactorDatabase(mergedDB: SerializableDatabase) {
+        queries.transaction {
+            deleteAllTagbox()
+            mergedDB.serializableTagboxs.forEach {
+                insertTagBox(it)
             }
+        }
+
+    }
+
+    // 账户表的方法
+    fun queryAllAccount(): List<Account> {
+        return try {
+            queries.queryAllAccount().executeAsList()
+
         } catch (e: SQLException) {
             println("Error querying all accounts: ${e.message}")
             emptyList() // 返回空列表，避免崩溃

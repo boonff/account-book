@@ -16,7 +16,7 @@ data class SerializableTagbox(
 @Serializable
 data class SerializableDatabase(
     val serializableTagboxs: List<SerializableTagbox>,
-    val timestamp: Long? = null,
+    var timestamp: Long? = null,
 )
 
 fun Tagbox.encode() =

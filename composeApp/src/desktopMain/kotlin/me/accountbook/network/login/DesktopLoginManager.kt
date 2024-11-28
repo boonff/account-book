@@ -23,11 +23,11 @@ class DesktopLoginManager : LoginManagerImpl(), KoinComponent {
 
     override suspend fun saveAccessToken() {
         val token = getAccessToken()
-        fileStore.saveJsonToFile("token", token)
+        fileStore.saveJsonToFile(tokenPath, token)
     }
 
     override fun readAccessToken(): String? {
-        return fileStore.readJsonFromFile("token")
+        return fileStore.readJsonFromFile(tokenPath)
     }
 
 }

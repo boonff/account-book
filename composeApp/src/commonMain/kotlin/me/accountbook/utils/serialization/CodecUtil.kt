@@ -10,11 +10,11 @@ import java.time.Instant
 object CodecUtil : KoinComponent {
     private val dbHelper: DatabaseHelper by inject()
 
-    suspend fun serializationDatabase(): SerializableDatabase {
+    fun serializationDatabase(): SerializableDatabase {
         val tagbox = dbHelper.queryAllTagbox()
         val serializableTagbox = tagbox.map {
             it.encode()
         }
-        return SerializableDatabase(serializableTagbox, Instant.now().epochSecond)
+        return SerializableDatabase(serializableTagbox)
     }
 }

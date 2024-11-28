@@ -15,16 +15,13 @@ import okhttp3.RequestBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 object GitHubApiService {
     private var token: String? = null
-    private val repoName: String = "test"
-    private val targetFilePathInRepo: String = "database.bat"
+    private const val REPO_NAME: String = "test"
+    private const val TARGET_FILE_PATH_IN_REPO: String = "database.bat"
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)) // 日志记录
@@ -49,8 +46,10 @@ object GitHubApiService {
 
         // 使用协程中的 withContext 切换到IO线程
         return withContext(Dispatchers.IO) {
-            val request = Request.Builder().url("https://api.github.com/user") // 或许需要去耦合
-                .addHeader("Authorization", "Bearer $token").build()
+            val request = Request.Builder()
+                .url("https://api.github.com/user") // 或许需要去耦合
+                .addHeader("Authorization", "Bearer $token")
+                .build()
 
             try {
                 val response: Response = client.newCall(request).execute()
@@ -75,7 +74,7 @@ object GitHubApiService {
     private suspend fun checkIfRepoExists(): Boolean {
         if (emptyToken()) return false
 
-        val checkRepoUrl = "https://api.github.com/repos/boonff/$repoName" // 替换为你的 GitHub 用户名
+        val checkRepoUrl = "https://api.github.com/repos/boonff/$REPO_NAME" // 替换为你的 GitHub 用户名
         val checkRepoRequest =
             Request.Builder().url(checkRepoUrl).addHeader("Authorization", "Bearer $token").build()
 
@@ -96,14 +95,14 @@ object GitHubApiService {
         // 使用协程中的 withContext 切换到IO线程
         return withContext(Dispatchers.IO) {
             if (checkIfRepoExists()) {
-                println("Repository '$repoName' already exists.")
+                println("Repository '$REPO_NAME' already exists.")
                 return@withContext false
             }
 
             val url = "https://api.github.com/user/repos"
             val jsonPayload = """
                 {
-                    "name": "$repoName",
+                    "name": "$REPO_NAME",
                     "description": "$description",
                     "private": true
                 }
@@ -118,7 +117,7 @@ object GitHubApiService {
             try {
                 val response: Response = client.newCall(request).execute()
                 if (response.isSuccessful) {
-                    println("Repository '$repoName' created successfully.")
+                    println("Repository '$REPO_NAME' created successfully.")
                     return@withContext true
                 } else {
                     println("Failed to create repository: ${response.code}")
@@ -144,7 +143,7 @@ object GitHubApiService {
         val encodedFile = Base64.encode(protoBufBytes)
         val sha: String? = getFileShaFromRepo()
         // GitHub API URL: 上传文件
-        val url = "https://api.github.com/repos/boonff/$repoName/contents/$targetFilePathInRepo"
+        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         // 创建请求体
         val jsonPayload = """
@@ -184,7 +183,7 @@ object GitHubApiService {
     private suspend fun getFileShaFromRepo(): String? {
         if (emptyToken()) return null
 
-        val url = "https://api.github.com/repos/boonff/$repoName/contents/$targetFilePathInRepo"
+        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         val request = Request.Builder().url(url).addHeader("Authorization", "Bearer $token")
             .get()  // GET 请求获取文件的元数据
@@ -220,7 +219,7 @@ object GitHubApiService {
     suspend fun fetchFileContentAsByteArray(): ByteArray? {
         if (emptyToken()) return null
 
-        val url = "https://api.github.com/repos/boonff/$repoName/contents/$targetFilePathInRepo"
+        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         val request = Request.Builder().url(url).addHeader("Authorization", "Bearer $token")
             .get()  // GET 请求获取文件内容

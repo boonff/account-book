@@ -14,7 +14,7 @@ import me.accountbook.koin.OAuthConfig
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ServerUtil : KoinComponent {
+object ServerUtil : KoinComponent {
     private val oAuthConfig: OAuthConfig by inject()
 
     // 持有服务器实例
