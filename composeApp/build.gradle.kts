@@ -13,10 +13,11 @@ plugins {
 repositories {
     google()
     mavenCentral()
+    maven("https://jitpack.io")
     maven {
         url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
         url = uri("https://mvnrepository.com/artifact/io.insert-koin/koin-compose-viewmodel")
-        url = uri("https://mvnrepository.com/artifact/com.microsoft.identity.client/msal")
+        url = uri(" https://mvnrepository.com/artifact/com.soywiz.korlibs.krypto/krypto")
     }
 }
 
@@ -64,11 +65,12 @@ kotlin {
 
                     implementation(libs.kotlinx.coroutines.core)
                     implementation(libs.kotlinx.datetime)
-                    implementation(libs.slf4j.api)
                     implementation(libs.kotlinx.serialization.json)
 
+                    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-protobuf
+                    implementation(libs.kotlinx.serialization.protobuf)
 
-                    // Koin: 简化依赖
+
                     implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
                     implementation(libs.koin.compose)
@@ -77,6 +79,11 @@ kotlin {
                     implementation(project.dependencies.platform(libs.okhttp.bom))
                     implementation(libs.okhttp)
                     implementation(libs.okhttp.logging.interceptor)
+
+                    implementation(libs.ktor.server.cio)
+
+                    implementation(libs.spring.security.crypto)
+
                 }
             }
             val androidMain by getting {
@@ -91,7 +98,6 @@ kotlin {
                     implementation(compose.desktop.currentOs)
                     implementation(libs.kotlinx.coroutines.swing)
                     implementation(libs.sqldelight.driver)
-                    implementation(libs.ktor.server.netty)
                 }
             }
         }

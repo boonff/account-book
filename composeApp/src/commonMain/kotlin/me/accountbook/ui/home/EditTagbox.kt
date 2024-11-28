@@ -61,7 +61,7 @@ fun EditTagbox() {
                                     .align(Alignment.CenterEnd)
                             ) {
                                 scope.launch {
-                                    viewModel.deleteTagboxById(viewModel.tagboxId)
+                                    viewModel.softDeleteTagbox(viewModel.uuid)
                                     reorderTagboxViewModel.loadSortedTagbox()
                                 }
                                 viewModel.togglePopupVisible()
@@ -91,11 +91,11 @@ fun EditTagbox() {
                                     scope.launch {
                                         viewModel.updateTagboxName(
                                             viewModel.name,
-                                            viewModel.tagboxId
+                                            viewModel.uuid
                                         )
                                         viewModel.updateTagboxColor(
                                             viewModel.color,
-                                            viewModel.tagboxId
+                                            viewModel.uuid
                                         )
                                         reorderTagboxViewModel.loadSortedTagbox()
                                     }

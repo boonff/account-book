@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppAndroidContent() {
+    App()
     AndroidTheme {
         Box(
             modifier = Modifier

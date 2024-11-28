@@ -1,11 +1,10 @@
-package me.accountbook.network
+package me.accountbook.network.utils
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import me.accountbook.WebViewActivity
 
-class AndroidBrowserScaffold(private val context: Context) : BrowserScaffold {
+class AndroidBrowserUtil(private val context: Context) : BrowserUtil {
     override fun openBrowser(url: String) {
         // 启动 WebViewActivity 显示网页
         val intent = Intent(context, WebViewActivity::class.java).apply {

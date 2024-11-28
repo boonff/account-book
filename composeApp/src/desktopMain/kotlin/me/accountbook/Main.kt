@@ -40,6 +40,7 @@ fun main() = application {
             exitApplication()
         }
     ) {
+        App()
         AppTheme {
             Navigator(rememberNavController())
         }

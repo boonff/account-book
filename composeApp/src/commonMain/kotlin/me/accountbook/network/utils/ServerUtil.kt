@@ -1,19 +1,21 @@
-package me.accountbook.network
+package me.accountbook.network.utils
 
+
+import io.ktor.http.ContentType
+import io.ktor.server.application.call
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.routing.*
-import io.ktor.server.response.*
-import io.ktor.http.*
-import io.ktor.server.application.call
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import kotlinx.coroutines.CompletableDeferred
 import me.accountbook.koin.OAuthConfig
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DeskTopServerManager : KoinComponent {
-    private val oAuthConfig:OAuthConfig by inject()
+class ServerUtil : KoinComponent {
+    private val oAuthConfig: OAuthConfig by inject()
 
     // 持有服务器实例
     private var server: ApplicationEngine? = null
@@ -27,7 +29,7 @@ class DeskTopServerManager : KoinComponent {
             return // 如果服务器已启动，则不重复启动
         }
 
-        server = embeddedServer(Netty, oAuthConfig.port) {
+        server = embeddedServer(CIO, oAuthConfig.port) {
             routing {
                 // 静默处理获取 OAuth2 授权码
                 get(oAuthConfig.rootDirectory) {

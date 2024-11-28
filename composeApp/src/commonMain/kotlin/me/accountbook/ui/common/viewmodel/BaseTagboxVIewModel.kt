@@ -17,12 +17,12 @@ abstract class BaseTagboxVIewModel(
         protected set
 
     suspend fun loadTagbox() {
-        tagboxs = dbHelper.queryAllTagBox()
+        tagboxs = dbHelper.queryUndeletedTagBox()
 
     }
 
     suspend fun loadSortedTagbox() {
-        tagboxs = dbHelper.queryAllTagBox()
+        tagboxs = dbHelper.queryUndeletedTagBox()
         tagboxs = tagboxs.toMutableList().apply {
             sortBy {
                 it.position
@@ -42,15 +42,15 @@ abstract class BaseTagboxVIewModel(
 
     }
 
-    suspend fun updateTagboxName(name: String, tagboxId: Int) {
-        dbHelper.updateTagboxName(name, tagboxId)
+    suspend fun updateTagboxName(name: String, uuid: String) {
+        dbHelper.updateTagboxName(name, uuid)
     }
 
-    suspend fun updateTagboxColor(color: Color, tagboxId: Int) {
-        dbHelper.updateTagboxColor(color, tagboxId)
+    suspend fun updateTagboxColor(color: Color, uuid: String) {
+        dbHelper.updateTagboxColor(color, uuid)
     }
 
-    suspend fun deleteTagboxById(tagboxId: Int) {
-        dbHelper.deleteTagBoxById(tagboxId)
+    suspend fun softDeleteTagbox(uuid: String) {
+        dbHelper.softDeleteTagbox(uuid)
     }
 }

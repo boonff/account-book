@@ -43,43 +43,112 @@ deleteAllAccounts:
 DELETE FROM Account;
 
 -- TagBox 表
+dropTagbox:
+DROP TABLE Tagbox;
 
+createTagbox:
 CREATE TABLE IF NOT EXISTS Tagbox (
-    tagbox_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE NOT NULL,
+    uuid TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
     color INTEGER NOT NULL,
-    position INTEGER NOT NULL -- position 字段可以为 NULL，稍后触发器设置其值
+    position INTEGER NOT NULL,
+    timestamp INTEGER DEFAULT (strftime('%s', 'now')),  -- 自动设置时间戳
+    deleted INTEGER DEFAULT 0
 );
+createSetPositionTrigger:
+CREATE TRIGGER IF NOT EXISTS Setposition
+    AFTER INSERT ON Tagbox
+    FOR EACH ROW
+    BEGIN
+        UPDATE Tagbox
+        SET position = new.uuid
+        WHERE uuid = new.uuid;
+    END;
+createTagboxTimstampTragger:
+CREATE TRIGGER IF NOT EXISTS TagboxTimstamp
+    AFTER UPDATE ON Tagbox
+    FOR EACH ROW
+    BEGIN
+        UPDATE Tagbox
+        SET timestamp = (strftime('%s', 'now'))
+        WHERE uuid = new.uuid;
+    END;
 
--- 插入标签
+dropTagboxTimstampTragger:
+DROP TRIGGER IF EXISTS TagboxTimstamp;
+
+
+-- 示例：插入标签时生成 uuid 和时间戳，默认状态为未删除
 insertTagbox:
-INSERT INTO Tagbox(name, color, position)
-VALUES(:name, :color, :position);
+INSERT INTO Tagbox(uuid, name, color, position, deleted)
+VALUES(:uuid, :name, :color, 0, 0);
 
+insertTagboxWithTimetamp:
+INSERT INTO Tagbox(uuid, name, color, position, timestamp, deleted)
+VALUES(:uuid, :name, :color, :position, :timestamp, :deleted);
+
+-- 查询未软删除的标签
+queryUndeletedTagbox:
+SELECT * FROM Tagbox WHERE deleted = 0;
 queryAllTagbox:
 SELECT * FROM Tagbox;
 
+-- 更新标签的 position
 updateTagboxPosition:
 UPDATE Tagbox
 SET position = :position
-WHERE tagbox_id = :tagboxID;
+WHERE uuid = :uuid;
 
+-- 更新标签的 name
 updateTagboxName:
 UPDATE Tagbox
 SET name = :name
-WHERE tagbox_id = :tagboxID;
+WHERE uuid = :uuid;
 
+-- 更新标签的 color
 updateTagboxColor:
 UPDATE Tagbox
 SET color = :color
-WHERE tagbox_id = :tagboxID;
+WHERE uuid = :uuid;
 
-deleteTagBoxByID:
-DELETE FROM Tagbox WHERE tagbox_id = :tagboxID;
+updateTagboxById:
+UPDATE Tagbox
+SET
+    name = :name,
+    color = :color,
+    position = :position,
+    deleted = :deleted
+WHERE uuid = :uuid;
+-- 更新标签
+updateTagboxByUuid:
+UPDATE Tagbox
+SET
+    name = :name,
+    color = :color,
+    position = :position,
+    deleted = :deleted
+WHERE uuid = :uuid;
 
 
-deleteAllTagBox:
+-- 软删除标签
+softDeleteTagbox:
+UPDATE Tagbox
+SET deleted = 1
+WHERE uuid = :uuid;
+
+-- 恢复软删除的标签
+recoverTagbox:
+UPDATE Tagbox
+SET deleted = 0
+WHERE uuid = :uuid;
+
+-- 删除所有标签（不触发软删除）
+deleteAllTagbox:
 DELETE FROM Tagbox;
+
+-- 获取未删除的所有标签
+deleteAllDeletedTagbox:
+SELECT * FROM Tagbox WHERE deleted = 0;
 
 
 -- Envelope 表

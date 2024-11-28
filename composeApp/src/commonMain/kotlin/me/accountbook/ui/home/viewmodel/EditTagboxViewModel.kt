@@ -10,7 +10,7 @@ import me.accountbook.ui.common.viewmodel.BaseTagboxVIewModel
 
 class EditTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelper) {
     var isPopupVisible by mutableStateOf(false)
-    var tagboxId by mutableStateOf(0)
+    var uuid by mutableStateOf("")
     var name by mutableStateOf("")
     var color by mutableStateOf(Color.Transparent)
     fun togglePopupVisible() {
@@ -18,7 +18,7 @@ class EditTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelp
     }
 
     fun initByTagbox(tagbox: Tagbox) {
-        tagboxId = tagbox.tagbox_id.toInt()
+        uuid = tagbox.uuid
         name = tagbox.name
         color = Color(tagbox.color)
     }

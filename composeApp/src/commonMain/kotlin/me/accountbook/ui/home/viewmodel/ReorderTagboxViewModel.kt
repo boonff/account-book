@@ -16,7 +16,7 @@ class ReorderTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbH
 
     suspend fun updatePosition() {
         tagboxs.forEachIndexed { index, it ->
-            dbHelper.updateTagboxPosition(index, it.tagbox_id.toInt())
+            dbHelper.updateTagboxPosition(index, it.uuid)
         }
 
     }

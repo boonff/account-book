@@ -1,15 +1,7 @@
 package me.accountbook.ui.navigation
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,17 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import me.accountbook.ui.home.HomeScreen
-import me.accountbook.ui.setting.SettingsScreen
-import me.accountbook.ui.home.DetailsTagbox
-import me.accountbook.ui.setting.sync.SyncDetails
-import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.utils.DeviceUtils
 
 

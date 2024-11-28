@@ -11,8 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import me.accountbook.platform.Platform
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.platform.getPlatform
@@ -22,7 +20,6 @@ import me.accountbook.ui.common.components.FunCard
 import me.accountbook.ui.common.components.HorizontalScrollWithBar
 import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
 import me.accountbook.ui.navigation.Screen
-import me.accountbook.utils.serialization.toSerializable
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

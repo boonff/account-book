@@ -11,8 +11,8 @@ open class TriggerHelper(private val driver: SqlDriver) {
             FOR EACH ROW
             BEGIN
                 UPDATE Tagbox
-                SET position = NEW.tagbox_id
-                WHERE tagbox_id = NEW.tagbox_id;
+                SET position = NEW.tagboxId
+                WHERE tagboxId = NEW.tagboxId;
             END;
         """.trimIndent()
 

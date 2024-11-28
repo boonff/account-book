@@ -1,11 +1,18 @@
-package me.accountbook.platform
+package me.accountbook.utils.file
 
 import android.content.Context
 import android.util.Log
 import java.io.File
 import java.io.IOException
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 
-class AndroidFileStorage(private val context: Context) : FileStorage {
+class AndroidFileUtil(private val context: Context) : FileUtil {
+    override fun isFileExist(fileName: String): Boolean {
+        val file = File(context.filesDir, fileName)
+        return file.exists() // 返回文件是否存在
+    }
+
     override fun saveJsonToFile(fileName: String, json: String): Boolean {
         return try {
             val file = File(context.filesDir, fileName)
@@ -24,6 +31,16 @@ class AndroidFileStorage(private val context: Context) : FileStorage {
         } catch (e: IOException) {
             Log.e("AndroidFileStorage", "Error reading file", e)
             null
+        }
+    }
+
+    override fun deleteFile(fileName: String):Boolean {
+        return try{
+            val file = File(context.filesDir, fileName)
+            if (file.exists()) file.delete() else return true
+        }catch (e:Exception){
+            Log.e("AndroidFileStorage", "Error reading file", e)
+            false
         }
     }
 }

@@ -1,9 +1,9 @@
-package me.accountbook.network
+package me.accountbook.network.utils
 
 import java.awt.Desktop
 import java.net.URI
 
-class DeskTopBrowserScaffold:BrowserScaffold {
+class DeskTopBrowserUtil: BrowserUtil {
     override fun openBrowser(url: String) {
         val uri = URI.create(url)
         if (Desktop.isDesktopSupported()) {
