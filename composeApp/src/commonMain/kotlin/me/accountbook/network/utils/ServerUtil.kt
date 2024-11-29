@@ -55,16 +55,16 @@ object ServerUtil : KoinComponent {
     }
 
     // 获取授权码（异步等待）
-    suspend fun getAuthorizationCode(): String {
+    suspend fun getAuthorizationCode(): String? {
         return try {
             val authorizationCode = authorizationCodeDeferred.await()
             if (authorizationCode.isNullOrBlank()) {
-                throw IllegalStateException("Authorization code is null or empty")
+                println("Authorization code is null or empty")
             }
             authorizationCode
         } catch (e: Exception) {
             println("Error while waiting for authorization code: ${e.message}")
-            throw e
+            null
         }
     }
 }

@@ -86,7 +86,7 @@ class KeystoreUtil(private val keyAlias: String) {
 
 
     // 检查 Keystore 中是否已存在密钥
-    fun isKeyAvailable(): Boolean {
+    private fun isKeyAvailable(): Boolean {
         val keyStore = KeyStore.getInstance("AndroidKeyStore")
         keyStore.load(null)
         return keyStore.containsAlias(keyAlias)

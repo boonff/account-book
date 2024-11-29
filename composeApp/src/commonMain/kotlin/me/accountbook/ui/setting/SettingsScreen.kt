@@ -19,17 +19,24 @@ import me.accountbook.ui.navigation.Screen
 
 @Composable
 fun SettingsScreen(navHostController: NavHostController) {
-    BasicPage(title = "设置") {
-        Column {
-            OptionsCard(
-                name = "同步",
-                Icons.Outlined.Sync,
-                Screen.SyncDetails.route,
-                navHostController = navHostController
-            )
+    BasicPage(title = "设置",
+        reLoadData = {},
+        content = {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Column {
+                    OptionsCard(
+                        name = "同步",
+                        Icons.Outlined.Sync,
+                        Screen.SyncDetails.route,
+                        navHostController = navHostController
+                    )
+                }
+            }
         }
-    }
+    )
+
 }
+
 
 @Composable
 fun OptionsCard(

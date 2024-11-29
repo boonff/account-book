@@ -5,10 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import me.accountbook.database.Tagbox
-import me.accountbook.database.DatabaseHelper
-import me.accountbook.ui.common.viewmodel.BaseTagboxVIewModel
+import me.accountbook.ui.viewmodel.TagboxViewModel
 
-class EditTagboxViewModel(dbHelper: DatabaseHelper) : BaseTagboxVIewModel(dbHelper) {
+class EditTagboxViewModel : TagboxViewModel() {
     var isPopupVisible by mutableStateOf(false)
     var uuid by mutableStateOf("")
     var name by mutableStateOf("")

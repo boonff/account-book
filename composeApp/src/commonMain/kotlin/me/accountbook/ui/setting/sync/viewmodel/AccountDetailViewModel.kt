@@ -1,4 +1,4 @@
-package me.accountbook.ui.setting.account.viewmodel
+package me.accountbook.ui.setting.sync.viewmodel
 
 
 import androidx.compose.runtime.getValue
@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import me.accountbook.database.DatabaseHelper
-import me.accountbook.network.login.LoginManagerImpl
 import me.accountbook.network.GitHubApiService
 import me.accountbook.network.GitHubUser
 import me.accountbook.network.login.LoginManager
@@ -14,9 +13,7 @@ import me.accountbook.utils.serialization.CodecUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AccountDetailViewModel(
-    private val dbHelper: DatabaseHelper
-) : ViewModel(), KoinComponent {
+class AccountDetailViewModel: ViewModel(), KoinComponent {
     private val loginManager: LoginManager by inject()
     private val githubApi = GitHubApiService
 
@@ -30,12 +27,14 @@ class AccountDetailViewModel(
     var error by mutableStateOf<String?>(null)
         private set
 
-    suspend fun revokeAccessToken(){
-        loginManager.revokeAccessToken()
+    suspend fun revokeAccessToken() {
+        if (loginManager.checkAccessToken())
+            loginManager.revokeAccessToken()
+        loginManager.deleteAccessToken()
 
     }
 
-    suspend fun checkToken(){
+    suspend fun checkToken() {
         loginManager.checkAccessToken()
     }
 

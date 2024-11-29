@@ -16,8 +16,8 @@ class DatabaseHelper(private val driver: SqlDriver) {
     private val database = Database(driver) // 自动生成的数据库类
     private val queries = database.appDatabaseQueries
 
-    private fun setNoSynced() {
-        SyncUtil.setNoSynced()
+    private fun setNotSynced() {
+        SyncUtil.setNotSynced()
     }
 
     fun initializeDatabase() {
@@ -36,7 +36,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
                 name,
                 color.toArgb().toUInt().toLong(),
             )
-            setNoSynced()
+            setNotSynced()
 
         } catch (e: SQLException) {
             println("Error inserting tag box: ${e.message}")
@@ -54,7 +54,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
                 tagbox.timestamp,
                 tagbox.deleted,
             )
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error inserting tagbox: ${e.message}")
         }
@@ -70,7 +70,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
                 tagbox.timestamp,
                 tagbox.deleted,
             )
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error inserting tagbox: ${e.message}")
         }
@@ -97,7 +97,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun updateTagboxName(name: String, uuid: String) {
         try {
             queries.updateTagboxName(name, uuid)
-            setNoSynced()
+            setNotSynced()
 
         } catch (e: SQLException) {
             println("Error updateTagboxName:${e.message}")
@@ -107,7 +107,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun updateTagboxColor(color: Color, uuid: String) {
         try {
             queries.updateTagboxColor(color.toArgb().toUInt().toLong(), uuid)
-            setNoSynced()
+            setNotSynced()
 
         } catch (e: SQLException) {
             println("Error updateTagboxColor${e.message}")
@@ -117,7 +117,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun updateTagboxPosition(position: Int, uuid: String) {
         try {
             queries.updateTagboxPosition(position.toLong(), uuid)
-            setNoSynced()
+            setNotSynced()
 
         } catch (e: SQLException) {
             println("Error updateTagboxPosition: ${e.message}")
@@ -133,7 +133,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
                 tagbox.deleted,
                 tagbox.uuid
             )
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error updateTagbox: ${e.message}")
         }
@@ -148,7 +148,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
                 tagbox.deleted,
                 tagbox.uuid
             )
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error updateTagbox: ${e.message}")
         }
@@ -157,7 +157,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun softDeleteTagbox(uuid: String) {
         try {
             queries.softDeleteTagbox(uuid)
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error softDeleteTagbox")
         }
@@ -166,7 +166,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun deleteAllTagbox() {
         try {
             queries.deleteAllTagbox()
-            setNoSynced()
+            setNotSynced()
         } catch (e: SQLException) {
             println("Error delete all tagbox :${e.message}")
         }
@@ -175,7 +175,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun deleteAllDeletedTagbox(){
         try{
             queries.deleteAllDeletedTagbox()
-            setNoSynced()
+            setNotSynced()
         }catch (e:SQLException){
             println("Error delete all deleted tagbox: ${e.message}")
         }

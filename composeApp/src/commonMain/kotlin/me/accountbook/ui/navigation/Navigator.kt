@@ -25,7 +25,7 @@ import me.accountbook.ui.home.HomeScreen
 import me.accountbook.ui.setting.SettingsScreen
 import me.accountbook.ui.home.DetailsTagbox
 import me.accountbook.ui.translation.TranslationScreen
-import me.accountbook.ui.setting.account.SyncDetails
+import me.accountbook.ui.setting.sync.SyncDetails
 
 @Composable
 fun Navigator(navHostController: NavHostController) {

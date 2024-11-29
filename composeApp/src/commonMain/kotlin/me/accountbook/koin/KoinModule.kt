@@ -1,13 +1,10 @@
 package me.accountbook.koin
 
-import me.accountbook.network.GitHubApiService
-import me.accountbook.network.login.LoginManager
 import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
 import me.accountbook.ui.home.viewmodel.FormBarViewModel
-import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
-import me.accountbook.ui.home.viewmodel.ReorderTagboxViewModel
-import me.accountbook.ui.home.viewmodel.TagDetailsViewModel
-import me.accountbook.ui.setting.account.viewmodel.AccountDetailViewModel
+import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
+import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
+import me.accountbook.ui.setting.sync.viewmodel.SyncPointViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -22,12 +19,11 @@ val commonModule = module {
             oauthTokenUrl = "https://github.com/login/oauth/access_token",
         )
     }
-    viewModel { TagDetailsViewModel() }
-    viewModel { ReorderTagboxViewModel(get()) }
-    viewModel { HomeScreenViewModel(get()) }
+    viewModel { SyncPointViewModel() }
+    viewModel { DetailsTagboxViewModel() }
     viewModel { FormBarViewModel() }
-    viewModel { EditTagboxViewModel(get()) }
-    viewModel { AccountDetailViewModel(get()) }
+    viewModel { EditTagboxViewModel() }
+    viewModel { AccountDetailViewModel() }
 }
 
 data class OAuthConfig(

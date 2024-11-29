@@ -1,9 +1,9 @@
 package me.accountbook.utils
 
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -20,12 +20,11 @@ object SyncUtil : KoinComponent {
     private val dbHelper: DatabaseHelper by inject()
     private val githubApi = GitHubApiService
 
-    @Volatile
-    var synced: Boolean = false
+    var isSynced by mutableStateOf(false)
         private set
 
-    fun setNoSynced() {
-        synced = false
+    fun setNotSynced() {
+        isSynced = false
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -44,18 +43,18 @@ object SyncUtil : KoinComponent {
         val mergedDB = SerializableDatabase(tagboxs, Instant.now().epochSecond)
 
         dbHelper.refactorDatabase(mergedDB)
-        synced = githubApi.uploadProtoBufToRepo(mergedDB)
-        return true
+        isSynced = githubApi.uploadProtoBufToRepo(mergedDB)
+        return isSynced
     }
 
     suspend fun hardDelete() {
-        if (!synced) sync()
+        if (!isSynced) sync()
 
         dbHelper.deleteAllDeletedTagbox()
         val localDB = CodecUtil.serializationDatabase()
         localDB.timestamp = Instant.now().epochSecond
 
-        synced = githubApi.uploadProtoBufToRepo(localDB)
+        isSynced = githubApi.uploadProtoBufToRepo(localDB)
 
     }
 

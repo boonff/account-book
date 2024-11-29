@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -21,33 +22,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import me.accountbook.platform.BasicPageVisible
+import me.accountbook.ui.setting.sync.SyncPoint
 
 
 @Composable
 fun BasicPage(
     title: String,
-    content: @Composable () -> Unit //主要内容
+    reLoadData: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Box(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background) // 使用主题背景色
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(), // 让列填满整个可用空间
-            horizontalAlignment = Alignment.Start,
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
+
             if (BasicPageVisible()) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = title,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
+                    )
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        SyncPoint(
+                            modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
+                        ) { reLoadData() }
+                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    SyncPoint(
+                        modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
+                    ) { reLoadData() }
+                }
             }
-            content()
+            Box(modifier = Modifier.padding(8.dp)) {
+                content()
+            }
+
         }
     }
 }

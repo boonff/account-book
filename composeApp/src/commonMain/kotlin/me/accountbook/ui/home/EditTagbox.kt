@@ -29,13 +29,13 @@ import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
 import me.accountbook.ui.home.ColorPalette.colors
 import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
-import me.accountbook.ui.home.viewmodel.ReorderTagboxViewModel
+import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EditTagbox() {
     val viewModel: EditTagboxViewModel = koinViewModel()
-    val reorderTagboxViewModel: ReorderTagboxViewModel = koinViewModel()
+    val detailsTagboxViewModel: DetailsTagboxViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     if (viewModel.isPopupVisible) {
         Dialog(onDismissRequest = { viewModel.togglePopupVisible() }) {
@@ -62,7 +62,7 @@ fun EditTagbox() {
                             ) {
                                 scope.launch {
                                     viewModel.softDeleteTagbox(viewModel.uuid)
-                                    reorderTagboxViewModel.loadSortedTagbox()
+                                    detailsTagboxViewModel.loadSortedTagbox()
                                 }
                                 viewModel.togglePopupVisible()
                             }
@@ -97,7 +97,7 @@ fun EditTagbox() {
                                             viewModel.color,
                                             viewModel.uuid
                                         )
-                                        reorderTagboxViewModel.loadSortedTagbox()
+                                        detailsTagboxViewModel.loadSortedTagbox()
                                     }
                                     viewModel.togglePopupVisible()
                                 },
