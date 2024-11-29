@@ -1,58 +1,87 @@
 -- Account 表
+dropAccount:
+DROP TABLE Account;
+createAccount:
 CREATE TABLE IF NOT EXISTS Account (
-    account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    account_name TEXT NOT NULL,  -- 账户名称，如现金、银行卡等
+    uuid TEXT PRIMARY KEY,
+    timestamp INTEGER DEFAULT (strftime('%s', 'now')),
+    deleted INTEGER DEFAULT 0,
+    name TEXT NOT NULL,
     balance REAL NOT NULL DEFAULT 0,
-    created_at TEXT DEFAULT (DATETIME('now'))
+    minBalance REAL DEFAULT 0
 );
 
--- 获取所有账户
+createAccountTimestampTrigger:
+CREATE TRIGGER IF NOT EXISTS AccountTimestamp
+    BEFORE UPDATE ON Account
+    FOR EACH ROW
+    BEGIN
+        UPDATE Account
+        SET timestamp = (strftime('%s', 'now'))
+        WHERE uuid = new.uuid;
+    END;
+dropAccountTimestampTrigger:
+DROP TRIGGER IF EXISTS AccountTimestamp;
+-- 插入账户时生成 uuid 和时间戳，默认状态为未删除
+insertAccount:
+INSERT INTO Account(uuid, name, balance, minBalance)
+VALUES(:uuid, :name, :balance, :minBalance);
+insertAccountWithAll:
+INSERT INTO Account(uuid,timestamp,deleted, name, balance, minBalance)
+VALUES(:uuid, :timestamp,:deleted,:name, :balance, :minBalance);
+-- 查询未软删除的账户
+queryUndeletedAccount:
+SELECT * FROM Account WHERE deleted = 0;
+-- 查询所有账户
 queryAllAccount:
 SELECT * FROM Account;
-
--- 插入账户
-insertAccount:
-INSERT INTO Account (account_name, balance, created_at)
-VALUES (:accountName, :balance, :createdAt);
-
--- 获取某用户的所有账户
-queryAccounts:
-SELECT * FROM Account;
-
--- 更新账户余额
+-- 更新账户的余额
 updateAccountBalance:
 UPDATE Account
 SET balance = :balance
-WHERE account_id = :accountId;
-
--- 删除账户
-deleteAccount:
-DELETE FROM Account WHERE account_id = :accountId;
--- 获取账户余额
-queryAccountBalance:
-SELECT balance FROM Account WHERE account_id = :accountId;
-
--- 更新账户名称
-updateAccountName:
+WHERE uuid = :uuid;
+-- 更新账户的 minBalance
+updateAccountMinBalance:
 UPDATE Account
-SET account_name = :accountName
-WHERE account_id = :accountId;
-
+SET minBalance = :minBalance
+WHERE uuid = :uuid;
+-- 更新账户信息
+updateAccountByUuid:
+UPDATE Account
+SET
+    name = :name,
+    balance = :balance,
+    minBalance = :minBalance,
+    deleted = :deleted
+WHERE uuid = :uuid;
+-- 软删除账户
+softDeleteAccount:
+UPDATE Account
+SET deleted = 1
+WHERE uuid = :uuid;
+-- 恢复软删除的账户
+recoverAccount:
+UPDATE Account
+SET deleted = 0
+WHERE uuid = :uuid;
 -- 删除所有账户
-deleteAllAccounts:
+deleteAllAccount:
 DELETE FROM Account;
+-- 删除所有软删除的账户
+deleteAllDeletedAccount:
+DELETE FROM Account WHERE deleted = 1;
+
 
 -- TagBox 表
 dropTagbox:
 DROP TABLE Tagbox;
-
 createTagbox:
 CREATE TABLE IF NOT EXISTS Tagbox (
     uuid TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     color INTEGER NOT NULL,
     position INTEGER NOT NULL,
-    timestamp INTEGER DEFAULT (strftime('%s', 'now')),  -- 自动设置时间戳
+    timestamp INTEGER DEFAULT (strftime('%s', 'now')),
     deleted INTEGER DEFAULT 0
 );
 dropSetPositionTrigger:
@@ -68,7 +97,7 @@ CREATE TRIGGER IF NOT EXISTS Setposition
     END;
 createTagboxTimstampTragger:
 CREATE TRIGGER IF NOT EXISTS TagboxTimstamp
-    AFTER UPDATE ON Tagbox
+    BEFORE UPDATE ON Tagbox
     FOR EACH ROW
     BEGIN
         UPDATE Tagbox

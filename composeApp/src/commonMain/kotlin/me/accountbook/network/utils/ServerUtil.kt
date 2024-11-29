@@ -21,7 +21,7 @@ object ServerUtil : KoinComponent {
     private var server: ApplicationEngine? = null
 
     // 用于异步接收授权码
-    private val authorizationCodeDeferred = CompletableDeferred<String?>()
+    private var authorizationCodeDeferred = CompletableDeferred<String?>()
 
     // 启动服务器（静默模式）
     fun startServer() {
@@ -56,6 +56,8 @@ object ServerUtil : KoinComponent {
 
     // 获取授权码（异步等待）
     suspend fun getAuthorizationCode(): String? {
+        // 每次请求时确保重新创建新的 CompletableDeferred 实例
+        authorizationCodeDeferred = CompletableDeferred()
         return try {
             val authorizationCode = authorizationCodeDeferred.await()
             if (authorizationCode.isNullOrBlank()) {

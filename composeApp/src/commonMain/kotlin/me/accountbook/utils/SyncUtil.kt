@@ -39,8 +39,14 @@ object SyncUtil : KoinComponent {
                 localDB.serializableTagboxs,
                 netDB.timestamp
             )
+        val accounts =
+            mergeItems(
+                netDB.serializableAccount,
+                localDB.serializableAccount,
+                netDB.timestamp
+            )
 
-        val mergedDB = SerializableDatabase(tagboxs, Instant.now().epochSecond)
+        val mergedDB = SerializableDatabase(tagboxs, accounts, Instant.now().epochSecond)
 
         dbHelper.refactorDatabase(mergedDB)
         isSynced = githubApi.uploadProtoBufToRepo(mergedDB)

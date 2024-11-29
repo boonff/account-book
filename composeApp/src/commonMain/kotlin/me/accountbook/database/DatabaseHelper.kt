@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import app.cash.sqldelight.db.SqlDriver
 import me.accountbook.utils.SyncUtil
+import me.accountbook.utils.serialization.SerializableAccount
 import me.accountbook.utils.serialization.SerializableDatabase
 import me.accountbook.utils.serialization.SerializableTagbox
 import java.sql.SQLException
@@ -21,11 +22,15 @@ class DatabaseHelper(private val driver: SqlDriver) {
     }
 
     fun initializeDatabase() {
+        queries.createTagbox()
+        queries.createAccount()
 
         queries.dropSetPositionTrigger()
+        queries.dropAccountTimestampTrigger()
 
         queries.createSetPositionTrigger()
         queries.createTagboxTimstampTragger()
+        queries.createAccountTimestampTrigger()
     }
 
     // tagbox表的方法
@@ -60,6 +65,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
         }
     }
 
+    //插入序列化类时必须指定时间戳
     fun insertTagBox(tagbox: SerializableTagbox) {
         try {
             queries.insertTagboxWithTimetamp(
@@ -172,11 +178,11 @@ class DatabaseHelper(private val driver: SqlDriver) {
         }
     }
 
-    fun deleteAllDeletedTagbox(){
-        try{
+    fun deleteAllDeletedTagbox() {
+        try {
             queries.deleteAllDeletedTagbox()
             setNotSynced()
-        }catch (e:SQLException){
+        } catch (e: SQLException) {
             println("Error delete all deleted tagbox: ${e.message}")
         }
     }
@@ -192,13 +198,113 @@ class DatabaseHelper(private val driver: SqlDriver) {
     }
 
     // 账户表的方法
+    fun insertAccount(name: String, balance: Double, minBalance: Double) {
+        try {
+            queries.insertAccount(
+                UUID.randomUUID().toString(),
+                name,
+                balance,
+                minBalance,
+            )
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error inserting account: ${e.message}")
+        }
+    }
+
+    fun insertAccount(account: SerializableAccount) {
+        try {
+            queries.insertAccountWithAll(
+                account.uuid,
+                account.deleted,
+                account.timestamp,
+                account.name,
+                account.balance,
+                account.minBalance,
+            )
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error inserting account: ${e.message}")
+        }
+    }
+
     fun queryAllAccount(): List<Account> {
         return try {
             queries.queryAllAccount().executeAsList()
-
         } catch (e: SQLException) {
             println("Error querying all accounts: ${e.message}")
-            emptyList() // 返回空列表，避免崩溃
+            emptyList()
         }
     }
+
+    fun updateAccountBalance(balance: Double, uuid: String) {
+        try {
+            queries.updateAccountBalance(balance, uuid)
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error updating account balance: ${e.message}")
+        }
+    }
+
+    fun updateAccountMinBalance(minBalance: Double, uuid: String) {
+        try {
+            queries.updateAccountMinBalance(minBalance, uuid)
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error updating account min balance: ${e.message}")
+        }
+    }
+
+    fun updateAccount(account: Account) {
+        try {
+            queries.updateAccountByUuid(
+                account.name,
+                account.balance,
+                account.minBalance,
+                account.deleted,
+                account.uuid
+            )
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error updating account: ${e.message}")
+        }
+    }
+
+    fun softDeleteAccount(uuid: String) {
+        try {
+            queries.softDeleteAccount(uuid)
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error soft deleting account: ${e.message}")
+        }
+    }
+
+    fun recoverAccount(uuid: String) {
+        try {
+            queries.recoverAccount(uuid)
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error recovering account: ${e.message}")
+        }
+    }
+
+    fun deleteAllAccount() {
+        try {
+            queries.deleteAllAccount()
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error deleting all accounts: ${e.message}")
+        }
+    }
+
+    fun deleteAllDeletedAccount() {
+        try {
+            queries.deleteAllDeletedAccount()
+            setNotSynced()
+        } catch (e: SQLException) {
+            println("Error deleting all deleted accounts: ${e.message}")
+        }
+    }
+
+
 }

@@ -38,7 +38,6 @@ abstract class LoginManager : KoinComponent {
 
     protected suspend fun getAccessToken(): String? {
         val authorizationCode = ServerUtil.getAuthorizationCode()
-        ServerUtil.stopServer()
         authorizationCode ?: return null
 
         return withContext(Dispatchers.IO) {
@@ -58,11 +57,15 @@ abstract class LoginManager : KoinComponent {
             try {
                 val response = httpClient.newCall(request).execute()
                 if (!response.isSuccessful) {
-                    throw Exception("Failed to retrieve access token. HTTP status: ${response.code}")
+                    println("Failed to retrieve access token. HTTP status: ${response.code}")
+                    return@withContext null
                 }
 
                 val responseBody = response.body?.string()
-                    ?: throw Exception("Error requesting access token: response body is null")
+                    ?: run {
+                        println("Failed to responseBody :${response.body}")
+                        return@withContext null
+                    }
 
                 try {
                     val decodedResponse =
@@ -71,10 +74,11 @@ abstract class LoginManager : KoinComponent {
                         val (key, value) = it.split("=")
                         key to value
                     }
-
+                    ServerUtil.stopServer()
                     tokenMap["access_token"]
                 } catch (e: Exception) {
-                    throw Exception("Error parsing response body: ${e.message}", e)
+                    println("Error parsing response body: ${e.message}")
+                    return@withContext null
                 }
             } catch (e: Exception) {
                 println("Error making HTTP request for access token: ${e.message}")
