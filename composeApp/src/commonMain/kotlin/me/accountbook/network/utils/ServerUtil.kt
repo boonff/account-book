@@ -36,10 +36,10 @@ object ServerUtil : KoinComponent {
                     val code = call.parameters["code"]
                     if (code != null) {
                         authorizationCodeDeferred.complete(code) // 异步传递授权码
-                        call.respondText("Authorization successful. You can close this page now.")
+                        call.respondText("获取授权码成功，正在交换令牌，请稍等...")
                     } else {
                         call.respondText(
-                            "Authorization failed. No code received.",
+                            "授权码获取失败。",
                             ContentType.Text.Plain
                         )
                     }

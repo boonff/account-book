@@ -3,6 +3,7 @@ package me.accountbook.network.login
 import android.content.Context
 import android.content.Intent
 import me.accountbook.WebViewActivity
+import me.accountbook.WebViewManager
 import me.accountbook.network.utils.ServerUtil
 import me.accountbook.utils.file.KeystoreUtil
 import org.koin.core.component.KoinComponent
@@ -11,6 +12,8 @@ import java.net.URI
 
 object AndroidLoginManager : LoginManager(), KoinComponent {
     private val context: Context by inject()
+    private val webViewManager: WebViewManager by inject()
+
     private const val KEY_ALIAS = "access_token"
 
     private val keystoreUtil = KeystoreUtil(KEY_ALIAS)
@@ -18,8 +21,8 @@ object AndroidLoginManager : LoginManager(), KoinComponent {
         // 启动 WebViewActivity 显示网页
         val intent = Intent(context, WebViewActivity::class.java).apply {
             putExtra(WebViewActivity.EXTRA_URL, url)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
     }
 
@@ -33,7 +36,11 @@ object AndroidLoginManager : LoginManager(), KoinComponent {
     override suspend fun saveAccessToken(): Boolean {
         val accessToken = getAccessToken() ?: return false
         val encryptToken = keystoreUtil.encryptData(accessToken)
-        return fileStore.saveJsonToFile(tokenPath, encryptToken)
+        val flag = fileStore.saveJsonToFile(tokenPath, encryptToken)
+        if (flag) {
+            webViewManager.closeWebViewActivity()
+        }
+        return flag
     }
 
     override suspend fun deleteAccessToken(): Boolean {

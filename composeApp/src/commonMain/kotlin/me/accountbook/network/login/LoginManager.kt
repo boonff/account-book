@@ -42,8 +42,6 @@ abstract class LoginManager : KoinComponent {
         val authorizationCode = ServerUtil.getAuthorizationCode()
         authorizationCode ?: return null
 
-        @Serializable
-        data class GetToken(val token: String)
 
         return withContext(Dispatchers.IO) {
             val requestBody = FormBody.Builder()

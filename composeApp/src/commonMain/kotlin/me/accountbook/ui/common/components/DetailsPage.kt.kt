@@ -35,7 +35,7 @@ fun DetailsPage(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -50,6 +50,7 @@ fun DetailsPage(
                     modifier = Modifier
                         .padding(8.dp)
                         .padding(end = 16.dp)
+                        .align(CenterVertically)
                         .clickable {
                             navController.popBackStack()
                         }
@@ -67,7 +68,7 @@ fun DetailsPage(
                     ) { reLoadData() }
                 }
             }
-            Box(modifier = Modifier.padding(16.dp)) {
+            Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
                 content()
             }
 

@@ -1,9 +1,8 @@
 package me.accountbook
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.webkit.WebChromeClient
-import android.webkit.WebView
+import android.view.ViewManager
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
-import me.accountbook.WebViewActivity.Companion.EXTRA_URL
+import org.koin.android.ext.android.inject
+import org.koin.compose.koinInject
 
 class WebViewActivity : ComponentActivity() {
+    val webViewManager: WebViewManager by inject()
+
     companion object {
         const val EXTRA_URL = "EXTRA_URL" // 用来传递 URL
     }
@@ -25,57 +26,52 @@ class WebViewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val url: String? = intent.getStringExtra(EXTRA_URL)
+        webViewManager.activity = this
         // 设置 Compose 内容
         setContent {
             if (url == null) {
                 Text("url error")
-            } else
+            } else {
                 WebViewScreen(url)
+            }
         }
     }
 }
 
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(url: String) {
-    var progress by remember { mutableIntStateOf(0) }
-    var loading by remember { mutableStateOf(true) }
+    val webViewManager: WebViewManager = koinInject()
 
+    var progress by remember { mutableIntStateOf(0) } // 加载进度
+    var loading by remember { mutableStateOf(true) } // 是否加载中
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        // 如果正在加载，显示顶部 LinearProgressIndicator
+        if (loading) {
+            LinearProgressIndicator(
+                progress = {
+                    progress / 100f // 显示进度条
+                },
+                modifier = Modifier
+                    .fillMaxWidth()  // 占满整个宽度
+                    .height(4.dp), // 设置高度
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f), // 设置进度条的背景色
+            )
+        }
+        // 创建 WebView，并且绑定进度更新
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                WebView(context).apply {
-                    settings.javaScriptEnabled = true
-                    settings.domStorageEnabled = true
-                    webChromeClient = object : WebChromeClient() {
-                        override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                            super.onProgressChanged(view, newProgress)
-                            progress = newProgress
-                            if (newProgress == 100) {
-                                loading = false
-                            } else {
-                                loading = true
-                            }
-                        }
-                    }
-
-                    webViewClient = WebViewClient()
-                    loadUrl(url)
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            factory = {
+                val webView = webViewManager.createWebView { newProgress ->
+                    progress = newProgress
+                    loading = newProgress < 100 // 如果进度 < 100，则继续加载
                 }
+                webView.loadUrl(url)
+                webView
             }
         )
 
-        if (loading) {
-            CircularProgressIndicator(
-                progress = { progress / 100f },
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(100.dp),
-                trackColor = ProgressIndicatorDefaults.circularIndeterminateTrackColor,
-            )
-        }
     }
 }
 

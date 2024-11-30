@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,8 @@ fun SyncDetails(navHostController: NavHostController) {
         content =
         {
             Column(
+                modifier = Modifier
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 if (!viewModel.isLogin)
@@ -45,7 +48,7 @@ fun SyncDetails(navHostController: NavHostController) {
 
                             }
                     )
-                //登录后的功能
+
                 if (viewModel.isLogin) {
                     Row {
                         Text(
@@ -70,18 +73,6 @@ fun SyncDetails(navHostController: NavHostController) {
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
-
-                    Text(
-                        text = "同步",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    SyncUtil.sync()
-                                }
-                            }
-                    )
                     Text(
                         text = "硬删除",
                         color = MaterialTheme.colorScheme.onBackground,
@@ -101,18 +92,6 @@ fun SyncDetails(navHostController: NavHostController) {
                                     viewModel.revokeAccessToken()
                                 }
                             }
-                    )
-
-                    Text(
-                        text = "检查令牌",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.checkToken()
-                                }
-                            }
-
                     )
                 }
 
