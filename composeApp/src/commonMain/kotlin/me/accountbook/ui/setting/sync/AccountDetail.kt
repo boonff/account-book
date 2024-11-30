@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.accountbook.network.GitHubApiService
 import me.accountbook.ui.common.components.DetailsPage
 import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
 import me.accountbook.utils.SyncUtil
@@ -90,6 +91,17 @@ fun SyncDetails(navHostController: NavHostController) {
                             .clickable {
                                 scope.launch(Dispatchers.IO) {
                                     viewModel.revokeAccessToken()
+                                }
+                            }
+                    )
+
+                    Text(
+                        text = "更改用户名",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                            .clickable {
+                                scope.launch(Dispatchers.IO) {
+                                    GitHubApiService.username = "ddd"
                                 }
                             }
                     )

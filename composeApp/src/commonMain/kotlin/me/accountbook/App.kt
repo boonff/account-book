@@ -10,8 +10,10 @@ import org.koin.compose.koinInject
 fun App() {
     val loginManager: LoginManager = koinInject()
     LaunchedEffect(Unit) {
-        if (loginManager.checkAccessToken())
+        if (loginManager.checkAccessToken()) {
             GitHubApiService.setToken(loginManager.readAccessToken())
+            GitHubApiService.loadUsername()
+        }
     }
 
 }

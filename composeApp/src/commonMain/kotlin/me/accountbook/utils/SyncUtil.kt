@@ -59,7 +59,6 @@ object SyncUtil : KoinComponent {
         dbHelper.deleteAllDeletedTagbox()
         val localDB = CodecUtil.serializationDatabase()
         localDB.timestamp = Instant.now().epochSecond
-
         isSynced = githubApi.uploadProtoBufToRepo(localDB)
 
     }

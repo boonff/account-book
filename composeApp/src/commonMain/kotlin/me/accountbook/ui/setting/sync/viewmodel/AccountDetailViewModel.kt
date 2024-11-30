@@ -70,6 +70,7 @@ class AccountDetailViewModel : ViewModel(), KoinComponent {
                     ?: throw Exception("文件中读取到的token为空")
                 isLogin = true
                 githubApi.createPrivateRepo()
+                githubApi.loadUsername()
             } catch (e: Exception) {
                 println("login Error :${e.message}")
             }
