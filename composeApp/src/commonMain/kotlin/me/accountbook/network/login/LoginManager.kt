@@ -2,6 +2,8 @@ package me.accountbook.network.login
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import me.accountbook.koin.OAuthConfig
 import me.accountbook.koin.getRedirectUri
 import me.accountbook.network.utils.ServerUtil
@@ -40,6 +42,9 @@ abstract class LoginManager : KoinComponent {
         val authorizationCode = ServerUtil.getAuthorizationCode()
         authorizationCode ?: return null
 
+        @Serializable
+        data class GetToken(val token: String)
+
         return withContext(Dispatchers.IO) {
             val requestBody = FormBody.Builder()
                 .add("grant_type", "authorization_code")
@@ -53,21 +58,10 @@ abstract class LoginManager : KoinComponent {
                 .url(oauthConfig.oauthTokenUrl)
                 .post(requestBody)
                 .build()
-
             try {
                 val response = httpClient.newCall(request).execute()
-                if (!response.isSuccessful) {
-                    println("Failed to retrieve access token. HTTP status: ${response.code}")
-                    return@withContext null
-                }
-
-                val responseBody = response.body?.string()
-                    ?: run {
-                        println("Failed to responseBody :${response.body}")
-                        return@withContext null
-                    }
-
-                try {
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
                     val decodedResponse =
                         URLDecoder.decode(responseBody, StandardCharsets.UTF_8.name())
                     val tokenMap = decodedResponse.split("&").associate {
@@ -76,13 +70,13 @@ abstract class LoginManager : KoinComponent {
                     }
                     ServerUtil.stopServer()
                     tokenMap["access_token"]
-                } catch (e: Exception) {
-                    println("Error parsing response body: ${e.message}")
-                    return@withContext null
+                } else {
+                    println("Failed to retrieve access token. HTTP status: ${response.code}")
+                    null
                 }
             } catch (e: Exception) {
                 println("Error making HTTP request for access token: ${e.message}")
-                return@withContext null
+                null
             }
         }
     }

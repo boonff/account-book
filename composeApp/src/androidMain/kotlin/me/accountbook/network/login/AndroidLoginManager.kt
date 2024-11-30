@@ -33,7 +33,7 @@ object AndroidLoginManager : LoginManager(), KoinComponent {
     override suspend fun saveAccessToken(): Boolean {
         val accessToken = getAccessToken() ?: return false
         val encryptToken = keystoreUtil.encryptData(accessToken)
-        return fileStore.saveJsonToFile(tokenPath, encryptToken) //文件名需要解耦
+        return fileStore.saveJsonToFile(tokenPath, encryptToken)
     }
 
     override suspend fun deleteAccessToken(): Boolean {

@@ -22,6 +22,7 @@ object GitHubApiService {
     private var token: String? = null
     private const val REPO_NAME: String = "test"
     private const val TARGET_FILE_PATH_IN_REPO: String = "database.bat"
+    private var username: String? = null
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)) // 日志记录
@@ -40,9 +41,21 @@ object GitHubApiService {
 
     }
 
+    private suspend fun loadUsername(): Boolean {
+        if (username == null) {
+            username = fetchUserName() ?: return false
+            return true
+        } else
+            return false
+    }
+
     //获取用户信息
-    suspend fun fetchUserInfo(): GitHubUser? {
+    suspend fun fetchUserName(): String? {
         if (emptyToken()) return null
+        @Serializable
+        data class GitHubUser(
+            val login: String
+        )
 
         // 使用协程中的 withContext 切换到IO线程
         return withContext(Dispatchers.IO) {
@@ -55,9 +68,9 @@ object GitHubApiService {
                 val response: Response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    return@withContext responseBody?.let {
+                    responseBody?.let {
                         val json = Json { ignoreUnknownKeys = true } // 序列化时忽略未知字段
-                        json.decodeFromString<GitHubUser>(it)
+                        return@withContext json.decodeFromString<GitHubUser>(it).login
                     }
                 } else {
                     // 处理错误响应
@@ -73,8 +86,9 @@ object GitHubApiService {
     // 检查仓库是否已经存在
     private suspend fun checkIfRepoExists(): Boolean {
         if (emptyToken()) return false
+        if (loadUsername()) return false
 
-        val checkRepoUrl = "https://api.github.com/repos/boonff/$REPO_NAME" // 替换为你的 GitHub 用户名
+        val checkRepoUrl = "https://api.github.com/repos/$username/$REPO_NAME" // 替换为你的 GitHub 用户名
         val checkRepoRequest =
             Request.Builder().url(checkRepoUrl).addHeader("Authorization", "Bearer $token").build()
 
@@ -138,12 +152,14 @@ object GitHubApiService {
         commitMessage: String = "Upload ProtoBuf file"
     ): Boolean {
         if (emptyToken()) return false
+        if (loadUsername()) return false
 
         val protoBufBytes = ProtoBuf.encodeToByteArray(protoBufData)
         val encodedFile = Base64.encode(protoBufBytes)
         val sha: String? = getFileShaFromRepo()
         // GitHub API URL: 上传文件
-        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
+        val url =
+            "https://api.github.com/repos/$username/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         // 创建请求体
         val jsonPayload = """
@@ -182,8 +198,9 @@ object GitHubApiService {
     //获取仓库文件的sha校验值
     private suspend fun getFileShaFromRepo(): String? {
         if (emptyToken()) return null
-
-        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
+        if (loadUsername()) return null
+        val url =
+            "https://api.github.com/repos/$username/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         val request = Request.Builder().url(url).addHeader("Authorization", "Bearer $token")
             .get()  // GET 请求获取文件的元数据
@@ -218,8 +235,10 @@ object GitHubApiService {
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun fetchFileContentAsByteArray(): ByteArray? {
         if (emptyToken()) return null
+        if (loadUsername()) return null
 
-        val url = "https://api.github.com/repos/boonff/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
+        val url =
+            "https://api.github.com/repos/$username/$REPO_NAME/contents/$TARGET_FILE_PATH_IN_REPO"
 
         val request = Request.Builder().url(url).addHeader("Authorization", "Bearer $token")
             .get()  // GET 请求获取文件内容
@@ -263,8 +282,3 @@ object GitHubApiService {
 
 }
 
-
-@Serializable
-data class GitHubUser(
-    val login: String
-)

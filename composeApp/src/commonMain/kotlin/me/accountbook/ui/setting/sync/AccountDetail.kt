@@ -24,7 +24,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SyncDetails(navHostController: NavHostController) {
     val viewModel: AccountDetailViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
-    DetailsPage("同步设置",
+    DetailsPage(
+        "同步设置",
         navHostController,
         reLoadData = {},
         content =
@@ -39,10 +40,9 @@ fun SyncDetails(navHostController: NavHostController) {
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    //viewModel.serialization()
-                                    viewModel.initToken()
-                                }
+                                //viewModel.serialization()
+                                viewModel.initToken()
+
                             }
                     )
                 //登录后的功能
@@ -65,15 +65,12 @@ fun SyncDetails(navHostController: NavHostController) {
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
-                        viewModel.userInfo?.let {
-                            Text(
-                                "User: ${it.login}",
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        } ?: run {
-                            viewModel.error?.let { Text("Error: $it") }
-                        }
+                        Text(
+                            "User: ${viewModel.userInfo}",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
+
 
                     Text(
                         text = "同步",
@@ -118,7 +115,9 @@ fun SyncDetails(navHostController: NavHostController) {
 
                     )
                 }
+
             }
         }
     )
 }
+

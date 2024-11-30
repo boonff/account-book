@@ -190,8 +190,12 @@ class DatabaseHelper(private val driver: SqlDriver) {
     fun refactorDatabase(mergedDB: SerializableDatabase) {
         queries.transaction {
             deleteAllTagbox()
+            deleteAllAccount()
             mergedDB.serializableTagboxs.forEach {
                 insertTagBox(it)
+            }
+            mergedDB.serializableAccount.forEach{
+                insertAccount(it)
             }
         }
 
