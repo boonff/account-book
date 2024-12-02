@@ -37,43 +37,16 @@ fun SyncDetails(navHostController: NavHostController) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (!viewModel.isLogin)
-                //登录按钮
+                if (!viewModel.isLogin())
                     Text(
-                        text = "获得授权令牌",
+                        text = "登录",
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .clickable {
-                                //viewModel.serialization()
-                                viewModel.initToken()
-
+                                viewModel.login()
                             }
                     )
-
-                if (viewModel.isLogin) {
-                    Row {
-                        Text(
-                            text = "加载用户名",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier
-                                .clickable {
-                                    scope.launch(Dispatchers.IO) {
-                                        viewModel.fetchGitHubUserInfo()
-                                    }
-                                }
-                        )
-                        //用户名加载动画
-                        if (viewModel.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        Text(
-                            "User: ${viewModel.userInfo}",
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
+                if (viewModel.isLogin()) {
                     Text(
                         text = "硬删除",
                         color = MaterialTheme.colorScheme.onBackground,
@@ -85,23 +58,12 @@ fun SyncDetails(navHostController: NavHostController) {
                             }
                     )
                     Text(
-                        text = "销毁令牌",
+                        text = "退出登录",
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .clickable {
                                 scope.launch(Dispatchers.IO) {
                                     viewModel.revokeAccessToken()
-                                }
-                            }
-                    )
-
-                    Text(
-                        text = "更改用户名",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    GitHubApiService.username = "ddd"
                                 }
                             }
                     )

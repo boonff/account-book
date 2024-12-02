@@ -4,6 +4,7 @@ import kotlinx.serialization.*
 import me.accountbook.database.DatabaseHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.time.Instant
 
 @OptIn(ExperimentalSerializationApi::class)
 object CodecUtil : KoinComponent {
@@ -16,6 +17,10 @@ object CodecUtil : KoinComponent {
         val serializableAccount = dbHelper.queryAllAccount().map {
             it.encode()
         }
-        return SerializableDatabase(serializableTagbox, serializableAccount)
+        return SerializableDatabase(
+            serializableTagbox,
+            serializableAccount,
+            Instant.now().epochSecond
+        )
     }
 }

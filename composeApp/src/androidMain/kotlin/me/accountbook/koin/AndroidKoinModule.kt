@@ -7,8 +7,10 @@ import me.accountbook.database.AndroidDatabaseDriverFactory
 import me.accountbook.database.DatabaseDriverFactory
 import me.accountbook.database.DatabaseHelper
 import me.accountbook.network.utils.AndroidBrowserUtil
-import me.accountbook.network.login.AndroidLoginManager
-import me.accountbook.network.login.LoginManager
+import me.accountbook.network.AndroidLoginService
+import me.accountbook.network.AndroidUserService
+import me.accountbook.network.LoginService
+import me.accountbook.network.UserService
 import me.accountbook.network.utils.BrowserUtil
 import me.accountbook.utils.file.AndroidFileUtil
 import me.accountbook.utils.file.FileUtil
@@ -22,5 +24,6 @@ val androidModule = module {
     single<DatabaseHelper> { DatabaseHelper(get()) }
     single<FileUtil> { AndroidFileUtil(get()) }
     single<BrowserUtil> { AndroidBrowserUtil(get()) }//可以删除
-    single<LoginManager> { AndroidLoginManager }
+    single<LoginService> { AndroidLoginService }
+    single<UserService> { AndroidUserService }
 }

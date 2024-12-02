@@ -17,6 +17,13 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        google()
+        maven("https://jitpack.io")
+        maven {
+            url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
+            url = uri("https://mvnrepository.com/artifact/io.insert-koin/koin-compose-viewmodel")
+            url = uri(" https://mvnrepository.com/artifact/com.soywiz.korlibs.krypto/krypto")
+        }
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -27,5 +34,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+
 
 include(":composeApp")

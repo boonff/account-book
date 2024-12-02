@@ -4,19 +4,17 @@ import android.content.Context
 import android.util.Log
 import java.io.File
 import java.io.IOException
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 
 class AndroidFileUtil(private val context: Context) : FileUtil {
-    override fun isFileExist(fileName: String): Boolean {
+    override fun exist(fileName: String): Boolean {
         val file = File(context.filesDir, fileName)
         return file.exists() // 返回文件是否存在
     }
 
-    override fun saveJsonToFile(fileName: String, json: String): Boolean {
+    override fun save(fileName: String, content: String): Boolean {
         return try {
             val file = File(context.filesDir, fileName)
-            file.writeText(json)
+            file.writeText(content)
             true
         } catch (e: IOException) {
             Log.e("AndroidFileStorage", "Error saving file", e)
@@ -24,7 +22,7 @@ class AndroidFileUtil(private val context: Context) : FileUtil {
         }
     }
 
-    override fun readJsonFromFile(fileName: String): String? {
+    override fun read(fileName: String): String? {
         return try {
             val file = File(context.filesDir, fileName)
             if (file.exists()) file.readText() else null
@@ -34,7 +32,7 @@ class AndroidFileUtil(private val context: Context) : FileUtil {
         }
     }
 
-    override fun deleteFile(fileName: String):Boolean {
+    override fun delete(fileName: String):Boolean {
         return try{
             val file = File(context.filesDir, fileName)
             if (file.exists()) file.delete() else return true

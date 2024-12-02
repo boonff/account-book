@@ -19,15 +19,9 @@ class WebViewManager(private val context: Context) : KoinComponent {
         // 启用 JavaScript 和存储
         webView.settings.apply {
             javaScriptEnabled = true
-            domStorageEnabled = false
-            cacheMode = WebSettings.LOAD_NO_CACHE  // 不使用缓存
-            databaseEnabled = false  // 禁用数据库存储
+            domStorageEnabled = true
         }
 
-        // 清理 Cookie
-        val cookieManager = CookieManager.getInstance()
-        cookieManager.removeAllCookies(null)
-        cookieManager.flush()
         webView.webChromeClient = getWebChromeClient(onProgressChanged)
         webView.webViewClient = WebViewClient()
 

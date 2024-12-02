@@ -1,4 +1,4 @@
-package me.accountbook.network.login
+package me.accountbook.network
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.net.URI
 
-object AndroidLoginManager : LoginManager(), KoinComponent {
+object AndroidLoginService : LoginService(), KoinComponent {
     private val context: Context by inject()
     private val webViewManager: WebViewManager by inject()
 
@@ -31,26 +31,5 @@ object AndroidLoginManager : LoginManager(), KoinComponent {
         val uri = URI.create(authorizationUrl)
         ServerUtil.startServer()
         openBrowser(uri.toString())
-    }
-
-    override suspend fun saveAccessToken(): Boolean {
-        val accessToken = getAccessToken() ?: return false
-        val encryptToken = keystoreUtil.encryptData(accessToken)
-        val flag = fileStore.saveJsonToFile(tokenPath, encryptToken)
-        if (flag) {
-            webViewManager.closeWebViewActivity()
-        }
-        return flag
-    }
-
-    override suspend fun deleteAccessToken(): Boolean {
-        return fileStore.deleteFile(tokenPath)
-    }
-
-    override fun readAccessToken(): String? {
-        val encryptToken = fileStore.readJsonFromFile(tokenPath)
-        return if (encryptToken == null) null
-        else
-            keystoreUtil.decryptData(encryptToken)
     }
 }

@@ -19,35 +19,13 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 object GitHubApiService {
-    private const val repoName: String = "test"
-    private const val repoPath: String = "database.bat"
-    private var token: String? = null
-    var username: String? = null
-
     private val client = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)) // 日志记录
         .build()
 
-    private fun emptyToken(): Boolean {
-        return token == null
-    }
-
-    private fun emptyUsername(): Boolean {
-        return username == null
-    }
-
-    fun setToken(token: String?) {
-        this.token = token
-    }
-
-    suspend fun loadUsername(): Boolean {
-        username = fetchUserName()
-        return username != null
-    }
 
     //获取用户信息
-    suspend fun fetchUserName(): String? {
-        if (emptyToken()) return null
+    suspend fun fetchUserName(token: String): String? {
         @Serializable
         data class GitHubUser(
             val login: String
@@ -70,18 +48,17 @@ object GitHubApiService {
                     }
                 } else {
                     // 处理错误响应
-                    println("Error: ${response.code}")
+                    println("Error fetchUserName: ${response.code}")
                 }
             } catch (e: Exception) {
-                println("Error: ${e.message}")
+                println("Error fetchUserName: ${e.message}")
             }
             return@withContext null
         }
     }
 
     // 检查仓库是否已经存在
-    private suspend fun checkIfRepoExists(): Boolean {
-        if (emptyToken() || emptyUsername()) return false
+    suspend fun checkIfRepoExists(token: String, username: String, repoName: String): Boolean {
         val checkRepoUrl =
             "https://api.github.com/repos/$username/$repoName" // 替换为你的 GitHub 用户名
         val checkRepoRequest =
@@ -99,14 +76,18 @@ object GitHubApiService {
     }
 
     // 创建私有仓库
-    suspend fun createPrivateRepo(description: String = "Private repository"): Boolean {
-        if (emptyToken()) return false
+    suspend fun createPrivateRepo(
+        token: String,
+        username: String,
+        repoName: String,
+        description: String = "Private repository"
+    ): Boolean {
 
         // 使用协程中的 withContext 切换到IO线程
         return withContext(Dispatchers.IO) {
-            if (checkIfRepoExists()) {
+            if (checkIfRepoExists(token, username, repoName)) {
                 println("Repository '$repoName' already exists.")
-                return@withContext false
+                return@withContext true
             }
 
             val url = "https://api.github.com/user/repos"
@@ -132,10 +113,10 @@ object GitHubApiService {
                 } else {
                     println("Failed to create repository: ${response.code}")
                     val errorBody = response.body?.string()
-                    println("Error: $errorBody")
+                    println("Error createPrivateRepo: $errorBody")
                 }
             } catch (e: Exception) {
-                println("Error: ${e.message}")
+                println("Error createPrivateRepo: ${e.message}")
             }
             return@withContext false
         }
@@ -144,13 +125,16 @@ object GitHubApiService {
     // 直接上传 ProtoBuf 数据到指定路径
     @OptIn(ExperimentalSerializationApi::class, ExperimentalEncodingApi::class)
     suspend fun uploadProtoBufToRepo(
+        token: String,
+        username: String,
+        repoName: String,
+        repoPath: String,
         protoBufData: SerializableDatabase,
         commitMessage: String = "Upload ProtoBuf file"
     ): Boolean {
-        if (emptyToken() || emptyUsername()) return false
         val protoBufBytes = ProtoBuf.encodeToByteArray(protoBufData)
         val encodedFile = Base64.encode(protoBufBytes)
-        val sha: String? = getFileShaFromRepo()
+        val sha: String? = getFileShaFromRepo(token, username, repoName, repoPath)
         // GitHub API URL: 上传文件
         val url =
             "https://api.github.com/repos/$username/$repoName/contents/$repoPath"
@@ -180,18 +164,22 @@ object GitHubApiService {
                 } else {
                     println("Failed to upload file: ${response.code}")
                     val errorBody = response.body?.string()
-                    println("Error: $errorBody")
+                    println("Error uploadProtoBufToRepo: $errorBody")
                 }
             } catch (e: Exception) {
-                println("Error: ${e.message}")
+                println("Error uploadProtoBufToRepo: ${e.message}")
             }
             return@withContext false
         }
     }
 
     //获取仓库文件的sha校验值
-    private suspend fun getFileShaFromRepo(): String? {
-        if (emptyToken() || emptyUsername()) return null
+    private suspend fun getFileShaFromRepo(
+        token: String,
+        username: String,
+        repoName: String,
+        repoPath: String
+    ): String? {
         val url =
             "https://api.github.com/repos/$username/$repoName/contents/$repoPath"
 
@@ -215,10 +203,10 @@ object GitHubApiService {
                 } else {
                     println("Failed to fetch file info: ${response.code}")
                     val errorBody = response.body?.string()
-                    println("Error: $errorBody")
+                    println("Error getFileShaFromRepo: $errorBody")
                 }
             } catch (e: Exception) {
-                println("Error: ${e.message}")
+                println("Error getFileShaFromRepo: ${e.message}")
             }
             return@withContext null
         }
@@ -226,8 +214,12 @@ object GitHubApiService {
 
     //获取仓库 ProtoBuf 数据
     @OptIn(ExperimentalEncodingApi::class)
-    suspend fun fetchFileContentAsByteArray(): ByteArray? {
-        if (emptyToken() || emptyUsername()) return null
+    suspend fun fetchFileContentAsByteArray(
+        token: String,
+        username: String,
+        repoName: String,
+        repoPath: String
+    ): ByteArray? {
 
         val url =
             "https://api.github.com/repos/$username/$repoName/contents/$repoPath"
@@ -263,14 +255,15 @@ object GitHubApiService {
                 } else {
                     println("Failed to fetch file content: ${response.code}")
                     val errorBody = response.body?.string()
-                    println("Error: $errorBody")
+                    println("Error fetchFileContentAsByteArray: $errorBody")
                 }
             } catch (e: Exception) {
-                println("Error: ${e.message}")
+                println("Error fetchFileContentAsByteArray: ${e.message}")
             }
             return@withContext null
         }
     }
+
 
 }
 

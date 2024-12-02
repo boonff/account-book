@@ -3,17 +3,15 @@ package me.accountbook
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import me.accountbook.network.GitHubApiService
-import me.accountbook.network.login.LoginManager
+import me.accountbook.network.LoginService
+import me.accountbook.network.UserService
 import org.koin.compose.koinInject
 
 @Composable
 fun App() {
-    val loginManager: LoginManager = koinInject()
+    val userService:UserService = koinInject()
     LaunchedEffect(Unit) {
-        if (loginManager.checkAccessToken()) {
-            GitHubApiService.setToken(loginManager.readAccessToken())
-            GitHubApiService.loadUsername()
-        }
+        userService.initUser()
     }
 
 }

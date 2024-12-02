@@ -1,10 +1,10 @@
 package me.accountbook.utils.file
 
 interface FileUtil {
-    fun isFileExist(fileName: String): Boolean
-    fun saveJsonToFile(fileName: String, json: String): Boolean
-    fun readJsonFromFile(fileName: String): String?
+    fun exist(fileName: String): Boolean
+    fun save(fileName: String, content: String): Boolean
+    fun read(fileName: String): String?
 
-    fun deleteFile(fileName: String): Boolean
+    fun delete(fileName: String): Boolean
 }
 

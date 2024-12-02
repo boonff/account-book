@@ -1,9 +1,7 @@
-package me.accountbook.network.login
+package me.accountbook.network
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import me.accountbook.koin.OAuthConfig
 import me.accountbook.koin.getRedirectUri
 import me.accountbook.network.utils.ServerUtil
@@ -11,37 +9,41 @@ import me.accountbook.utils.file.FileUtil
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-abstract class LoginManager : KoinComponent {
+abstract class LoginService : KoinComponent {
     private val oauthConfig: OAuthConfig by inject()
     protected val fileStore: FileUtil by inject()
-    private val loginManager: LoginManager by inject()
 
     protected val tokenPath: String = "token"
     private val httpClient = OkHttpClient()
 
     fun isLoggedIn(): Boolean {
-        return fileStore.isFileExist(tokenPath)
+        return fileStore.exist(tokenPath)
     }
 
     protected fun getAuthorizationUrl(): String {
         val baseUrl = oauthConfig.oauthUrl
         val scope = "repo"
-        return "$baseUrl?client_id=${oauthConfig.clientId}&response_type=code&redirect_uri=${oauthConfig.getRedirectUri()}&scope=$scope"//scope需要填写
+        return "$baseUrl?client_id=${oauthConfig.clientId}&response_type=code&redirect_uri=${oauthConfig.getRedirectUri()}&scope=$scope&prompt=select_account"//scope需要填写
     }
 
-    protected suspend fun getAccessToken(): String? {
+    suspend fun getToken(): String? {
+        val httpClient = OkHttpClient.Builder()
+            .protocols(listOf(Protocol.HTTP_1_1))  // 强制使用 HTTP/1.1
+            .build()
+
         val authorizationCode = ServerUtil.getAuthorizationCode()
         authorizationCode ?: return null
-
 
         return withContext(Dispatchers.IO) {
             val requestBody = FormBody.Builder()
@@ -54,9 +56,11 @@ abstract class LoginManager : KoinComponent {
 
             val request = Request.Builder()
                 .url(oauthConfig.oauthTokenUrl)
+                .addHeader("Cache-Control", "no-cache")
                 .post(requestBody)
                 .build()
             try {
+
                 val response = httpClient.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
@@ -66,28 +70,28 @@ abstract class LoginManager : KoinComponent {
                         val (key, value) = it.split("=")
                         key to value
                     }
-                    ServerUtil.stopServer()
                     tokenMap["access_token"]
                 } else {
-                    println("Failed to retrieve access token. HTTP status: ${response.code}")
+                    println("Error getToken response is failed: ${response.code}")
                     null
                 }
             } catch (e: Exception) {
-                println("Error making HTTP request for access token: ${e.message}")
+                println("Error getToken: ${e.message}\n")
                 null
+            }finally {
+                ServerUtil.stopServer()
             }
         }
     }
 
 
     @OptIn(ExperimentalEncodingApi::class)
-    suspend fun revokeAccessToken(): Boolean {
+    suspend fun revokeToken(token: String): Boolean {
         return withContext(Dispatchers.IO) {
             val credentials = "${oauthConfig.clientId}:${oauthConfig.clientSecret}"
             val base64Credentials = Base64.encode(credentials.toByteArray()) // 将身份验证信息编码为 Base64
-            val accessToken = loginManager.readAccessToken() ?: return@withContext false
             val revokeUrl = "https://api.github.com/applications/${oauthConfig.clientId}/token"
-            val requestBody = """{"access_token":"$accessToken"}"""
+            val requestBody = """{"access_token":"$token"}"""
                 .toRequestBody("application/json".toMediaTypeOrNull())
             val request = Request.Builder()
                 .url(revokeUrl) // URL
@@ -95,24 +99,30 @@ abstract class LoginManager : KoinComponent {
                 .addHeader("Authorization", "Basic $base64Credentials") // 添加 Basic 认证头
                 .addHeader("Accept", "application/vnd.github+json")
                 .build()
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful) {
-                return@withContext false
+            try {
+                val response = httpClient.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    println("Error revokeToken response is failed: ${response.code}")
+                    return@withContext false
+                }
+                fileStore.delete(tokenPath) // 删除 token 文件或执行其他本地清理操作
+                return@withContext true
+            } catch (e: Exception) {
+                println("Error revokeToken:${e.message}")
+                false
             }
-            fileStore.deleteFile(tokenPath) // 删除 token 文件或执行其他本地清理操作
-            return@withContext true
+
         }
 
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    suspend fun checkAccessToken(): Boolean {
+    suspend fun checkToken(token: String): Boolean {
         return withContext(Dispatchers.IO) {
             val credentials = "${oauthConfig.clientId}:${oauthConfig.clientSecret}"
             val base64Credentials = Base64.encode(credentials.toByteArray())
-            val accessToken = loginManager.readAccessToken() ?: return@withContext false
             val checkUrl = "https://api.github.com/applications/${oauthConfig.clientId}/token"
-            val requestBody = """{"access_token":"$accessToken"}"""
+            val requestBody = """{"access_token":"$token"}"""
                 .toRequestBody("application/json".toMediaTypeOrNull())
             val request = Request.Builder()
                 .url(checkUrl)
@@ -120,23 +130,25 @@ abstract class LoginManager : KoinComponent {
                 .addHeader("Authorization", "Basic $base64Credentials")
                 .addHeader("Accept", "application/vnd.github+json")
                 .build()
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful)
-                return@withContext false
-            else (response.code == 200)
-            return@withContext true
+            try {
+                val response = httpClient.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    println("Error checkToken response is failed:${response.code}")
+                    return@withContext false
+                }
+                else (response.code == 200)
+                return@withContext true
+            } catch (e: Exception) {
+                println("Error checkToken:${e.message}")
+                false
+            }
+
         }
 
     }
 
 
     abstract fun openLoginPage()
-
-    abstract suspend fun saveAccessToken(): Boolean
-
-    abstract suspend fun deleteAccessToken(): Boolean
-
-    abstract fun readAccessToken(): String?
 
 
 }

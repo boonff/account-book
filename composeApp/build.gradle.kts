@@ -10,17 +10,6 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven("https://jitpack.io")
-    maven {
-        url = uri("https://packages.jetbrains.team/maven/p/skija/maven")
-        url = uri("https://mvnrepository.com/artifact/io.insert-koin/koin-compose-viewmodel")
-        url = uri(" https://mvnrepository.com/artifact/com.soywiz.korlibs.krypto/krypto")
-    }
-}
-
 sqldelight {
     databases {
         create("Database") {
@@ -30,16 +19,9 @@ sqldelight {
 }
 
 
-
 kotlin {
     sourceSets {
-        all {
-            languageSettings {
-                optIn("kotlin.Experimental")
-            }
-        }
         androidTarget()
-
         jvm("desktop")
 
         sourceSets {
@@ -150,11 +132,18 @@ android {
 compose.desktop {
     application {
         mainClass = "me.accountbook.MainKt"
+        jvmArgs += listOf("-Xmx2G") // 设置最大内存为 2GB
+        args += listOf("-customArgument") // 可以根据需要修改
 
+        //禁用混淆
+        buildTypes.release.proguard {
+            obfuscate.set(false)
+        }
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "me.accountbook"
-            packageVersion = "1.0.0"
+            targetFormats(TargetFormat.Exe)
+            packageName = "accountbook"
+            packageVersion = "0.0.1"
+            modules("java.instrument", "java.management", "java.sql", "jdk.unsupported")
         }
     }
 }

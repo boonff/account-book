@@ -9,6 +9,7 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import me.accountbook.database.DatabaseHelper
 import me.accountbook.network.GitHubApiService
+import me.accountbook.network.UserService
 import me.accountbook.utils.serialization.CodecUtil
 import me.accountbook.utils.serialization.DBItem
 import me.accountbook.utils.serialization.SerializableDatabase
@@ -18,7 +19,7 @@ import java.time.Instant
 
 object SyncUtil : KoinComponent {
     private val dbHelper: DatabaseHelper by inject()
-    private val githubApi = GitHubApiService
+    private val userService: UserService by inject()
 
     var isSynced by mutableStateOf(false)
         private set
@@ -29,7 +30,7 @@ object SyncUtil : KoinComponent {
 
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun sync(): Boolean {
-        val byteArray = githubApi.fetchFileContentAsByteArray() ?: ByteArray(0)
+        val byteArray = userService.fetchFile() ?: ByteArray(0)
         val netDB = ProtoBuf.decodeFromByteArray<SerializableDatabase>(byteArray)
         val localDB = CodecUtil.serializationDatabase()
 
@@ -49,7 +50,7 @@ object SyncUtil : KoinComponent {
         val mergedDB = SerializableDatabase(tagboxs, accounts, Instant.now().epochSecond)
 
         dbHelper.refactorDatabase(mergedDB)
-        isSynced = githubApi.uploadProtoBufToRepo(mergedDB)
+        isSynced = userService.uploadToRepo(mergedDB)
         return isSynced
     }
 
@@ -58,8 +59,7 @@ object SyncUtil : KoinComponent {
 
         dbHelper.deleteAllDeletedTagbox()
         val localDB = CodecUtil.serializationDatabase()
-        localDB.timestamp = Instant.now().epochSecond
-        isSynced = githubApi.uploadProtoBufToRepo(localDB)
+        isSynced = userService.uploadToRepo(localDB)
 
     }
 
