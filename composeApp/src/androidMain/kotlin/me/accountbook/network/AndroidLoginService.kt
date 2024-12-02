@@ -12,11 +12,6 @@ import java.net.URI
 
 object AndroidLoginService : LoginService(), KoinComponent {
     private val context: Context by inject()
-    private val webViewManager: WebViewManager by inject()
-
-    private const val KEY_ALIAS = "access_token"
-
-    private val keystoreUtil = KeystoreUtil(KEY_ALIAS)
     private fun openBrowser(url: String) {
         // 启动 WebViewActivity 显示网页
         val intent = Intent(context, WebViewActivity::class.java).apply {

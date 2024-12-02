@@ -6,32 +6,34 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import me.accountbook.platform.Platform
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
-import me.accountbook.platform.getPlatform
 import me.accountbook.ui.common.components.BasicPage
 import me.accountbook.ui.common.components.FunCard
 import me.accountbook.ui.common.components.HorizontalScrollWithBar
-import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
 import me.accountbook.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    val detailsTagboxViewModel: DetailsTagboxViewModel = koinViewModel()
+    val tagboxDetailsViewModel: TagboxDetailsViewModel = koinViewModel()
 
+    //加载数据
     LaunchedEffect(Unit) {
-        detailsTagboxViewModel.loadSortedTagbox()
+        tagboxDetailsViewModel.loadSortedTagbox()
     }
     BasicPage(
         title = "首页",
         reLoadData = {
-            detailsTagboxViewModel.loadSortedTagbox()
+            tagboxDetailsViewModel.loadSortedTagbox()
         },
         content = {
             // 使用 LazyVerticalGrid 创建自适应列
@@ -57,12 +59,11 @@ fun HomeScreen(navController: NavHostController) {
                         }
                     )
                 }
-
                 item {
                     FunCard(title = "标签",
                         icon = Icons.AutoMirrored.Outlined.Label,
                         content = {
-                            FlowRowTagbox(detailsTagboxViewModel.tagboxs)
+                            FlowRowTagbox(tagboxDetailsViewModel.tagboxList)
                         },
                         onClick = {
                             navController.navigate(Screen.TagDetails.route) {
@@ -77,7 +78,35 @@ fun HomeScreen(navController: NavHostController) {
     )
 }
 
+@Composable
+fun AccountCard(
+    title: String = "Anonymous",
+    balance: Double,
+    modifier: Modifier = Modifier // 添加 modifier 参数
+) {
+    Card(
+        modifier = modifier
+            .fillMaxSize(),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = modifier
+                .padding(8.dp)
+        ) {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(bottom=4.dp)
+            )
 
-fun isDesktop(): Boolean {
-    return getPlatform() == Platform.Desktop
+            //CompactInfoRow(color = TestData.SaveColor, balance = balance)
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "银行描述",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
 }

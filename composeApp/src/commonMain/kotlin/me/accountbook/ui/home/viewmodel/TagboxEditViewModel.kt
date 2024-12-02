@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import me.accountbook.database.Tagbox
 import me.accountbook.ui.viewmodel.TagboxViewModel
 
-class EditTagboxViewModel : TagboxViewModel() {
+class TagboxEditViewModel : TagboxViewModel() {
     var isPopupVisible by mutableStateOf(false)
     var uuid by mutableStateOf("")
     var name by mutableStateOf("")

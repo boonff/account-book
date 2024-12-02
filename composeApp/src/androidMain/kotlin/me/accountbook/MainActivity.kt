@@ -26,16 +26,10 @@ import org.koin.core.context.GlobalContext.startKoin
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 初始化 Koin
         startKoin {
             androidContext(this@MainActivity)
             modules(androidModule, commonModule)
         }
-        //初始化数据库
-        val dbHelper: DatabaseHelper = get()
-        dbHelper.initializeDatabase()
-
         setContent {
             AppAndroidContent()
         }
@@ -45,7 +39,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppAndroidContent() {
     App()
-
     AndroidTheme {
         Box(
             modifier = Modifier
@@ -53,6 +46,5 @@ fun AppAndroidContent() {
                 .background(color = MaterialTheme.colorScheme.background)
         )
         AndroidNav()
-
     }
 }

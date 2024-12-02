@@ -1,8 +1,8 @@
 package me.accountbook.koin
 
-import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
-import me.accountbook.ui.home.viewmodel.FormBarViewModel
-import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
+import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
+import me.accountbook.ui.home.viewmodel.TagboxFormBarViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
 import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
 import me.accountbook.ui.setting.sync.viewmodel.SyncPointViewModel
 import org.koin.core.module.dsl.viewModel
@@ -20,9 +20,9 @@ val commonModule = module {
         )
     }
     viewModel { SyncPointViewModel() }
-    viewModel { DetailsTagboxViewModel() }
-    viewModel { FormBarViewModel() }
-    viewModel { EditTagboxViewModel() }
+    viewModel { TagboxDetailsViewModel() }
+    viewModel { TagboxFormBarViewModel() }
+    viewModel { TagboxEditViewModel() }
     viewModel { AccountDetailViewModel() }
 }
 

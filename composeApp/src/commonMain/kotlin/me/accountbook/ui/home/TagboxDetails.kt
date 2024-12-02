@@ -31,17 +31,16 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.common.components.DetailsPage
-import me.accountbook.ui.home.viewmodel.EditTagboxViewModel
-import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
-import me.accountbook.ui.setting.sync.viewmodel.SyncPointViewModel
+import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun DetailsTagbox(navHostController: NavHostController) {
-    val viewModel: DetailsTagboxViewModel = koinViewModel()
-    val editTagboxViewModel: EditTagboxViewModel = koinViewModel()
+    val viewModel: TagboxDetailsViewModel = koinViewModel()
+    val tagboxEditViewModel: TagboxEditViewModel = koinViewModel()
     val hapticFeedback = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
@@ -85,7 +84,7 @@ fun DetailsTagbox(navHostController: NavHostController) {
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                 horizontalArrangement = Arrangement.Center,
                             ) {
-                                items(viewModel.tagboxs, key = { it.uuid }) {
+                                items(viewModel.tagboxList, key = { it.uuid }) {
                                     ReorderableItem(
                                         reorderableLazyGridState,
                                         key = it.uuid
@@ -115,8 +114,8 @@ fun DetailsTagbox(navHostController: NavHostController) {
                                                         }
                                                     )
                                                     .clickable {
-                                                        editTagboxViewModel.togglePopupVisible()
-                                                        editTagboxViewModel.initByTagbox(it)
+                                                        tagboxEditViewModel.togglePopupVisible()
+                                                        tagboxEditViewModel.initByTagbox(it)
                                                     }
                                             )
                                         }
@@ -130,7 +129,7 @@ fun DetailsTagbox(navHostController: NavHostController) {
                     }
                     FormBar {
                         scope.launch {
-                            lazyGridState.scrollToItem(viewModel.tagboxs.size)
+                            lazyGridState.scrollToItem(viewModel.tagboxList.size)
                         }
                     }
                 }

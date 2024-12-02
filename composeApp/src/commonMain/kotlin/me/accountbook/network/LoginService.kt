@@ -22,19 +22,16 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 abstract class LoginService : KoinComponent {
     private val oauthConfig: OAuthConfig by inject()
-    protected val fileStore: FileUtil by inject()
-
-    protected val tokenPath: String = "token"
     private val httpClient = OkHttpClient()
-
-    fun isLoggedIn(): Boolean {
-        return fileStore.exist(tokenPath)
-    }
-
     protected fun getAuthorizationUrl(): String {
         val baseUrl = oauthConfig.oauthUrl
         val scope = "repo"
-        return "$baseUrl?client_id=${oauthConfig.clientId}&response_type=code&redirect_uri=${oauthConfig.getRedirectUri()}&scope=$scope&prompt=select_account"//scope需要填写
+        return "$baseUrl?" +
+                "client_id=${oauthConfig.clientId}&" +
+                "response_type=code&" +
+                "redirect_uri=${oauthConfig.getRedirectUri()}&" +
+                "scope=$scope&" +
+                "prompt=select_account"
     }
 
     suspend fun getToken(): String? {
@@ -78,7 +75,7 @@ abstract class LoginService : KoinComponent {
             } catch (e: Exception) {
                 println("Error getToken: ${e.message}\n")
                 null
-            }finally {
+            } finally {
                 ServerUtil.stopServer()
             }
         }
@@ -105,7 +102,6 @@ abstract class LoginService : KoinComponent {
                     println("Error revokeToken response is failed: ${response.code}")
                     return@withContext false
                 }
-                fileStore.delete(tokenPath) // 删除 token 文件或执行其他本地清理操作
                 return@withContext true
             } catch (e: Exception) {
                 println("Error revokeToken:${e.message}")
@@ -135,8 +131,7 @@ abstract class LoginService : KoinComponent {
                 if (!response.isSuccessful) {
                     println("Error checkToken response is failed:${response.code}")
                     return@withContext false
-                }
-                else (response.code == 200)
+                } else (response.code == 200)
                 return@withContext true
             } catch (e: Exception) {
                 println("Error checkToken:${e.message}")
@@ -146,9 +141,5 @@ abstract class LoginService : KoinComponent {
         }
 
     }
-
-
     abstract fun openLoginPage()
-
-
 }

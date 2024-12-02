@@ -13,7 +13,7 @@ abstract class UserService : KoinComponent {
     var isLogin by mutableStateOf(false)
         private set
     protected val tokenPath: String = "token"
-    protected var token: String? = null
+    private var token: String? = null
     private var username: String? = null
     private val repoName: String = "test"
     private val repoPath: String = "database.bat"

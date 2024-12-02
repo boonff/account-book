@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.home.ColorPalette.colors
-import me.accountbook.ui.home.viewmodel.DetailsTagboxViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 
@@ -30,7 +30,7 @@ fun FormBar(
     modifier: Modifier = Modifier,
     onAddClick: () -> Unit,
 ) {
-    val viewModel: DetailsTagboxViewModel = koinViewModel()
+    val viewModel: TagboxDetailsViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     Box(modifier = modifier
     ) {

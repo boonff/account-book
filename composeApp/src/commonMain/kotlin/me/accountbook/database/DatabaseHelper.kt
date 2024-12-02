@@ -21,7 +21,7 @@ class DatabaseHelper(private val driver: SqlDriver) {
         SyncUtil.setNotSynced()
     }
 
-    fun initializeDatabase() {
+    fun initDatabase() {
         queries.createTagbox()
         queries.createAccount()
 

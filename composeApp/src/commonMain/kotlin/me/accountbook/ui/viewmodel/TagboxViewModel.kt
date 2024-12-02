@@ -12,11 +12,11 @@ import org.koin.core.component.inject
 
 abstract class TagboxViewModel : ViewModel(), KoinComponent {
     protected val dbHelper: DatabaseHelper by inject()
-     var tagboxs by mutableStateOf<List<Tagbox>>(emptyList())
+     var tagboxList by mutableStateOf<List<Tagbox>>(emptyList())
         protected set
 
     fun loadTagbox() {
-        tagboxs = dbHelper.queryUndeletedTagBox()
+        tagboxList = dbHelper.queryUndeletedTagBox()
 
     }
     fun insertTagbox(name: String, color: Color) {
