@@ -1,4 +1,4 @@
-package me.accountbook.utils
+package me.accountbook.data.manager
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,69 +6,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import me.accountbook.database.DatabaseHelper
-import me.accountbook.network.GitHubApiService
+import me.accountbook.data.model.NetModel
+import me.accountbook.data.model.SerDataItem
+import me.accountbook.data.model.SerTagbox
+import me.accountbook.data.repository.DatabaseRepository
 import me.accountbook.network.UserService
-import me.accountbook.utils.serialization.CodecUtil
-import me.accountbook.utils.serialization.DBItem
-import me.accountbook.utils.serialization.SerializableDatabase
+import me.accountbook.utils.LoggingUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Instant
 
-object SyncUtil : KoinComponent {
-    private val dbHelper: DatabaseHelper by inject()
-    private val userService: UserService by inject()
-
+abstract class SyncHandler<T : SerDataItem> : KoinComponent {
+    protected val userService: UserService by inject()
     var isSynced by mutableStateOf(false)
-        private set
+        protected set
 
-    fun setNotSynced() {
+    fun noSynced() {
         isSynced = false
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    suspend fun sync(): Boolean {
-        val byteArray = userService.fetchFile() ?: ByteArray(0)
-        val netDB = ProtoBuf.decodeFromByteArray<SerializableDatabase>(byteArray)
-        val localDB = CodecUtil.serializationDatabase()
-
-        val tagboxs =
-            mergeItems(
-                netDB.serializableTagboxs,
-                localDB.serializableTagboxs,
-                netDB.timestamp
-            )
-        val accounts =
-            mergeItems(
-                netDB.serializableAccount,
-                localDB.serializableAccount,
-                netDB.timestamp
-            )
-
-        val mergedDB = SerializableDatabase(tagboxs, accounts, Instant.now().epochSecond)
-
-        dbHelper.refactorDatabase(mergedDB)
-        isSynced = userService.uploadToRepo(mergedDB)
-        return isSynced
+    protected inline fun <reified T : SerDataItem> createNetTableModel(data: List<T>): ByteArray {
+        return ProtoBuf.encodeToByteArray(NetModel(data, Instant.now().epochSecond))
     }
 
-    suspend fun hardDelete() {
-        if (!isSynced) sync()
-
-        dbHelper.deleteAllDeletedTagbox()
-        val localDB = CodecUtil.serializationDatabase()
-        isSynced = userService.uploadToRepo(localDB)
-
+    protected suspend fun fetchFile(repoFileName: String): ByteArray {
+        return userService.fetchFile(repoFileName) ?: run {
+            LoggingUtil.logError("同步数据库文件下传失败。")
+            return ByteArray(0)
+        }
     }
 
     //合并github仓库中的数据库和本地数据库
-    private fun <T : DBItem> mergeItems(
-        netItems: List<T>,
-        localItems: List<T>,
-        timestamp: Long?
-    ): List<T> {
+    protected fun mergeItems(netItems: List<T>, localItems: List<T>, timestamp: Long?): List<T> {
         //排除已被硬删除的属性（可能会造成数据丢失）
         val clearedItems = localItems.toMutableStateList()
         clearedItems.removeIf {
@@ -96,6 +68,4 @@ object SyncUtil : KoinComponent {
         }
         return result
     }
-
-
 }

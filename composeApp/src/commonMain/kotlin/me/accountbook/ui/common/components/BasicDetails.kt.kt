@@ -23,10 +23,11 @@ import androidx.navigation.NavHostController
 import me.accountbook.ui.setting.sync.SyncPoint
 
 @Composable
-fun DetailsPage(
+fun BasicDetails(
     title: String,
     navController: NavHostController,
-    reLoadData: () -> Unit,
+    isSynced: Boolean,
+    syncData: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -64,8 +65,9 @@ fun DetailsPage(
                 )
                 Box(modifier = Modifier.weight(1f)) {
                     SyncPoint(
+                        isSynced = isSynced,
                         modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
-                    ) { reLoadData() }
+                    ) { syncData() }
                 }
             }
             Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {

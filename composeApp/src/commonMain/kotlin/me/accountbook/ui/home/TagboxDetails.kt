@@ -30,16 +30,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.accountbook.ui.common.components.DetailsPage
+import me.accountbook.ui.common.components.BasicDetails
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
-import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun DetailsTagbox(navHostController: NavHostController) {
-    val viewModel: TagboxDetailsViewModel = koinViewModel()
+    val viewModel: TagboxDataViewModel = koinViewModel()
     val tagboxEditViewModel: TagboxEditViewModel = koinViewModel()
     val hapticFeedback = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -50,11 +50,12 @@ fun DetailsTagbox(navHostController: NavHostController) {
     LaunchedEffect(Unit) {
         viewModel.loadSortedTagbox()
     }
-    DetailsPage("标签管理",
+    BasicDetails("标签管理",
         navHostController,
-        reLoadData = {
-            viewModel.loadSortedTagbox()
+        syncData = {
+            viewModel.syncData()
         },
+        isSynced = viewModel.isSynced,
         content =
         {
             Box(modifier = Modifier.fillMaxSize()) {

@@ -40,6 +40,7 @@ fun HorizontalScrollWithBar(
         scrollBarOffset = scrollBarOffset.coerceIn(0f, maxScrollBarOffset) // 确保在可见范围内
 
     }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,27 +73,30 @@ fun HorizontalScrollWithBar(
             val scrollBarWidth = (viewportWidth.toFloat() / contentWidth) * viewportWidth
             maxScrollBarOffset = viewportWidth - scrollBarWidth
             // 同步滚动条位置
-
             //滚动条
-            Box(
-                modifier = Modifier
-                    .width(pxToDp(scrollBarWidth))
-                    .padding(top = 8.dp)
-                    .height(8.dp)
-                    .offset(x = pxToDp(scrollBarOffset))
-                    .background(Color.Gray, RoundedCornerShape(16.dp)) // 直接对背景应用圆角
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures { change, dragAmount ->
-                            change.consume()
-                            // 根据拖拽的距离更新 scrollState
-                            coroutineScope.launch {
-                                scrollBarOffset =
-                                    (scrollBarOffset + dragAmount).coerceIn(0f, maxScrollBarOffset)
-                                scrollState.scrollTo((scrollBarOffset * ((contentWidth - viewportWidth) / maxScrollBarOffset)).toInt())
+            if (viewportWidth > contentWidth)
+                Box(
+                    modifier = Modifier
+                        .width(pxToDp(scrollBarWidth))
+                        .padding(top = 8.dp)
+                        .height(8.dp)
+                        .offset(x = pxToDp(scrollBarOffset))
+                        .background(Color.Gray, RoundedCornerShape(16.dp)) // 直接对背景应用圆角
+                        .pointerInput(Unit) {
+                            detectHorizontalDragGestures { change, dragAmount ->
+                                change.consume()
+                                // 根据拖拽的距离更新 scrollState
+                                coroutineScope.launch {
+                                    scrollBarOffset =
+                                        (scrollBarOffset + dragAmount).coerceIn(
+                                            0f,
+                                            maxScrollBarOffset
+                                        )
+                                    scrollState.scrollTo((scrollBarOffset * ((contentWidth - viewportWidth) / maxScrollBarOffset)).toInt())
+                                }
                             }
                         }
-                    }
-            )
+                )
         }
     }
 }

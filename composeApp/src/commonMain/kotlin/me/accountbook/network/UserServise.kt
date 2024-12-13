@@ -3,9 +3,8 @@ package me.accountbook.network
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import me.accountbook.data.model.SerDataItem
 import me.accountbook.network.utils.ServerUtil
-import me.accountbook.utils.file.FileUtil
-import me.accountbook.utils.serialization.SerializableDatabase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -16,9 +15,8 @@ abstract class UserService : KoinComponent {
     private var token: String? = null
     private var username: String? = null
     private val repoName: String = "test"
-    private val repoPath: String = "database.bat"
+    private val repoPath: String = "accountbook/"
     private val loginService: LoginService by inject()
-
 
     suspend fun initUser(): Boolean {
         token = readTokenFile()
@@ -74,26 +72,29 @@ abstract class UserService : KoinComponent {
         }
     }
 
-    suspend fun uploadToRepo(protoBufData: SerializableDatabase): Boolean {
+    suspend fun uploadToRepo(
+        repoFileName: String,
+        protoBufBytes: ByteArray
+    ): Boolean {
         val token = token ?: return false
         val username = username ?: return false
         return GitHubApiService.uploadProtoBufToRepo(
             token,
             username,
             repoName,
-            repoPath,
-            protoBufData
+            repoPath + repoFileName,
+            protoBufBytes
         )
     }
 
-    suspend fun fetchFile(): ByteArray? {
+    suspend fun fetchFile(repoFileName: String): ByteArray? {
         val token = token ?: return null
         val username = username ?: return null
         return GitHubApiService.fetchFileContentAsByteArray(
             token,
             username,
             repoName,
-            repoPath
+            repoPath + repoFileName
         )
     }
 

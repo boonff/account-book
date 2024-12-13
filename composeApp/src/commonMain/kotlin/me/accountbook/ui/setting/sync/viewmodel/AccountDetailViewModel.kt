@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import me.accountbook.network.GitHubApiService
 import me.accountbook.network.LoginService
 import me.accountbook.network.UserService
-import me.accountbook.utils.serialization.CodecUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -23,26 +22,22 @@ class AccountDetailViewModel : ViewModel(), KoinComponent {
     var isLoading by mutableStateOf(false)
     var userInfo by mutableStateOf("")
         private set
-    var error by mutableStateOf<String?>(null)
-        private set
 
-    fun isLogin():Boolean{
+    fun isLogin(): Boolean {
         return userService.isLogin
     }
-    suspend fun revokeAccessToken() {
 
-        userService.logout()
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            userService.logout()
+        }
+
     }
 
-    suspend fun uploadRepo() {
-        userService.uploadToRepo(
-            CodecUtil.serializationDatabase()
-        )
-    }
     //获取 token 保存
     fun login() {
         viewModelScope.launch(Dispatchers.IO) {
-           userService.login()
+            userService.login()
         }
     }
 }

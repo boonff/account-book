@@ -35,23 +35,21 @@ kotlin {
                     implementation(compose.materialIconsExtended)
                     implementation(compose.components.resources)
 
-                    implementation(libs.firebase.database.ktx)
                     implementation(libs.androidx.window)
                     implementation(libs.androidx.navigation.compose)
                     implementation(libs.lifecycle.viewmodel.compose)
-                    implementation(libs.jetbrains)
                     implementation(libs.reorderable)
 
                     implementation(libs.slf4j.api)
+                    implementation (libs.kotlin.logging)
                     implementation(libs.slf4j.simple)
 
-                    implementation(libs.kotlinx.coroutines.core)
+                    implementation(libs.kotlinx.coroutines.core)//协程
                     implementation(libs.kotlinx.datetime)
                     implementation(libs.kotlinx.serialization.json)
 
                     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-protobuf
                     implementation(libs.kotlinx.serialization.protobuf)
-
 
                     implementation(project.dependencies.platform(libs.koin.bom))
                     implementation(libs.koin.core)
@@ -66,6 +64,8 @@ kotlin {
 
                     implementation(libs.spring.security.crypto)
 
+                    //implementation(libs.kandy.lets.plot)
+
                 }
             }
             val androidMain by getting {
@@ -73,6 +73,10 @@ kotlin {
                     implementation(libs.androidx.activity.compose)
                     implementation(libs.sqldelight.android.driver)
                     implementation(libs.koin.androidx.compose)
+
+                    implementation(libs.vico.compose.m3)
+                    implementation(libs.vico.core)
+                    implementation(libs.vico.views)
                 }
             }
             val desktopMain by getting {

@@ -8,8 +8,22 @@ CREATE TABLE IF NOT EXISTS Account (
     deleted INTEGER DEFAULT 0,
     name TEXT NOT NULL,
     balance REAL NOT NULL DEFAULT 0,
-    minBalance REAL DEFAULT 0
+    targetSavings REAL NOT NULL DEFAULT 0,  -- 改为目标储蓄
+    emergencySavings REAL NOT NULL DEFAULT 0,  -- 改为紧急储蓄
+    position INTEGER DEFAULT -1
 );
+dropSetAccountPositionTrigger:
+DROP TRIGGER IF EXISTS SetAccountPosition;
+
+createSetAccountPositionTrigger:
+CREATE TRIGGER IF NOT EXISTS SetAccountPosition
+    AFTER INSERT ON Account
+    FOR EACH ROW
+    BEGIN
+        UPDATE Account
+        SET position = (SELECT COUNT(*) FROM Account) - 1
+        WHERE uuid = new.uuid AND position = -1;
+    END;
 
 createAccountTimestampTrigger:
 CREATE TRIGGER IF NOT EXISTS AccountTimestamp
@@ -20,53 +34,83 @@ CREATE TRIGGER IF NOT EXISTS AccountTimestamp
         SET timestamp = (strftime('%s', 'now'))
         WHERE uuid = new.uuid;
     END;
+
 dropAccountTimestampTrigger:
 DROP TRIGGER IF EXISTS AccountTimestamp;
+
 -- 插入账户时生成 uuid 和时间戳，默认状态为未删除
 insertAccount:
-INSERT INTO Account(uuid, name, balance, minBalance)
-VALUES(:uuid, :name, :balance, :minBalance);
+INSERT INTO Account(uuid, name, balance, targetSavings, emergencySavings)
+VALUES(:uuid, :name, :balance, :targetSavings, :emergencySavings);
+
 insertAccountWithAll:
-INSERT INTO Account(uuid,timestamp,deleted, name, balance, minBalance)
-VALUES(:uuid, :timestamp,:deleted,:name, :balance, :minBalance);
+INSERT INTO Account(uuid, timestamp, deleted, name, balance, targetSavings, emergencySavings, position)
+VALUES(:uuid, :timestamp, :deleted, :name, :balance, :targetSavings, :emergencySavings, :position);
+
 -- 查询未软删除的账户
 queryUndeletedAccount:
 SELECT * FROM Account WHERE deleted = 0;
+
 -- 查询所有账户
 queryAllAccount:
 SELECT * FROM Account;
+queryAccountById:
+SELECT * FROM Account WHERE uuid = :uuid;
+
 -- 更新账户的余额
 updateAccountBalance:
 UPDATE Account
 SET balance = :balance
 WHERE uuid = :uuid;
--- 更新账户的 minBalance
-updateAccountMinBalance:
+
+-- 更新账户的目标储蓄
+updateAccountTargetSavings:
 UPDATE Account
-SET minBalance = :minBalance
+SET targetSavings = :targetSavings
 WHERE uuid = :uuid;
+
+-- 更新账户的紧急储蓄
+updateAccountEmergencySavings:
+UPDATE Account
+SET emergencySavings = :emergencySavings
+WHERE uuid = :uuid;
+
 -- 更新账户信息
 updateAccountByUuid:
 UPDATE Account
 SET
     name = :name,
     balance = :balance,
-    minBalance = :minBalance,
+    targetSavings = :targetSavings,
+    emergencySavings = :emergencySavings,
     deleted = :deleted
 WHERE uuid = :uuid;
+-- 更新账户位置
+updateAccountPosition:
+UPDATE Account
+SET
+    position = :position
+WHERE uuid = :uuid;
+
+deleteAccountById:
+DELETE FROM Account WHERE uuid = :uuid;
+
 -- 软删除账户
 softDeleteAccount:
 UPDATE Account
 SET deleted = 1
 WHERE uuid = :uuid;
+
 -- 恢复软删除的账户
 recoverAccount:
 UPDATE Account
 SET deleted = 0
 WHERE uuid = :uuid;
+
 -- 删除所有账户
 deleteAllAccount:
 DELETE FROM Account;
+
 -- 删除所有软删除的账户
 deleteAllDeletedAccount:
 DELETE FROM Account WHERE deleted = 1;
@@ -80,14 +124,14 @@ CREATE TABLE IF NOT EXISTS Tagbox (
     uuid TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     color INTEGER NOT NULL,
-    position INTEGER NOT NULL,
+    position INTEGER DEFAULT -1,
     timestamp INTEGER DEFAULT (strftime('%s', 'now')),
-    deleted INTEGER DEFAULT 0
+    deleted INTEGER DEFAULT  0
 );
 dropSetPositionTrigger:
 DROP TRIGGER IF EXISTS Setposition;
-createSetPositionTrigger:
-CREATE TRIGGER IF NOT EXISTS Setposition
+createSetTagboxPositionTrigger:
+CREATE TRIGGER IF NOT EXISTS SetTagboxPosition
     AFTER INSERT ON Tagbox
     FOR EACH ROW
     BEGIN
@@ -111,10 +155,10 @@ DROP TRIGGER IF EXISTS TagboxTimstamp;
 
 -- 示例：插入标签时生成 uuid 和时间戳，默认状态为未删除
 insertTagbox:
-INSERT INTO Tagbox(uuid, name, color, position, deleted)
-VALUES(:uuid, :name, :color, -1, 0);
+INSERT INTO Tagbox(uuid, name, color)
+VALUES(:uuid, :name, :color);
 
-insertTagboxWithTimetamp:
+insertTagboxWithAll:
 INSERT INTO Tagbox(uuid, name, color, position, timestamp, deleted)
 VALUES(:uuid, :name, :color, :position, :timestamp, :deleted);
 
@@ -123,6 +167,8 @@ queryUndeletedTagbox:
 SELECT * FROM Tagbox WHERE deleted = 0;
 queryAllTagbox:
 SELECT * FROM Tagbox;
+queryTagboxById:
+SELECT * FROM Tagbox WHERE uuid = :uuid;
 
 -- 更新标签的 position
 updateTagboxPosition:
@@ -141,15 +187,6 @@ updateTagboxColor:
 UPDATE Tagbox
 SET color = :color
 WHERE uuid = :uuid;
-
-updateTagboxById:
-UPDATE Tagbox
-SET
-    name = :name,
-    color = :color,
-    position = :position,
-    deleted = :deleted
-WHERE uuid = :uuid;
 -- 更新标签
 updateTagboxByUuid:
 UPDATE Tagbox
@@ -162,9 +199,12 @@ WHERE uuid = :uuid;
 
 
 -- 软删除标签
-softDeleteTagbox:
+softDeleteTagboxById:
 UPDATE Tagbox
 SET deleted = 1
+WHERE uuid = :uuid;
+deleteTagboxById:
+DELETE FROM Tagbox
 WHERE uuid = :uuid;
 
 -- 恢复软删除的标签

@@ -14,10 +14,10 @@ private const val DividerLengthInDegrees = 1.8f
 
 //环形图
 @Composable
-fun DonutChart(
-    modifier: Modifier = Modifier,
+fun StackedDonutChart(
     proportions: List<Float>,
     colors: List<Color>,
+    modifier: Modifier = Modifier,
 
     ) {
     val stroke = with(LocalDensity.current) { Stroke(5.dp.toPx()) }

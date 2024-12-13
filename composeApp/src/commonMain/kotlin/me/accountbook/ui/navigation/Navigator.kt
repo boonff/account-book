@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import me.accountbook.ui.home.AccountDetails
 import me.accountbook.ui.home.HomeScreen
 import me.accountbook.ui.setting.SettingsScreen
 import me.accountbook.ui.home.DetailsTagbox
@@ -64,7 +65,11 @@ fun Navigator(navHostController: NavHostController) {
 }
 
 @Composable
-fun MyNavController(navHostController: NavHostController, startDestination: String, modifier: Modifier = Modifier) {
+fun MyNavController(
+    navHostController: NavHostController,
+    startDestination: String,
+    modifier: Modifier = Modifier
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         // 使用 NavHost 来显示屏幕
         NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
@@ -83,6 +88,9 @@ fun MyNavController(navHostController: NavHostController, startDestination: Stri
             composable(Screen.SyncDetails.route) {
                 SyncDetails(navHostController)
             }
+            composable(Screen.AccountDetails.route) {
+                AccountDetails(navHostController)
+            }
         }
     }
 }
@@ -93,6 +101,7 @@ sealed class Screen(val route: String) {
     data object SettingScreen : Screen("settings")
     data object TagDetails : Screen("tagDetails")
     data object SyncDetails : Screen("syncDetails")
+    data object AccountDetails : Screen("accountDetails")
 }
 
 // 定义每个导航项

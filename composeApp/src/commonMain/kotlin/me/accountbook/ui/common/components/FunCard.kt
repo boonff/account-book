@@ -2,12 +2,8 @@ package me.accountbook.ui.common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -28,17 +25,18 @@ fun FunCard(
     onClick: () -> Unit = {}, // 点击事件的回调
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(0.5f)),
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            FunCardtTopBar(title, icon) { onClick() }
+            FunCardTopBar(title, icon) { onClick() }
             content()
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -47,7 +45,7 @@ fun FunCard(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FunCardtTopBar(
+fun FunCardTopBar(
     title: String,
     icon: ImageVector = Icons.Rounded.Warning,
     onClick: () -> Unit,

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.home.ColorPalette.colors
-import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 
@@ -30,7 +30,7 @@ fun FormBar(
     modifier: Modifier = Modifier,
     onAddClick: () -> Unit,
 ) {
-    val viewModel: TagboxDetailsViewModel = koinViewModel()
+    val viewModel: TagboxDataViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     Box(modifier = modifier
     ) {
@@ -56,7 +56,7 @@ fun FormBar(
                 onClick = {
                     scope.launch(Dispatchers.IO) {
                         val random = Random.nextInt(0, colors.size)
-                        viewModel.insertTagbox(viewModel.text, colors[random])
+                        viewModel.insert(viewModel.text, colors[random])
                         viewModel.loadSortedTagbox() //添加tagbox后触发tagboxs的更新，
                         viewModel.text = ""
                         onAddClick() //回调函数，目前的作用是添加元素后将LazyVerticalGrid滚动到末尾

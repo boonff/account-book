@@ -6,8 +6,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.protobuf.ProtoBuf
-import me.accountbook.utils.serialization.SerializableDatabase
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -129,10 +127,9 @@ object GitHubApiService {
         username: String,
         repoName: String,
         repoPath: String,
-        protoBufData: SerializableDatabase,
+        protoBufBytes: ByteArray,
         commitMessage: String = "Upload ProtoBuf file"
     ): Boolean {
-        val protoBufBytes = ProtoBuf.encodeToByteArray(protoBufData)
         val encodedFile = Base64.encode(protoBufBytes)
         val sha: String? = getFileShaFromRepo(token, username, repoName, repoPath)
         // GitHub API URL: 上传文件

@@ -1,8 +1,16 @@
 package me.accountbook.koin
 
+import me.accountbook.data.local.AccountHelper
+import me.accountbook.data.local.TagboxHelper
+import me.accountbook.data.manager.TagboxSyncManager
+import me.accountbook.data.model.SerAccount
+import me.accountbook.data.model.SerTagbox
+import me.accountbook.data.repository.AccountRepository
+import me.accountbook.data.repository.DatabaseRepository
+import me.accountbook.data.repository.TagboxRepository
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
 import me.accountbook.ui.home.viewmodel.TagboxFormBarViewModel
-import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
 import me.accountbook.ui.setting.sync.viewmodel.SyncPointViewModel
 import org.koin.core.module.dsl.viewModel
@@ -19,8 +27,12 @@ val commonModule = module {
             oauthTokenUrl = "https://github.com/login/oauth/access_token",
         )
     }
+    single { TagboxRepository(get()) }
+    single { AccountRepository(get()) }
+    single { TagboxSyncManager }
+
+    viewModel { TagboxDataViewModel() }
     viewModel { SyncPointViewModel() }
-    viewModel { TagboxDetailsViewModel() }
     viewModel { TagboxFormBarViewModel() }
     viewModel { TagboxEditViewModel() }
     viewModel { AccountDetailViewModel() }

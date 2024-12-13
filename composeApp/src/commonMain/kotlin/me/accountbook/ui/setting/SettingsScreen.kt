@@ -14,13 +14,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import me.accountbook.ui.common.components.BasicPage
+import me.accountbook.ui.common.components.BasicScreen
 import me.accountbook.ui.navigation.Screen
 
 @Composable
 fun SettingsScreen(navHostController: NavHostController) {
-    BasicPage(title = "设置",
-        reLoadData = {},
+    BasicScreen(title = "设置",
+        syncData = {},
+        isSynced = false,//未实现
         content = {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {

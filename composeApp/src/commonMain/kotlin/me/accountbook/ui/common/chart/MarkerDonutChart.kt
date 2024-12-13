@@ -17,11 +17,11 @@ private const val DividerLengthInDegrees = 1.8f
 //带箭头的环形图
 @Composable
 fun MarkerDonutChart(
-    modifier: Modifier = Modifier,
     proportions: List<Float>,
     proportionColors: List<Color>,
     markers: List<Float>,
-    markerColors: List<Color>
+    markerColors: List<Color>,
+    modifier: Modifier = Modifier,
 ) {
     val stroke = with(LocalDensity.current) { Stroke(5.dp.toPx()) }
 

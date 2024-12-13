@@ -3,10 +3,7 @@ package me.accountbook.ui.setting.sync
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,20 +13,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.accountbook.network.GitHubApiService
-import me.accountbook.ui.common.components.DetailsPage
+import me.accountbook.ui.common.components.BasicDetails
 import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
-import me.accountbook.utils.SyncUtil
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SyncDetails(navHostController: NavHostController) {
     val viewModel: AccountDetailViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
-    DetailsPage(
+    BasicDetails(
         "同步设置",
         navHostController,
-        reLoadData = {},
+        isSynced = false,
+        syncData = {},
         content =
         {
             Column(
@@ -53,7 +49,7 @@ fun SyncDetails(navHostController: NavHostController) {
                         modifier = Modifier
                             .clickable {
                                 scope.launch(Dispatchers.IO) {
-                                    SyncUtil.hardDelete()
+                                    //SyncUtil.hardDelete() 未实现
                                 }
                             }
                     )
@@ -62,9 +58,7 @@ fun SyncDetails(navHostController: NavHostController) {
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.revokeAccessToken()
-                                }
+                                viewModel.logout()
                             }
                     )
                 }

@@ -42,9 +42,9 @@ fun AndroidNav() {
             bottomBar = {
                 if (bottomBarVisible)
                     BottomAppBar(
-                        modifier = Modifier.height(64.dp),
-                        containerColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.onBackground
+                            modifier = Modifier.height(64.dp),
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground
                     ) {
                         navItems.forEach { navItem ->
                             val selected =

@@ -19,12 +19,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.accountbook.database.Tagbox
+import me.accountbook.data.model.SerTagbox
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FlowRowTagbox(
-    tagbox: List<Tagbox>,
+    tagbox: List<SerTagbox>,
 ) {
     FlowRow(
         modifier = Modifier

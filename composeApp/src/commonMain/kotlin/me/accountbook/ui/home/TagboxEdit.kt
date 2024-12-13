@@ -29,13 +29,13 @@ import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
 import me.accountbook.ui.home.ColorPalette.colors
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
-import me.accountbook.ui.home.viewmodel.TagboxDetailsViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EditTagbox() {
     val viewModel: TagboxEditViewModel = koinViewModel()
-    val tagboxDetailsViewModel: TagboxDetailsViewModel = koinViewModel()
+    val tagboxDataViewModel: TagboxDataViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     if (viewModel.isPopupVisible) {
         Dialog(onDismissRequest = { viewModel.togglePopupVisible() }) {
@@ -61,8 +61,8 @@ fun EditTagbox() {
                                     .align(Alignment.CenterEnd)
                             ) {
                                 scope.launch {
-                                    viewModel.softDeleteTagbox(viewModel.uuid)
-                                    tagboxDetailsViewModel.loadSortedTagbox()
+                                    viewModel.softDelete(viewModel.uuid)
+                                    tagboxDataViewModel.loadSortedTagbox()
                                 }
                                 viewModel.togglePopupVisible()
                             }
@@ -85,19 +85,19 @@ fun EditTagbox() {
                         ) {
                             Text("取消")
                         }
-                        Box(modifier = Modifier.fillMaxWidth()){
+                        Box(modifier = Modifier.fillMaxWidth()) {
                             Button(
                                 onClick = {
                                     scope.launch {
-                                        viewModel.updateTagboxName(
+                                        viewModel.updateName(
                                             viewModel.name,
                                             viewModel.uuid
                                         )
-                                        viewModel.updateTagboxColor(
+                                        viewModel.updateColor(
                                             viewModel.color,
                                             viewModel.uuid
                                         )
-                                        tagboxDetailsViewModel.loadSortedTagbox()
+                                        tagboxDataViewModel.loadSortedTagbox()
                                     }
                                     viewModel.togglePopupVisible()
                                 },
