@@ -2,22 +2,26 @@ package me.accountbook.data.model
 
 import kotlinx.serialization.Serializable
 import me.accountbook.database.Account
+import me.accountbook.database.TableTimestamp
 import me.accountbook.database.Tagbox
-import java.time.Instant
 
 interface SerDataItem {
     val uuid: String
     var deleted: Long?
     var timestamp: Long?
+    fun decode(): Any
 }
 
-
 @Serializable
-data class NetModel<T>(
-    val serTable: List<T>? = null,
-    var timestamp: Long?
-)
+data class SerTableTimestamp(
+    val name: String,
+    val netTimestamp: Long?,
+    val localTimestamp: Long?,
+) {
+    fun decode() = TableTimestamp(name, netTimestamp, localTimestamp)
+}
 
+fun TableTimestamp.encode() = SerTableTimestamp(name, netTimestamp, localTimestamp)
 
 //Tagbox 表
 @Serializable
@@ -28,10 +32,9 @@ data class SerTagbox(
     var position: Long? = null,
     override var timestamp: Long? = null,
     override var deleted: Long? = null,
-) : SerDataItem
-
-fun SerTagbox.decode() =
-    Tagbox(uuid, name, color, position, timestamp, deleted)
+) : SerDataItem {
+    override fun decode() = Tagbox(uuid, name, color, position, timestamp, deleted)
+}
 
 fun Tagbox.encode() =
     SerTagbox(uuid, name, color, position, timestamp, deleted)
@@ -49,10 +52,10 @@ data class SerAccount(
     var targetSavings: Double,
     var emergencySavings: Double,
     var position: Long? = null,
-) : SerDataItem
-
-fun SerAccount.decode() =
-    Account(uuid, timestamp, deleted, name, balance, targetSavings, emergencySavings, position)
+) : SerDataItem {
+    override fun decode() =
+        Account(uuid, timestamp, deleted, name, balance, targetSavings, emergencySavings, position)
+}
 
 fun Account.encode() =
     SerAccount(

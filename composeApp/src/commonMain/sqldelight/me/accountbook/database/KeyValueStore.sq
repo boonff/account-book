@@ -1,0 +1,43 @@
+-- 表的同步标记（不需要同步）
+dropTableTamestamp:
+DROP TABLE IF EXISTS TableTimestamp;
+createTableTamestamp:
+CREATE TABLE IF NOT EXISTS TableTimestamp (
+    name TEXT PRIMARY KEY NOT NULL,
+    netTimestamp INTEGER,
+    localTimestamp INTEGER
+);
+
+queryTablestamp:
+SELECT * FROM TableTimestamp;
+queryTablestampByName:
+SELECT * FROM TableTimestamp WHERE name = :name;
+insertTableTamestamp:
+INSERT INTO TableTimestamp(name, netTimestamp, localTimestamp)
+VALUES (:name, :netTamestamp, :localTamestamp);
+updateTableTamestampByName:
+UPDATE TableTimestamp
+SET netTimestamp = :netTamestamp, localTimestamp = :localTamestamp
+WHERE name = :name;
+
+
+
+-- 设置表
+dropSetting:
+DROP TABLE IF EXISTS Setting;
+createSetting:
+CREATE TABLE IF NOT EXISTS Setting(
+    key TEXT PRIMARY KEY NOT NULL,
+    value TEXT NOT NULL
+);
+
+querySettingByKey:
+SELECT * FROM Setting WHERE key = :key;
+
+insertSetting:
+INSERT INTO Setting(key, value)
+VALUES (:key, :value);
+
+
+
+

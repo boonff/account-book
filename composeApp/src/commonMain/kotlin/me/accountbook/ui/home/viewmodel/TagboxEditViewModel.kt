@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import me.accountbook.data.model.SerTagbox
+import me.accountbook.database.Tagbox
 
 class TagboxEditViewModel : TagboxDataViewModel() {
     var isPopupVisible by mutableStateOf(false)
@@ -16,7 +17,7 @@ class TagboxEditViewModel : TagboxDataViewModel() {
         isPopupVisible = !isPopupVisible
     }
 
-    fun initByTagbox(tagbox: SerTagbox) {
+    fun initByTagbox(tagbox: Tagbox) {
         uuid = tagbox.uuid
         name = tagbox.name
         color = Color(tagbox.color)

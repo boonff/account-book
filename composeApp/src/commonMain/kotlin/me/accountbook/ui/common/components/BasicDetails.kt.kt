@@ -20,14 +20,12 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import me.accountbook.ui.setting.sync.SyncPoint
 
 @Composable
 fun BasicDetails(
     title: String,
     navController: NavHostController,
-    isSynced: Boolean,
-    syncData: () -> Unit,
+    syncPoint: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -62,13 +60,10 @@ fun BasicDetails(
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                         .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
+                        .weight(1f)
                 )
-                Box(modifier = Modifier.weight(1f)) {
-                    SyncPoint(
-                        isSynced = isSynced,
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
-                    ) { syncData() }
-                }
+                    syncPoint()
+
             }
             Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
                 content()

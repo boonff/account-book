@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.common.components.BasicDetails
+import me.accountbook.ui.common.components.SyncPoint
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
 import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,23 +40,26 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun DetailsTagbox(navHostController: NavHostController) {
-    val viewModel: TagboxDataViewModel = koinViewModel()
+    val tagboxDataViewModel: TagboxDataViewModel = koinViewModel()
     val tagboxEditViewModel: TagboxEditViewModel = koinViewModel()
     val hapticFeedback = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-        viewModel.moveTagbox(from.index, to.index)
+        tagboxDataViewModel.moveTagbox(from.index, to.index)
     }
-    LaunchedEffect(Unit) {
-        viewModel.loadSortedTagbox()
+
+    LaunchedEffect(Unit){
+        tagboxDataViewModel.initData()
     }
+
     BasicDetails("标签管理",
         navHostController,
-        syncData = {
-            viewModel.syncData()
+        syncPoint = {
+            SyncPoint(tagboxDataViewModel.syncState){
+                tagboxDataViewModel.sync()
+            }
         },
-        isSynced = viewModel.isSynced,
         content =
         {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -85,7 +89,7 @@ fun DetailsTagbox(navHostController: NavHostController) {
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                 horizontalArrangement = Arrangement.Center,
                             ) {
-                                items(viewModel.tagboxList, key = { it.uuid }) {
+                                items(tagboxDataViewModel.tagboxList, key = { it.uuid }) {
                                     ReorderableItem(
                                         reorderableLazyGridState,
                                         key = it.uuid
@@ -110,7 +114,7 @@ fun DetailsTagbox(navHostController: NavHostController) {
                                                         },
                                                         onDragStopped = {
                                                             scope.launch(Dispatchers.IO) {
-                                                                viewModel.updatePosition()
+                                                                tagboxDataViewModel.updatePosition()
                                                             }
                                                         }
                                                     )
@@ -130,7 +134,7 @@ fun DetailsTagbox(navHostController: NavHostController) {
                     }
                     FormBar {
                         scope.launch {
-                            lazyGridState.scrollToItem(viewModel.tagboxList.size)
+                            lazyGridState.scrollToItem(tagboxDataViewModel.tagboxList.size)
                         }
                     }
                 }

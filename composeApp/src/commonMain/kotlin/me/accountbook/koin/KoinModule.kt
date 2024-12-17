@@ -1,18 +1,19 @@
 package me.accountbook.koin
 
-import me.accountbook.data.local.AccountHelper
-import me.accountbook.data.local.TagboxHelper
-import me.accountbook.data.manager.TagboxSyncManager
-import me.accountbook.data.model.SerAccount
-import me.accountbook.data.model.SerTagbox
+import me.accountbook.data.manager.domain.TagboxManager
+import me.accountbook.data.manager.sync.AccountSyncManager
+import me.accountbook.data.manager.sync.TagboxSyncManager
 import me.accountbook.data.repository.AccountRepository
-import me.accountbook.data.repository.DatabaseRepository
+import me.accountbook.data.repository.AppDatabaseRepository
+import me.accountbook.data.repository.TableTimestampRepository
 import me.accountbook.data.repository.TagboxRepository
+import me.accountbook.database.Account
+import me.accountbook.database.Tagbox
+import me.accountbook.network.manager.RepositoryManager
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
 import me.accountbook.ui.home.viewmodel.TagboxFormBarViewModel
 import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
-import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
-import me.accountbook.ui.setting.sync.viewmodel.SyncPointViewModel
+import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -27,15 +28,26 @@ val commonModule = module {
             oauthTokenUrl = "https://github.com/login/oauth/access_token",
         )
     }
+    single { RepositoryManager() }
+
+    single<AppDatabaseRepository<Tagbox>> { TagboxRepository(get()) }
+    single<AppDatabaseRepository<Account>> { AccountRepository(get()) }
     single { TagboxRepository(get()) }
     single { AccountRepository(get()) }
+    single { TableTimestampRepository(get()) }
+
+    single { TagboxManager() }
+
     single { TagboxSyncManager }
+    single { AccountSyncManager }
+
 
     viewModel { TagboxDataViewModel() }
-    viewModel { SyncPointViewModel() }
     viewModel { TagboxFormBarViewModel() }
     viewModel { TagboxEditViewModel() }
-    viewModel { AccountDetailViewModel() }
+    viewModel { LoginViewModel() }
+
+
 }
 
 data class OAuthConfig(

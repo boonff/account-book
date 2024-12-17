@@ -15,14 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import me.accountbook.platform.BasicPageVisible
-import me.accountbook.ui.setting.sync.SyncPoint
 
 
 @Composable
 fun BasicScreen(
     title: String,
-    isSynced: Boolean,
-    syncData: () -> Unit,
+    syncPoint: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -47,21 +45,13 @@ fun BasicScreen(
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 8.dp, top = 16.dp, start = 16.dp)
+                            .weight(1f)
                     )
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        SyncPoint(
-                            isSynced = isSynced,
-                            modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
-                        ) { syncData() }
-                    }
+                        syncPoint()
+
                 }
             } else {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    SyncPoint(
-                        isSynced = isSynced,
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(8.dp)
-                    ) { syncData() }
-                }
+                    syncPoint()
             }
             Box(modifier = Modifier.padding(8.dp)) {
                 content()

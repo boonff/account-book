@@ -12,15 +12,7 @@ import me.accountbook.ui.common.components.BasicDetails
 
 @Composable
 fun AccountDetails(navHostController: NavHostController) {
-    BasicDetails(
-        "账户管理",
-        navHostController,
-        isSynced = false,//未实现
-        {},
-        {
-            AccountCard("中国银行", 10000.0)
-        }
-    )
+
 
 }
 

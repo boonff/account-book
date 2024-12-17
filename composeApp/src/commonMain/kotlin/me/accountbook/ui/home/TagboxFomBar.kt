@@ -57,7 +57,7 @@ fun FormBar(
                     scope.launch(Dispatchers.IO) {
                         val random = Random.nextInt(0, colors.size)
                         viewModel.insert(viewModel.text, colors[random])
-                        viewModel.loadSortedTagbox() //添加tagbox后触发tagboxs的更新，
+                        viewModel.initData() //添加tagbox后触发tagboxs的更新，
                         viewModel.text = ""
                         onAddClick() //回调函数，目前的作用是添加元素后将LazyVerticalGrid滚动到末尾
                     }

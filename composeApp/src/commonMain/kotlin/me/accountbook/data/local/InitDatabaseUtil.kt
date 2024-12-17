@@ -6,37 +6,43 @@ import me.accountbook.utils.LoggingUtil
 import java.sql.SQLException
 
 class InitDatabaseUtil(driver: SqlDriver) {
-    private val queries = Database(driver).appDatabaseQueries
+    private val appDatabaseQueries = Database(driver).appDatabaseQueries
+    private val keyValueStoreQueries = Database(driver).keyValueStoreQueries
 
     private fun dropTable() {
-        queries.dropAccount()
-        queries.dropTagbox()
+        appDatabaseQueries.dropAccount()
+        appDatabaseQueries.dropTagbox()
+        keyValueStoreQueries.dropSetting()
+        keyValueStoreQueries.dropTableTamestamp()
     }
 
     private fun dropTrigger() {
-        queries.dropTagboxTimstampTragger()
-        queries.dropSetPositionTrigger()
+        appDatabaseQueries.dropTagboxTimstampTragger()
+        appDatabaseQueries.dropSetPositionTrigger()
 
-        queries.dropSetAccountPositionTrigger()
-        queries.dropSetAccountPositionTrigger()
+        appDatabaseQueries.dropSetAccountPositionTrigger()
+        appDatabaseQueries.dropSetAccountPositionTrigger()
     }
 
     private fun initTable() {
-        queries.createTagbox()
-        queries.createAccount()
+        appDatabaseQueries.createTagbox()
+        appDatabaseQueries.createAccount()
+
+        keyValueStoreQueries.createSetting()
+        keyValueStoreQueries.createTableTamestamp()
     }
 
     private fun initTrigger() {
-        queries.createTagboxTimstampTragger()
-        queries.createSetTagboxPositionTrigger()
+        appDatabaseQueries.createTagboxTimstampTragger()
+        appDatabaseQueries.createSetTagboxPositionTrigger()
 
-        queries.createAccountTimestampTrigger()
-        queries.createSetAccountPositionTrigger()
+        appDatabaseQueries.createAccountTimestampTrigger()
+        appDatabaseQueries.createSetAccountPositionTrigger()
     }
 
     fun initDatabase(): Boolean {
         return try {
-            queries.transaction {
+            appDatabaseQueries.transaction {
                 //dropTable()
                 dropTrigger()
                 initTable()

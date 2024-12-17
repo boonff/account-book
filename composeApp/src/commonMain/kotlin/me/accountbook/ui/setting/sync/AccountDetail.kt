@@ -14,18 +14,17 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.common.components.BasicDetails
-import me.accountbook.ui.setting.sync.viewmodel.AccountDetailViewModel
+import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SyncDetails(navHostController: NavHostController) {
-    val viewModel: AccountDetailViewModel = koinViewModel()
+    val viewModel: LoginViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     BasicDetails(
         "同步设置",
         navHostController,
-        isSynced = false,
-        syncData = {},
+        syncPoint = {},
         content =
         {
             Column(
@@ -33,7 +32,7 @@ fun SyncDetails(navHostController: NavHostController) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (!viewModel.isLogin())
+                if (!viewModel.isLogin)
                     Text(
                         text = "登录",
                         color = MaterialTheme.colorScheme.onBackground,
@@ -42,7 +41,7 @@ fun SyncDetails(navHostController: NavHostController) {
                                 viewModel.login()
                             }
                     )
-                if (viewModel.isLogin()) {
+                if (viewModel.isLogin) {
                     Text(
                         text = "硬删除",
                         color = MaterialTheme.colorScheme.onBackground,

@@ -64,6 +64,8 @@ kotlin {
 
                     implementation(libs.spring.security.crypto)
 
+                    implementation("com.google.crypto.tink:tink:1.15.0")
+
                     //implementation(libs.kandy.lets.plot)
 
                 }

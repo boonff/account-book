@@ -1,9 +1,8 @@
 package me.accountbook.data.repository
 
-import me.accountbook.data.local.AccountHelper
-import me.accountbook.data.local.DatabaseHelper
-import me.accountbook.data.model.SerAccount
+import me.accountbook.data.local.helper.AccountHelper
+import me.accountbook.database.Account
 
-class AccountRepository(dbHelper: AccountHelper) : DatabaseRepository<SerAccount>(dbHelper) {
+class AccountRepository(dbHelper: AccountHelper) : AppDatabaseRepository<Account>(dbHelper) {
 
 }

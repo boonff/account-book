@@ -20,8 +20,7 @@ import me.accountbook.ui.navigation.Screen
 @Composable
 fun SettingsScreen(navHostController: NavHostController) {
     BasicScreen(title = "设置",
-        syncData = {},
-        isSynced = false,//未实现
+        syncPoint = {},
         content = {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Column {

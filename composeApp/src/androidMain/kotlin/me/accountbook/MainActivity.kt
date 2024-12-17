@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
             androidContext(this@MainActivity)
             modules(androidModule, commonModule)
         }
+        AppInitializer.initialize()
         setContent {
             AppAndroidContent()
         }
@@ -33,7 +34,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppAndroidContent() {
-    App()
     AndroidTheme {
         Box(
             modifier = Modifier

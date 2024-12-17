@@ -1,22 +1,21 @@
 package me.accountbook.koin
 
 import app.cash.sqldelight.db.SqlDriver
-import me.accountbook.data.local.AccountHelper
+import me.accountbook.data.local.helper.AccountHelper
 import me.accountbook.data.local.JvmDatabaseDriverFactory
 import me.accountbook.data.local.DatabaseDriverFactory
-import me.accountbook.data.local.DatabaseHelper
 import me.accountbook.data.local.InitDatabaseUtil
-import me.accountbook.data.local.TagboxHelper
-import me.accountbook.data.model.SerAccount
-import me.accountbook.data.model.SerTagbox
-import me.accountbook.network.DesktopUserService
+import me.accountbook.data.local.helper.SettingHelper
+import me.accountbook.data.local.helper.TableTimestampHelper
+import me.accountbook.data.local.helper.TagboxHelper
+import me.accountbook.network.manager.DesktopUserManager
 import me.accountbook.network.utils.BrowserUtil
 import me.accountbook.network.utils.DeskTopBrowserUtil
-import me.accountbook.network.DesktopLoginService
-import me.accountbook.network.LoginService
-import me.accountbook.network.UserService
-import me.accountbook.utils.file.DesktopFileUtil
-import me.accountbook.utils.file.FileUtil
+import me.accountbook.network.service.DesktopLoginService
+import me.accountbook.network.service.LoginService
+import me.accountbook.network.manager.UserManager
+import me.accountbook.file.local.DesktopFileUtil
+import me.accountbook.file.local.FileUtil
 import org.koin.dsl.module
 
 val jvmModule = module {
@@ -25,9 +24,11 @@ val jvmModule = module {
     single { InitDatabaseUtil(get()) }
     single { TagboxHelper(get()) }
     single { AccountHelper(get()) }
+    single { TableTimestampHelper(get()) }
+    single { SettingHelper(get()) }
 
     single<FileUtil> { DesktopFileUtil() }
     single<BrowserUtil> { DeskTopBrowserUtil() }//可以删除
     single<LoginService> { DesktopLoginService }
-    single<UserService> { DesktopUserService }
+    single<UserManager> { DesktopUserManager }
 }

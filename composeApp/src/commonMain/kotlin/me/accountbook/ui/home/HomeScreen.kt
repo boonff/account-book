@@ -16,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import me.accountbook.network.manager.UserManager
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.ui.common.chart.StackedDonutChart
 import me.accountbook.ui.common.components.BasicScreen
 import me.accountbook.ui.common.components.FunCard
 import me.accountbook.ui.common.components.HorizontalScrollWithBar
+import me.accountbook.ui.common.components.SyncPoint
 import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import me.accountbook.ui.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
@@ -29,16 +31,17 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(navController: NavHostController) {
     val tagboxDataViewModel: TagboxDataViewModel = koinViewModel()
 
-    //加载数据
-    LaunchedEffect(Unit) {
-        tagboxDataViewModel.loadSortedTagbox()
+    LaunchedEffect(Unit){
+        tagboxDataViewModel.initData()
     }
+
     BasicScreen(
         title = "首页",
-        syncData = {
-            tagboxDataViewModel.syncData()
+        syncPoint = {
+            SyncPoint(tagboxDataViewModel.syncState) {
+                tagboxDataViewModel.sync()
+            }
         },
-        isSynced = tagboxDataViewModel.isSynced,
         content = {
             // 使用 LazyVerticalGrid 创建自适应列
             LazyVerticalStaggeredGrid(

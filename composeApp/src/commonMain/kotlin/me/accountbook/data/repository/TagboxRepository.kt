@@ -2,19 +2,21 @@ package me.accountbook.data.repository
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import me.accountbook.data.local.DatabaseHelper
-import me.accountbook.data.local.TagboxHelper
-import me.accountbook.data.model.SerTagbox
+import me.accountbook.data.local.helper.TagboxHelper
+import me.accountbook.database.Tagbox
 import java.util.UUID
 
-class TagboxRepository(dbHelper: TagboxHelper) : DatabaseRepository<SerTagbox>(dbHelper) {
+class TagboxRepository(dbHelper: TagboxHelper) : AppDatabaseRepository<Tagbox>(dbHelper) {
 
-    fun insert(name: String, color: Color) {
-        super.insert(
-            SerTagbox(
+    fun insert(name: String, color: Color): Boolean {
+        return super.insert(
+            Tagbox(
                 uuid = UUID.randomUUID().toString(),
                 name = name,
                 color = color.toArgb().toUInt().toLong(),
+                position = null,
+                timestamp = null,
+                deleted = null,
             )
         )
     }

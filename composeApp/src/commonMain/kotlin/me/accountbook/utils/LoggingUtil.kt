@@ -1,7 +1,7 @@
 package me.accountbook.utils
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.accountbook.utils.file.FileUtil
+import me.accountbook.file.local.FileUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

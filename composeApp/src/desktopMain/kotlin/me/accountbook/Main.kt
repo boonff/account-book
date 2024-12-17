@@ -23,7 +23,7 @@ fun main() = application {
             exitApplication()
         }
     ) {
-        App()
+        AppInitializer.initialize()
         AppTheme {
             Navigator(rememberNavController())
         }

@@ -1,10 +1,9 @@
 package me.accountbook.network.utils
 
-
 import io.ktor.http.ContentType
-import io.ktor.server.application.call
 import io.ktor.server.cio.CIO
-import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.cio.CIOApplicationEngine
+import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -18,7 +17,7 @@ object ServerUtil : KoinComponent {
     private val oAuthConfig: OAuthConfig by inject()
 
     // 持有服务器实例
-    private var server: ApplicationEngine? = null
+    private var server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>? = null
 
     // 用于异步接收授权码
     private var authorizationCodeDeferred = CompletableDeferred<String?>()

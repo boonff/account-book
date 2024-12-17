@@ -62,7 +62,7 @@ fun EditTagbox() {
                             ) {
                                 scope.launch {
                                     viewModel.softDelete(viewModel.uuid)
-                                    tagboxDataViewModel.loadSortedTagbox()
+                                    tagboxDataViewModel.initData()
                                 }
                                 viewModel.togglePopupVisible()
                             }
@@ -97,7 +97,7 @@ fun EditTagbox() {
                                             viewModel.color,
                                             viewModel.uuid
                                         )
-                                        tagboxDataViewModel.loadSortedTagbox()
+                                        tagboxDataViewModel.initData()
                                     }
                                     viewModel.togglePopupVisible()
                                 },
