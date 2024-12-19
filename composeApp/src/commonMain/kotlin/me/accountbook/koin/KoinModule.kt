@@ -1,7 +1,9 @@
 package me.accountbook.koin
 
-import me.accountbook.data.manager.domain.TagboxManager
-import me.accountbook.data.manager.sync.AccountSyncManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import me.accountbook.data.manager.domain.TagboxDataManager
 import me.accountbook.data.manager.sync.TagboxSyncManager
 import me.accountbook.data.repository.AccountRepository
 import me.accountbook.data.repository.AppDatabaseRepository
@@ -12,8 +14,7 @@ import me.accountbook.database.Tagbox
 import me.accountbook.network.manager.RepositoryManager
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
 import me.accountbook.ui.home.viewmodel.TagboxFormBarViewModel
-import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
-import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
+import me.accountbook.ui.setting.sync.viewmodel.SyncDetailVIewModelTest
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,6 +29,8 @@ val commonModule = module {
             oauthTokenUrl = "https://github.com/login/oauth/access_token",
         )
     }
+    single { CoroutineScope(Dispatchers.Main + SupervisorJob()) }
+
     single { RepositoryManager() }
 
     single<AppDatabaseRepository<Tagbox>> { TagboxRepository(get()) }
@@ -36,16 +39,14 @@ val commonModule = module {
     single { AccountRepository(get()) }
     single { TableTimestampRepository(get()) }
 
-    single { TagboxManager() }
+    single { TagboxDataManager() }
 
-    single { TagboxSyncManager }
-    single { AccountSyncManager }
+    single { TagboxSyncManager() }
 
 
-    viewModel { TagboxDataViewModel() }
     viewModel { TagboxFormBarViewModel() }
     viewModel { TagboxEditViewModel() }
-    viewModel { LoginViewModel() }
+    viewModel { SyncDetailVIewModelTest() }
 
 
 }

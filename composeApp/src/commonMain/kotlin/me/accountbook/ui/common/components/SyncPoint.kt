@@ -26,9 +26,7 @@ fun SyncPoint(
     sync: () -> Unit,
 ) {
     val viewModel: LoginViewModel = koinViewModel()
-    LaunchedEffect(Unit){
-        viewModel.initLogin()
-    }
+
     Box(
         modifier = modifier.padding(end = 16.dp)
     ) {

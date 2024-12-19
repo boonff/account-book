@@ -18,7 +18,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 object GitHubApiService {
     private val client = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)) // 日志记录
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)) // 日志记录
         .build()
 
 
@@ -61,7 +61,7 @@ object GitHubApiService {
     }
 
     // 检查仓库是否已经存在
-    suspend fun checkIfRepoExists(token: String, username: String, repoName: String): Boolean {
+    private suspend fun checkIfRepoExists(token: String, username: String, repoName: String): Boolean {
         val checkRepoUrl =
             "https://api.github.com/repos/$username/$repoName" // 替换为你的 GitHub 用户名
         val checkRepoRequest =

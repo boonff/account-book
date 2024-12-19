@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.Dispatchers
 import me.accountbook.network.manager.UserManager
 import me.accountbook.platform.getHomeLazyVerticalStaggeredGridColumns
 import me.accountbook.ui.common.chart.StackedDonutChart

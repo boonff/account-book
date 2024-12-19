@@ -1,5 +1,7 @@
 package me.accountbook.network.manager
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.accountbook.network.service.GitHubApiService
 import me.accountbook.utils.LoggingUtil
 import org.koin.core.component.KoinComponent
@@ -13,11 +15,14 @@ class RepositoryManager : KoinComponent {
     private val githubApi = GitHubApiService
     private val userManager: UserManager by inject()
 
+    // fetchUsername 方法也需要执行网络请求，因此也放入 withContext(Dispatchers.IO)
     private suspend fun fetchUsername(): String? {
         if (username != null) return username
-        return userManager.authorize { token ->
-            githubApi.fetchUserName(token).also { username = it }
-        } as? String?
+        return withContext(Dispatchers.IO) {
+            userManager.authorize { token ->
+                githubApi.fetchUserName(token).also { username = it }
+            } as? String?
+        }
     }
 
     suspend fun upload(pathName: String, protoBufBytes: ByteArray): Boolean {
@@ -25,15 +30,17 @@ class RepositoryManager : KoinComponent {
             LoggingUtil.logDebug("username获取失败")
             return false
         }
-        return userManager.authorize { token ->
-            githubApi.uploadProtoBufToRepo(
-                token,
-                username,
-                repoName,
-                rootName + pathName,
-                protoBufBytes
-            )
-        } as? Boolean ?: false
+        return withContext(Dispatchers.IO) {
+            userManager.authorize { token ->
+                githubApi.uploadProtoBufToRepo(
+                    token,
+                    username,
+                    repoName,
+                    rootName + pathName,
+                    protoBufBytes
+                )
+            } as? Boolean ?: false
+        }
     }
 
     suspend fun fetch(pathName: String): ByteArray? {
@@ -41,14 +48,16 @@ class RepositoryManager : KoinComponent {
             LoggingUtil.logDebug("username获取失败")
             return null
         }
-        return userManager.authorize { token ->
-            githubApi.fetchFileContentAsByteArray(
-                token,
-                username,
-                repoName,
-                rootName + pathName
-            )
-        } as? ByteArray?
+        return withContext(Dispatchers.IO) {
+            userManager.authorize { token ->
+                githubApi.fetchFileContentAsByteArray(
+                    token,
+                    username,
+                    repoName,
+                    rootName + pathName
+                )
+            } as? ByteArray?
+        }
     }
 
     suspend fun create(): Boolean {
@@ -56,12 +65,14 @@ class RepositoryManager : KoinComponent {
             LoggingUtil.logDebug("username获取失败")
             return false
         }
-        return userManager.authorize { token ->
-            githubApi.createPrivateRepo(
-                token,
-                username,
-                repoName
-            )
-        } as? Boolean ?: false
+        return withContext(Dispatchers.IO) {
+            userManager.authorize { token ->
+                githubApi.createPrivateRepo(
+                    token,
+                    username,
+                    repoName
+                )
+            } as? Boolean ?: false
+        }
     }
 }

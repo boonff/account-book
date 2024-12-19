@@ -8,15 +8,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,11 +46,11 @@ import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
+import kotlin.random.Random
 
 @Composable
 fun DetailsTagbox(navHostController: NavHostController) {
     val tagboxDataViewModel: TagboxDataViewModel = koinViewModel()
-    val tagboxEditViewModel: TagboxEditViewModel = koinViewModel()
     val hapticFeedback = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val lazyGridState = rememberLazyGridState()
@@ -49,14 +58,14 @@ fun DetailsTagbox(navHostController: NavHostController) {
         tagboxDataViewModel.moveTagbox(from.index, to.index)
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         tagboxDataViewModel.initData()
     }
 
     BasicDetails("标签管理",
         navHostController,
         syncPoint = {
-            SyncPoint(tagboxDataViewModel.syncState){
+            SyncPoint(tagboxDataViewModel.syncState) {
                 tagboxDataViewModel.sync()
             }
         },
@@ -119,8 +128,8 @@ fun DetailsTagbox(navHostController: NavHostController) {
                                                         }
                                                     )
                                                     .clickable {
-                                                        tagboxEditViewModel.togglePopupVisible()
-                                                        tagboxEditViewModel.initByTagbox(it)
+                                                        tagboxDataViewModel.togglePopupVisible()
+                                                        tagboxDataViewModel.initByTagbox(it)
                                                     }
                                             )
                                         }
@@ -142,4 +151,58 @@ fun DetailsTagbox(navHostController: NavHostController) {
             EditTagbox()
         }
     )
+}
+
+
+@Composable
+fun FormBar(
+    modifier: Modifier = Modifier,
+    onAddClick: () -> Unit,
+) {
+    val viewModel: TagboxDataViewModel = koinViewModel()
+    val scope = rememberCoroutineScope()
+    Box(
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = viewModel.text,
+                onValueChange = { newText ->
+                    viewModel.text = newText
+                },
+                placeholder = { Text("输入标签名") },
+                modifier = Modifier
+
+                    .weight(0.6f)
+                    .align(Alignment.CenterVertically)
+            )
+            //添加tagbox的按钮
+            Button(
+                onClick = {
+                    val random = Random.nextInt(0, ColorPalette.colors.size)
+                    viewModel.insert(viewModel.text, ColorPalette.colors[random])
+                    viewModel.text = ""
+                    onAddClick() //回调函数，目前的作用是添加元素后将LazyVerticalGrid滚动到末尾
+
+                },
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .weight(0.2f)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Add,
+                    tint = MaterialTheme.colorScheme.surface,
+                    contentDescription = null,
+                )
+            }
+
+        }
+
+    }
 }

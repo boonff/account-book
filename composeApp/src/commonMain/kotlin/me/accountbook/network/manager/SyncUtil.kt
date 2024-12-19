@@ -1,12 +1,10 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.network.manager
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import me.accountbook.data.model.SerDataItem
-import me.accountbook.network.manager.RepositoryManager
-import me.accountbook.network.manager.UserManager
 import me.accountbook.utils.LoggingUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

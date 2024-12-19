@@ -5,22 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import me.accountbook.data.model.SerTagbox
-import me.accountbook.database.Tagbox
+import me.accountbook.data.manager.domain.TagboxDataManager
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class TagboxEditViewModel : TagboxDataViewModel() {
+class TagboxEditViewModel : ViewModel(), KoinComponent {
+    protected val tagboxDataManager: TagboxDataManager by inject()
+
     var isPopupVisible by mutableStateOf(false)
     var uuid by mutableStateOf("")
     var name by mutableStateOf("")
     var color by mutableStateOf(Color.Transparent)
-    fun togglePopupVisible() {
-        isPopupVisible = !isPopupVisible
-    }
-
-    fun initByTagbox(tagbox: Tagbox) {
-        uuid = tagbox.uuid
-        name = tagbox.name
-        color = Color(tagbox.color)
-    }
 
 }

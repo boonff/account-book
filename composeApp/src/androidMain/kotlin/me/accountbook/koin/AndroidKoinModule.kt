@@ -18,6 +18,11 @@ import me.accountbook.network.manager.UserManager
 import me.accountbook.network.utils.BrowserUtil
 import me.accountbook.file.local.AndroidFileUtil
 import me.accountbook.file.local.FileUtil
+import me.accountbook.ui.home.viewmodel.AndroidTagboxDataViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
+import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
+import me.accountbook.ui.setting.viewmodel.AndroidLoginViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val androidModule = module {
@@ -34,4 +39,7 @@ val androidModule = module {
     single<BrowserUtil> { AndroidBrowserUtil(get()) }//可以删除
     single<LoginService> { AndroidLoginService }
     single<UserManager> { AndroidUserManager }
+
+    viewModel<LoginViewModel> { AndroidLoginViewModel() }
+    viewModel<TagboxDataViewModel> { AndroidTagboxDataViewModel() }
 }

@@ -100,6 +100,9 @@ softDeleteAccount:
 UPDATE Account
 SET deleted = 1
 WHERE uuid = :uuid;
+hardDeleteAccount:
+DELETE FROM Account
+WHERE deleted = 1;
 
 -- 恢复软删除的账户
 recoverAccount:
@@ -206,6 +209,9 @@ WHERE uuid = :uuid;
 deleteTagboxById:
 DELETE FROM Tagbox
 WHERE uuid = :uuid;
+hardDeleteTagbox:
+DELETE FROM Tagbox
+WHERE deleted = 1;
 
 -- 恢复软删除的标签
 recoverTagbox:

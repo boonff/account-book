@@ -15,11 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.accountbook.ui.common.components.BasicDetails
 import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
+import me.accountbook.ui.setting.sync.viewmodel.SyncDetailVIewModelTest
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SyncDetails(navHostController: NavHostController) {
+fun SyncDetail(navHostController: NavHostController) {
     val viewModel: LoginViewModel = koinViewModel()
+    val testViewModel:SyncDetailVIewModelTest = koinViewModel()
     val scope = rememberCoroutineScope()
     BasicDetails(
         "同步设置",
@@ -32,6 +34,16 @@ fun SyncDetails(navHostController: NavHostController) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Text(
+                    text = "硬删除",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .clickable {
+                            scope.launch(Dispatchers.IO) {
+                                testViewModel.tagboxRepository.hardDelete()
+                            }
+                        }
+                )
                 if (!viewModel.isLogin)
                     Text(
                         text = "登录",
@@ -42,16 +54,6 @@ fun SyncDetails(navHostController: NavHostController) {
                             }
                     )
                 if (viewModel.isLogin) {
-                    Text(
-                        text = "硬删除",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .clickable {
-                                scope.launch(Dispatchers.IO) {
-                                    //SyncUtil.hardDelete() 未实现
-                                }
-                            }
-                    )
                     Text(
                         text = "退出登录",
                         color = MaterialTheme.colorScheme.onBackground,

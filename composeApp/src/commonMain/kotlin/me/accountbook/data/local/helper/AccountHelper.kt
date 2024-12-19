@@ -81,6 +81,16 @@ class AccountHelper(driver: SqlDriver) :
         }
     }
 
+    override fun hardDelete(): Boolean {
+        return try {
+            queries.hardDeleteTagbox()
+            true
+        } catch (e: SQLException) {
+            LoggingUtil.logError("account 硬删除失败", e)
+            false
+        }
+    }
+
     override fun refactor(dataList: List<Account>): Boolean {
         return try {
             queries.transaction {

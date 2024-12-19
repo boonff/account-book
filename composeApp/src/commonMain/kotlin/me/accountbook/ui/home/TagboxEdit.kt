@@ -34,9 +34,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EditTagbox() {
-    val viewModel: TagboxEditViewModel = koinViewModel()
-    val tagboxDataViewModel: TagboxDataViewModel = koinViewModel()
-    val scope = rememberCoroutineScope()
+    val viewModel: TagboxDataViewModel = koinViewModel()
     if (viewModel.isPopupVisible) {
         Dialog(onDismissRequest = { viewModel.togglePopupVisible() }) {
             Card(
@@ -60,10 +58,7 @@ fun EditTagbox() {
                                 modifier = Modifier
                                     .align(Alignment.CenterEnd)
                             ) {
-                                scope.launch {
-                                    viewModel.softDelete(viewModel.uuid)
-                                    tagboxDataViewModel.initData()
-                                }
+                                viewModel.softDelete(viewModel.uuid)
                                 viewModel.togglePopupVisible()
                             }
                         }
@@ -88,17 +83,14 @@ fun EditTagbox() {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             Button(
                                 onClick = {
-                                    scope.launch {
-                                        viewModel.updateName(
-                                            viewModel.name,
-                                            viewModel.uuid
-                                        )
-                                        viewModel.updateColor(
-                                            viewModel.color,
-                                            viewModel.uuid
-                                        )
-                                        tagboxDataViewModel.initData()
-                                    }
+                                    viewModel.updateName(
+                                        viewModel.name,
+                                        viewModel.uuid
+                                    )
+                                    viewModel.updateColor(
+                                        viewModel.color,
+                                        viewModel.uuid
+                                    )
                                     viewModel.togglePopupVisible()
                                 },
                                 colors = ButtonDefaults.buttonColors(

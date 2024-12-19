@@ -1,45 +1,74 @@
 package me.accountbook.data.repository
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.accountbook.data.local.helper.AppDatabaseHelper
 import me.accountbook.utils.LoggingUtil
 
 open class AppDatabaseRepository<T>(private val dbHelper: AppDatabaseHelper<T>) {
     val tableKey = dbHelper.tableKey
 
-    protected fun updateProperty(
+    // 更新属性
+    suspend fun updateProperty(
         uuid: String,
         changeProperty: (table: T) -> T
     ): Boolean {
-        val table = dbHelper.queryById(uuid) ?: run {
-            LoggingUtil.logDebug("queryById获取到的值为空")
-            return false
+        return withContext(Dispatchers.IO) {
+            val table = dbHelper.queryById(uuid) ?: run {
+                LoggingUtil.logDebug("queryById获取到的值为空")
+                return@withContext false
+            }
+            val updatedTable = changeProperty(table)
+            dbHelper.update(updatedTable, uuid)
+            true
         }
-        val updatedTable = changeProperty(table)
-        dbHelper.update(updatedTable, uuid)
-        return true
     }
 
-    fun insert(data: T): Boolean {
-        return dbHelper.insert(data)
+    // 插入数据
+    suspend fun insert(data: T): Boolean {
+        return withContext(Dispatchers.IO) {
+            dbHelper.insert(data)
+        }
     }
 
-    fun clear(): Boolean {
-        return dbHelper.delete()
+    // 清空数据
+    suspend fun clear(): Boolean {
+        return withContext(Dispatchers.IO) {
+            dbHelper.delete()
+        }
     }
 
-    fun softDelete(uuid: String): Boolean {
-        return dbHelper.softDelete(uuid)
+    // 执行软删除
+    suspend fun softDelete(uuid: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            dbHelper.softDelete(uuid)
+        }
+    }
+    suspend fun hardDelete():Boolean{
+        return withContext(Dispatchers.IO){
+            dbHelper.hardDelete()
+        }
+    }
+    // 查询所有数据
+    suspend fun query(): List<T>? {
+        return withContext(Dispatchers.IO) {
+            dbHelper.query()
+        }
     }
 
-    fun query(): List<T>? {
-        return dbHelper.query()
+    // 查询未删除的数据
+    suspend fun queryUndeleted(): List<T>? {
+        return withContext(Dispatchers.IO) {
+            dbHelper.queryUndeleted()
+        }
     }
 
-    fun queryUndeleted(): List<T>? {
-        return dbHelper.queryUndeleted()
-    }
 
-    fun refactor(merged: List<T>): Boolean {
-        return dbHelper.refactor(merged)
+
+    // 重构数据
+    suspend fun refactor(merged: List<T>): Boolean {
+        return withContext(Dispatchers.IO) {
+            dbHelper.refactor(merged)
+        }
     }
 }

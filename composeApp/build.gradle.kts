@@ -45,9 +45,10 @@ kotlin {
                     implementation(libs.slf4j.simple)
 
                     implementation(libs.kotlinx.coroutines.core)//协程
+
+
                     implementation(libs.kotlinx.datetime)
                     implementation(libs.kotlinx.serialization.json)
-
                     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-protobuf
                     implementation(libs.kotlinx.serialization.protobuf)
 
@@ -64,7 +65,7 @@ kotlin {
 
                     implementation(libs.spring.security.crypto)
 
-                    implementation("com.google.crypto.tink:tink:1.15.0")
+                    implementation(libs.tink)
 
                     //implementation(libs.kandy.lets.plot)
 

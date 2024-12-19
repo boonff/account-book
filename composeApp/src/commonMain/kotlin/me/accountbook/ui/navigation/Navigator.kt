@@ -26,7 +26,7 @@ import me.accountbook.ui.home.HomeScreen
 import me.accountbook.ui.setting.SettingsScreen
 import me.accountbook.ui.home.DetailsTagbox
 import me.accountbook.ui.translation.TranslationScreen
-import me.accountbook.ui.setting.sync.SyncDetails
+import me.accountbook.ui.setting.sync.SyncDetail
 
 @Composable
 fun Navigator(navHostController: NavHostController) {
@@ -86,7 +86,7 @@ fun MyNavController(
                 DetailsTagbox(navHostController)
             }
             composable(Screen.SyncDetails.route) {
-                SyncDetails(navHostController)
+                SyncDetail(navHostController)
             }
             composable(Screen.AccountDetails.route) {
                 AccountDetails(navHostController)

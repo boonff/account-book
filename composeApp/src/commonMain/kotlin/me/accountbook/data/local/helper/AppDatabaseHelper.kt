@@ -21,5 +21,6 @@ abstract class AppDatabaseHelper<T>(driver: SqlDriver) {
     abstract fun delete(): Boolean
     abstract fun deleteById(uuid: String): Boolean
     abstract fun softDelete(uuid: String): Boolean
+    abstract fun hardDelete():Boolean
     abstract fun refactor(dataList: List<T>): Boolean
 }

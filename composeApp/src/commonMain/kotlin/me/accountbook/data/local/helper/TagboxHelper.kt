@@ -7,7 +7,7 @@ import java.sql.SQLException
 
 class TagboxHelper(driver: SqlDriver) :
     AppDatabaseHelper<Tagbox>(driver) {
-        override val tableKey = "Tagbox"
+    override val tableKey = "Tagbox"
     override fun insert(data: Tagbox): Boolean {
         return try {
             queries.insertTagbox(data.uuid, data.name, data.color)
@@ -87,6 +87,16 @@ class TagboxHelper(driver: SqlDriver) :
             true
         } catch (e: SQLException) {
             LoggingUtil.logError("fun: TagboxDatabaseHelper.softDelete", e)
+            false
+        }
+    }
+
+    override fun hardDelete(): Boolean {
+        return try {
+            queries.hardDeleteTagbox()
+            true
+        } catch (e: SQLException) {
+            LoggingUtil.logError("tagbox 硬删除失败", e)
             false
         }
     }

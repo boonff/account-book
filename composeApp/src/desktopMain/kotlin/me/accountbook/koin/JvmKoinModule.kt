@@ -16,6 +16,11 @@ import me.accountbook.network.service.LoginService
 import me.accountbook.network.manager.UserManager
 import me.accountbook.file.local.DesktopFileUtil
 import me.accountbook.file.local.FileUtil
+import me.accountbook.ui.home.viewmodel.JvmTagboxDataViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDataViewModel
+import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
+import me.accountbook.ui.setting.viewmodel.JvmLoginViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val jvmModule = module {
@@ -31,4 +36,7 @@ val jvmModule = module {
     single<BrowserUtil> { DeskTopBrowserUtil() }//可以删除
     single<LoginService> { DesktopLoginService }
     single<UserManager> { DesktopUserManager }
+
+    viewModel<LoginViewModel>{ JvmLoginViewModel() }
+    viewModel<TagboxDataViewModel> { JvmTagboxDataViewModel() }
 }
