@@ -21,9 +21,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 fun FunCard(
     title: String,
     icon: ImageVector,
-    content: @Composable () -> Unit, //主要内容
     onClick: () -> Unit = {}, // 点击事件的回调
     modifier: Modifier = Modifier,
+    syncPoint: @Composable () -> Unit,
+    content: @Composable () -> Unit, //主要内容
 ) {
     Surface(
         shape = MaterialTheme.shapes.medium,
@@ -36,18 +37,18 @@ fun FunCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            FunCardTopBar(title, icon) { onClick() }
+            FunCardTopBar(title, icon, syncPoint) { onClick() }
             content()
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FunCardTopBar(
     title: String,
     icon: ImageVector = Icons.Rounded.Warning,
+    syncPoint: @Composable () -> Unit,
     onClick: () -> Unit,
 ) {
     Row(
@@ -73,6 +74,7 @@ fun FunCardTopBar(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 8.dp)
             )
+            syncPoint()
         }
 
         // 将箭头放在最右侧

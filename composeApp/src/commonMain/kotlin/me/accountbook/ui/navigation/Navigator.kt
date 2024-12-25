@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PanTool
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,10 +22,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import me.accountbook.ui.home.AccountDetails
-import me.accountbook.ui.home.HomeScreen
+import me.accountbook.ui.home.screen.AccountDetails
+import me.accountbook.ui.home.screen.HomeScreen
 import me.accountbook.ui.setting.SettingsScreen
-import me.accountbook.ui.home.DetailsTagbox
+import me.accountbook.ui.home.screen.TagboxDetail
 import me.accountbook.ui.translation.TranslationScreen
 import me.accountbook.ui.setting.sync.SyncDetail
 
@@ -70,9 +71,9 @@ fun MyNavController(
     startDestination: String,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         // 使用 NavHost 来显示屏幕
-        NavHost(navController = navHostController, startDestination = Screen.HomeScreen.route) {
+        NavHost(navController = navHostController, startDestination = startDestination) {
             composable(Screen.HomeScreen.route) {
                 HomeScreen(navHostController)
             }
@@ -83,7 +84,7 @@ fun MyNavController(
                 SettingsScreen(navHostController)
             }
             composable(Screen.TagDetails.route) {
-                DetailsTagbox(navHostController)
+                TagboxDetail(navHostController)
             }
             composable(Screen.SyncDetails.route) {
                 SyncDetail(navHostController)
@@ -132,5 +133,5 @@ val navItems = listOf(
         iconImageVector = Icons.Outlined.Settings,
         iconContentDescription = "设置",
         label = { }
-    )
+    ),
 )

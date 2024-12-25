@@ -1,11 +1,12 @@
 package me.accountbook.data.local.helper
 
 import app.cash.sqldelight.db.SqlDriver
+import me.accountbook.data.model.TableKey
 import me.accountbook.database.Database
 
 abstract class AppDatabaseHelper<T>(driver: SqlDriver) {
     protected val queries = Database(driver).appDatabaseQueries
-    abstract val tableKey: String
+    abstract val tableKey: TableKey
 
     fun <T> runTransaction(block: () -> T) {
         queries.transaction {

@@ -1,4 +1,4 @@
-package me.accountbook.ui.home
+package me.accountbook.ui.home.compoents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.accountbook.data.model.SerTagbox
 import me.accountbook.database.Tagbox
 
 @OptIn(ExperimentalLayoutApi::class)

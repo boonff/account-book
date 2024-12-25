@@ -40,8 +40,8 @@ DROP TRIGGER IF EXISTS AccountTimestamp;
 
 -- 插入账户时生成 uuid 和时间戳，默认状态为未删除
 insertAccount:
-INSERT INTO Account(uuid, name, balance, targetSavings, emergencySavings)
-VALUES(:uuid, :name, :balance, :targetSavings, :emergencySavings);
+INSERT INTO Account(uuid, name, balance, targetSavings, emergencySavings, position)
+VALUES(:uuid, :name, :balance, :targetSavings, :emergencySavings,:Position);
 
 insertAccountWithAll:
 INSERT INTO Account(uuid, timestamp, deleted, name, balance, targetSavings, emergencySavings, position)
@@ -158,8 +158,8 @@ DROP TRIGGER IF EXISTS TagboxTimstamp;
 
 -- 示例：插入标签时生成 uuid 和时间戳，默认状态为未删除
 insertTagbox:
-INSERT INTO Tagbox(uuid, name, color)
-VALUES(:uuid, :name, :color);
+INSERT INTO Tagbox(uuid, name, color,position)
+VALUES(:uuid, :name, :color,:position);
 
 insertTagboxWithAll:
 INSERT INTO Tagbox(uuid, name, color, position, timestamp, deleted)

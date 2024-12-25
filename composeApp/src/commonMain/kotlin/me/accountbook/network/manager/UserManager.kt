@@ -12,7 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-abstract class UserManager : KoinComponent {
+abstract class  UserManager : KoinComponent {
     @Volatile
     private var _isLogin = MutableStateFlow(false)  // 需要将它包装为 MutableStateFlow
     val isLogin: StateFlow<Boolean> get() = _isLogin  // 提供只读的 StateFlow

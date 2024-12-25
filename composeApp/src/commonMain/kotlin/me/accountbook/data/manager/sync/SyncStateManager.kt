@@ -1,45 +1,30 @@
 package me.accountbook.data.manager.sync
 
-
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import me.accountbook.network.manager.UserManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-
 
 class SyncStateManager : KoinComponent {
-    var isLoading by mutableStateOf(false)
-        private set
-    private var syncState by mutableStateOf(SyncState.UNKNOWN)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    fun isSynced(state: Boolean) {
-        syncState = if (state)
+    private val _syncState = MutableStateFlow(SyncState.UNKNOWN)
+    val syncState: StateFlow<SyncState> = _syncState
+
+    fun setSynced(state: Boolean) {
+        _syncState.value = if (state)
             SyncState.SYNCED
         else
             SyncState.UNSYNCED
     }
 
-
     fun startLoading() {
-        isLoading = true
+        _isLoading.value = true
     }
 
     fun endLoading() {
-        isLoading = false
-    }
-
-    fun getColorForState(): Color {
-        return when (syncState) {
-            SyncState.SYNCED -> Color.Green
-            SyncState.UNSYNCED -> Color.Red
-            SyncState.UNKNOWN -> Color.Yellow
-        }
+        _isLoading.value = false
     }
 }
 

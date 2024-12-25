@@ -3,8 +3,11 @@ package me.accountbook.koin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import me.accountbook.data.manager.domain.TagboxDataManager
+import me.accountbook.data.manager.domain.TagboxManagerImpl
+import me.accountbook.data.manager.domain.TagboxListUpdater
+import me.accountbook.data.manager.sync.SyncStateManager
 import me.accountbook.data.manager.sync.TagboxSyncManager
+import me.accountbook.data.manager.sync.TagboxUpdateManager
 import me.accountbook.data.repository.AccountRepository
 import me.accountbook.data.repository.AppDatabaseRepository
 import me.accountbook.data.repository.TableTimestampRepository
@@ -12,6 +15,9 @@ import me.accountbook.data.repository.TagboxRepository
 import me.accountbook.database.Account
 import me.accountbook.database.Tagbox
 import me.accountbook.network.manager.RepositoryManager
+import me.accountbook.ui.common.components.viewmodel.SyncPointViewModel
+import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
+import me.accountbook.ui.home.viewmodel.TagboxDetailViewModel
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
 import me.accountbook.ui.home.viewmodel.TagboxFormBarViewModel
 import me.accountbook.ui.setting.sync.viewmodel.SyncDetailVIewModelTest
@@ -29,7 +35,6 @@ val commonModule = module {
             oauthTokenUrl = "https://github.com/login/oauth/access_token",
         )
     }
-    single { CoroutineScope(Dispatchers.Main + SupervisorJob()) }
 
     single { RepositoryManager() }
 
@@ -39,16 +44,18 @@ val commonModule = module {
     single { AccountRepository(get()) }
     single { TableTimestampRepository(get()) }
 
-    single { TagboxDataManager() }
+    single { TagboxManagerImpl() }
 
+    single { SyncStateManager() }
     single { TagboxSyncManager() }
-
+    single { TagboxListUpdater() }
+    single { TagboxUpdateManager() }
 
     viewModel { TagboxFormBarViewModel() }
     viewModel { TagboxEditViewModel() }
     viewModel { SyncDetailVIewModelTest() }
-
-
+    viewModel { HomeScreenViewModel() }
+    viewModel { TagboxDetailViewModel() }
 }
 
 data class OAuthConfig(

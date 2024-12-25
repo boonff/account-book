@@ -12,30 +12,37 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import me.accountbook.data.manager.domain.TableManager
+import me.accountbook.data.manager.sync.SyncState
 import me.accountbook.data.manager.sync.SyncStateManager
+import me.accountbook.ui.common.components.viewmodel.SyncPointViewModel
 import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
+//需要大改
 @Composable
 fun SyncPoint(
-    syncStateViewModel: SyncStateManager,
+    viewModel: SyncPointViewModel,
     modifier: Modifier = Modifier,
     sync: () -> Unit,
 ) {
-    val viewModel: LoginViewModel = koinViewModel()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val syncState by viewModel.syncState.collectAsState()
 
     Box(
         modifier = modifier.padding(end = 16.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            if (syncStateViewModel.isLoading) CircularProgressIndicator(modifier = Modifier.size(16.dp))
+            if (isLoading) CircularProgressIndicator(modifier = Modifier.size(16.dp))
             Box(modifier = Modifier
                 .size(16.dp)
                 .background(
-                    color = if (viewModel.isLogin) syncStateViewModel.getColorForState() else Color.Gray,
+                    color = viewModel.getColorForState(syncState),
                     shape = CircleShape
                 )
                 .clickable {

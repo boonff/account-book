@@ -34,10 +34,10 @@ class InitDatabaseUtil(driver: SqlDriver) {
 
     private fun initTrigger() {
         appDatabaseQueries.createTagboxTimstampTragger()
-        appDatabaseQueries.createSetTagboxPositionTrigger()
+        //appDatabaseQueries.createSetTagboxPositionTrigger()
 
         appDatabaseQueries.createAccountTimestampTrigger()
-        appDatabaseQueries.createSetAccountPositionTrigger()
+        //appDatabaseQueries.createSetAccountPositionTrigger()
     }
 
     fun initDatabase(): Boolean {

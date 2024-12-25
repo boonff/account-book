@@ -1,13 +1,14 @@
 package me.accountbook.data.local.helper
 
 import app.cash.sqldelight.db.SqlDriver
+import me.accountbook.data.model.TableKey
 import me.accountbook.database.Account
 import me.accountbook.utils.LoggingUtil
 import java.sql.SQLException
 
 class AccountHelper(driver: SqlDriver) :
     AppDatabaseHelper<Account>(driver) {
-    override val tableKey = "Account"
+    override val tableKey = TableKey.Account
     override fun insert(data: Account): Boolean {
         return try {
             queries.insertAccount(
@@ -15,7 +16,8 @@ class AccountHelper(driver: SqlDriver) :
                 data.name,
                 data.balance,
                 data.targetSavings,
-                data.emergencySavings
+                data.emergencySavings,
+                data.position
             )
             true
         } catch (e: SQLException) {

@@ -16,6 +16,22 @@ import org.koin.core.component.inject
 class TagboxUpdateManager : KoinComponent {
     private val tableTimestampRep: TableTimestampRepository by inject()
     private val tagboxRep: TagboxRepository by inject()
+    val tableKey = tagboxRep.tableKey
+
+    // 插入标签
+    suspend fun insert(data: Tagbox): Boolean {
+        return withContext(Dispatchers.IO) {
+            if (tagboxRep.insert(data)) {
+                tableTimestampRep.updateLocalTimestamp(
+                    TimestampUtil.getTimestamp(),
+                    tagboxRep.tableKey
+                )
+                return@withContext true
+            }
+            return@withContext false
+        }
+    }
+
 
     // 查询未删除的标签
     suspend fun queryUndeleted(): List<Tagbox> {
@@ -24,20 +40,6 @@ class TagboxUpdateManager : KoinComponent {
                 LoggingUtil.logInfo("tagbox 表为空")
                 emptyList()
             }
-        }
-    }
-
-    // 插入标签
-    suspend fun insert(name: String, color: Color): Boolean {
-        return withContext(Dispatchers.IO) {
-            if (tagboxRep.insert(name, color)) {
-                tableTimestampRep.updateLocalTimestamp(
-                    TimestampUtil.getTimestamp(),
-                    tagboxRep.tableKey
-                )
-                return@withContext true
-            }
-            return@withContext false
         }
     }
 
@@ -82,6 +84,23 @@ class TagboxUpdateManager : KoinComponent {
             return@withContext false
         }
     }
+
+    suspend fun updatePositions(updates: List<Pair<String, Int>>): Boolean {
+        return withContext(Dispatchers.IO) {
+            val success = updates.all { (uuid, position) ->
+                tagboxRep.updatePosition(position, uuid)
+            }
+            if (success) {
+                tableTimestampRep.updateLocalTimestamp(
+                    TimestampUtil.getTimestamp(),
+                    tagboxRep.tableKey
+                )
+                return@withContext true
+            }
+            return@withContext false
+        }
+    }
+
 
     // 执行软删除
     suspend fun softDelete(uuid: String): Boolean {

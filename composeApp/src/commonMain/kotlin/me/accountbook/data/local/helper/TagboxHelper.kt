@@ -1,16 +1,17 @@
 package me.accountbook.data.local.helper
 
 import app.cash.sqldelight.db.SqlDriver
+import me.accountbook.data.model.TableKey
 import me.accountbook.database.Tagbox
 import me.accountbook.utils.LoggingUtil
 import java.sql.SQLException
 
 class TagboxHelper(driver: SqlDriver) :
     AppDatabaseHelper<Tagbox>(driver) {
-    override val tableKey = "Tagbox"
+    override val tableKey = TableKey.Tagbox
     override fun insert(data: Tagbox): Boolean {
         return try {
-            queries.insertTagbox(data.uuid, data.name, data.color)
+            queries.insertTagbox(data.uuid, data.name, data.color, data.position)
             true
         } catch (e: SQLException) {
             LoggingUtil.logError("fun: TagboxDatabaseHelper.insert", e)

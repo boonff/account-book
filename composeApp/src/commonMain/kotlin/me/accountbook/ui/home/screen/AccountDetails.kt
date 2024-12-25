@@ -1,4 +1,4 @@
-package me.accountbook.ui.home
+package me.accountbook.ui.home.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import me.accountbook.ui.common.components.BasicDetails
 
 
 @Composable
