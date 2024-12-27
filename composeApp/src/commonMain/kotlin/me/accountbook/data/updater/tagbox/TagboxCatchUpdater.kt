@@ -1,37 +1,38 @@
 // me.accountbook.data.manager.domain/TagboxListUpdater.kt
-package me.accountbook.data.manager.domain
+package me.accountbook.data.updater.tagbox
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import me.accountbook.database.Tagbox
 
-class TagboxListUpdater {
-    private val _tagboxList = MutableStateFlow<List<Tagbox>>(emptyList())
-    val tagboxList: StateFlow<List<Tagbox>> get() = _tagboxList
+
+/*
+Todo: 更名为 tagboxCatchUpdaterManager，并移动到data.local.manager.tagbox包
+ */
+class TagboxCatchUpdater {
+    private val _catchList = MutableStateFlow<List<Tagbox>>(emptyList())
+    val catchList: StateFlow<List<Tagbox>> get() = _catchList
 
     fun updateList(newList: List<Tagbox>) {
-        _tagboxList.value = newList
+        _catchList.value = newList
     }
 
     fun sortedByPosition() {
-        _tagboxList.value = _tagboxList.value.sortedBy { it.position }
+        _catchList.value = _catchList.value.sortedBy { it.position }
     }
 
     fun sortedByTimestamp() {
-        _tagboxList.value = _tagboxList.value.sortedBy { it.timestamp }
+        _catchList.value = _catchList.value.sortedBy { it.timestamp }
     }
 
     fun addItem(data: Tagbox) {
-        _tagboxList.value += data
+        _catchList.value += data
     }
 
     fun updateColor(uuid: String, color: Color) {
-        _tagboxList.value = _tagboxList.value.map {
+        _catchList.value = _catchList.value.map {
             if (it.uuid == uuid) {
                 it.copy(color = color.toArgb().toUInt().toLong())
             } else {
@@ -41,7 +42,7 @@ class TagboxListUpdater {
     }
 
     fun updateName(uuid: String, name: String) {
-        _tagboxList.value = _tagboxList.value.map {
+        _catchList.value = _catchList.value.map {
             if (it.uuid == uuid) {
                 it.copy(name = name)
             } else {
@@ -51,7 +52,7 @@ class TagboxListUpdater {
     }
 
     fun updatePosition(uuid: String, position: Int) {
-        _tagboxList.value = _tagboxList.value.map {
+        _catchList.value = _catchList.value.map {
             if (it.uuid == uuid) {
                 it.copy(position = position.toLong())
             } else {
@@ -61,7 +62,7 @@ class TagboxListUpdater {
     }
 
     fun removeItem(uuid: String) {
-        _tagboxList.value = _tagboxList.value.filterNot { it.uuid == uuid }
+        _catchList.value = _catchList.value.filterNot { it.uuid == uuid }
     }
 
 }

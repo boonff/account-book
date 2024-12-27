@@ -2,10 +2,8 @@ package me.accountbook.ui.common.components.viewmodel
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import me.accountbook.data.manager.domain.TableManager
-import me.accountbook.data.manager.sync.SyncState
-import me.accountbook.data.manager.sync.SyncStateManager
-import org.koin.core.component.KoinComponent
+import me.accountbook.data.sync.domain.SyncState
+import me.accountbook.data.sync.domain.SyncStateManager
 
 class SyncPointViewModel(private val syncStateManager: SyncStateManager) : ViewModel() {
 

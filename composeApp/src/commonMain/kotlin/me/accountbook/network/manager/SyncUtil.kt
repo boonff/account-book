@@ -4,8 +4,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
-import me.accountbook.data.model.SerDataItem
-import me.accountbook.data.model.TableKey
+import me.accountbook.data.local.model.SerDataItem
+import me.accountbook.data.local.model.TableKey
 import me.accountbook.utils.LoggingUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

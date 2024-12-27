@@ -6,14 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import me.accountbook.data.manager.domain.TagboxManagerImpl
+import me.accountbook.data.updater.tagbox.TagboxUpdateManager
 import me.accountbook.ui.home.compoents.ColorPalette
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.random.Random
 
 class TagboxFormBarViewModel : ViewModel(), KoinComponent {
-    private val tagboxManager: TagboxManagerImpl by inject()
+    private val tagboxManager: TagboxUpdateManager by inject()
     var text by mutableStateOf("")
         internal set
 

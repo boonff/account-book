@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.accountbook.data.manager.domain.TagboxManagerImpl
+import me.accountbook.data.updater.tagbox.TagboxUpdateManager
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 open class TagboxEditViewModel : ViewModel(), KoinComponent {
-    private val tagboxManager: TagboxManagerImpl by inject()
+    private val tagboxManager: TagboxUpdateManager by inject()
     var uuid by mutableStateOf("")
     var name by mutableStateOf("")
     var color by mutableStateOf(Color.Transparent)

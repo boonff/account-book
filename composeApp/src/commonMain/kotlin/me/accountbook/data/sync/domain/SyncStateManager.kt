@@ -1,6 +1,5 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.data.sync.domain
 
-import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.KoinComponent

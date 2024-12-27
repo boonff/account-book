@@ -1,26 +1,32 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.data.sync.tagbox
 
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import me.accountbook.data.repository.TableTimestampRepository
-import me.accountbook.data.repository.TagboxRepository
+import me.accountbook.data.local.repository.keyValueStore.TableTimestampRepository
+import me.accountbook.data.local.repository.appdatabase.TagboxRepository
+import me.accountbook.data.sync.domain.SyncStateManagers
 import me.accountbook.database.Tagbox
 import me.accountbook.utils.LoggingUtil
 import me.accountbook.utils.TimestampUtil
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TagboxUpdateManager : KoinComponent {
+class TagboxSyncUpdate : KoinComponent {
     private val tableTimestampRep: TableTimestampRepository by inject()
     private val tagboxRep: TagboxRepository by inject()
     val tableKey = tagboxRep.tableKey
+    private val syncStateManager = SyncStateManagers.getSyncStateManager(tagboxRep.tableKey)
+
+
+    private suspend fun <T> withChange(block: suspend () -> T): T {
+        syncStateManager.setSynced(false)
+        return block()
+    }
 
     // 插入标签
-    suspend fun insert(data: Tagbox): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun insert(data: Tagbox): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             if (tagboxRep.insert(data)) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),
@@ -44,8 +50,8 @@ class TagboxUpdateManager : KoinComponent {
     }
 
     // 更新标签名称
-    suspend fun updateName(name: String, uuid: String): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun updateName(name: String, uuid: String): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             if (tagboxRep.updateName(name, uuid)) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),
@@ -58,8 +64,8 @@ class TagboxUpdateManager : KoinComponent {
     }
 
     // 更新标签颜色
-    suspend fun updateColor(color: Color, uuid: String): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun updateColor(color: Color, uuid: String): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             if (tagboxRep.updateColor(color, uuid)) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),
@@ -72,8 +78,8 @@ class TagboxUpdateManager : KoinComponent {
     }
 
     // 更新标签位置
-    suspend fun updatePosition(position: Int, uuid: String): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun updatePosition(position: Int, uuid: String): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             if (tagboxRep.updatePosition(position, uuid)) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),
@@ -85,26 +91,26 @@ class TagboxUpdateManager : KoinComponent {
         }
     }
 
-    suspend fun updatePositions(updates: List<Pair<String, Int>>): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun updatePositions(updates: List<Pair<String, Int>>): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             val success = updates.all { (uuid, position) ->
                 tagboxRep.updatePosition(position, uuid)
             }
-            if (success) {
+            return@withContext if (success) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),
                     tagboxRep.tableKey
                 )
-                return@withContext true
-            }
-            return@withContext false
+                true
+            } else
+                false
         }
     }
 
 
     // 执行软删除
-    suspend fun softDelete(uuid: String): Boolean {
-        return withContext(Dispatchers.IO) {
+    suspend fun softDelete(uuid: String): Boolean = withChange {
+        withContext(Dispatchers.IO) {
             if (tagboxRep.softDelete(uuid)) {
                 tableTimestampRep.updateLocalTimestamp(
                     TimestampUtil.getTimestamp(),

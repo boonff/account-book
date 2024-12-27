@@ -1,4 +1,4 @@
-package me.accountbook.data.model
+package me.accountbook.data.local.model
 
 import kotlinx.serialization.Serializable
 import me.accountbook.database.Account

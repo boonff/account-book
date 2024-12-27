@@ -1,7 +1,7 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.data.sync.domain
 
 import androidx.compose.runtime.toMutableStateList
-import me.accountbook.data.model.SerDataItem
+import me.accountbook.data.local.model.SerDataItem
 import org.koin.core.component.KoinComponent
 
 

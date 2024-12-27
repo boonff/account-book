@@ -1,6 +1,6 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.data.sync.domain
 
-import me.accountbook.data.model.TableKey
+import me.accountbook.data.local.model.TableKey
 
 object SyncStateManagers {
     private val syncStateManagerMap = mutableMapOf<TableKey, SyncStateManager>()

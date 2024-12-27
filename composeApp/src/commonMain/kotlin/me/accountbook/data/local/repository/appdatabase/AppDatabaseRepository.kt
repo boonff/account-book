@@ -1,8 +1,8 @@
-package me.accountbook.data.repository
+package me.accountbook.data.local.repository.appdatabase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.accountbook.data.local.helper.AppDatabaseHelper
+import me.accountbook.data.local.helper.appdatabase.AppDatabaseHelper
 import me.accountbook.utils.LoggingUtil
 
 open class AppDatabaseRepository<T>(private val dbHelper: AppDatabaseHelper<T>) {

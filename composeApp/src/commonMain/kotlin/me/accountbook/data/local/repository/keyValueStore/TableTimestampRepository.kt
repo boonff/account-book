@@ -1,8 +1,8 @@
-package me.accountbook.data.repository
+package me.accountbook.data.local.repository.keyValueStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.accountbook.data.local.helper.TableTimestampHelper
-import me.accountbook.data.model.TableKey
+import me.accountbook.data.local.helper.keyValueStore.TableTimestampHelper
+import me.accountbook.data.local.model.TableKey
 import me.accountbook.database.TableTimestamp
 import me.accountbook.utils.LoggingUtil
 import org.koin.core.component.KoinComponent
@@ -50,13 +50,13 @@ class TableTimestampRepository(private val dbHelper: TableTimestampHelper) : Koi
 
     suspend fun queryLocalTimestamp(tableKey: TableKey): Long? {
         return withContext(Dispatchers.IO) {
-            queryByName(tableKey)?.localTimestamp
+            queryOrInsert(tableKey)?.localTimestamp
         }
     }
 
     suspend fun queryNetTimestamp(tableKey: TableKey): Long? {
         return withContext(Dispatchers.IO) {
-            queryByName(tableKey)?.netTimestamp
+            queryOrInsert(tableKey)?.netTimestamp
         }
     }
 

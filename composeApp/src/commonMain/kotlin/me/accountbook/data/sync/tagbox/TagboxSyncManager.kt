@@ -1,11 +1,13 @@
-package me.accountbook.data.manager.sync
+package me.accountbook.data.sync.tagbox
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.accountbook.data.model.SerTagbox
-import me.accountbook.data.model.encode
-import me.accountbook.data.repository.TableTimestampRepository
-import me.accountbook.data.repository.TagboxRepository
+import me.accountbook.data.local.model.SerTagbox
+import me.accountbook.data.local.model.encode
+import me.accountbook.data.local.repository.keyValueStore.TableTimestampRepository
+import me.accountbook.data.local.repository.appdatabase.TagboxRepository
+import me.accountbook.data.sync.domain.SyncLogic
+import me.accountbook.data.sync.domain.SyncStateManagers
 import me.accountbook.network.manager.SyncUtil
 import me.accountbook.utils.TimestampUtil
 import org.koin.core.component.KoinComponent
@@ -31,7 +33,7 @@ class TagboxSyncManager : KoinComponent {
         val uploadSuccess = SyncUtil.uploadTable(tableKey, merged)
                 && SyncUtil.uploadTimestamp(nowTimestamp, tableKey)
         syncStateManager.endLoading()
-        syncStateManager.setSynced(uploadSuccess)
+        syncStateManager.setSynced(tableTimestampRep.isSynced(tableKey))
         return uploadSuccess
     }
 

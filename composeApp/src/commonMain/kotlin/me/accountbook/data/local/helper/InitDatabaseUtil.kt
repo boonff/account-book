@@ -1,4 +1,4 @@
-package me.accountbook.data.local
+package me.accountbook.data.local.helper
 
 import app.cash.sqldelight.db.SqlDriver
 import me.accountbook.database.Database

@@ -1,7 +1,7 @@
-package me.accountbook.data.local.helper
+package me.accountbook.data.local.helper.appdatabase
 
 import app.cash.sqldelight.db.SqlDriver
-import me.accountbook.data.model.TableKey
+import me.accountbook.data.local.model.TableKey
 import me.accountbook.database.Database
 
 abstract class AppDatabaseHelper<T>(driver: SqlDriver) {

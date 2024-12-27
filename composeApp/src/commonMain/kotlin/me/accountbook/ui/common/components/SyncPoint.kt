@@ -9,20 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import me.accountbook.data.manager.domain.TableManager
-import me.accountbook.data.manager.sync.SyncState
-import me.accountbook.data.manager.sync.SyncStateManager
 import me.accountbook.ui.common.components.viewmodel.SyncPointViewModel
-import me.accountbook.ui.setting.sync.viewmodel.LoginViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 //需要大改
 @Composable

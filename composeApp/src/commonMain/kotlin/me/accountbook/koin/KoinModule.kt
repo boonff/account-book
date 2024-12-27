@@ -1,21 +1,17 @@
 package me.accountbook.koin
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import me.accountbook.data.manager.domain.TagboxManagerImpl
-import me.accountbook.data.manager.domain.TagboxListUpdater
-import me.accountbook.data.manager.sync.SyncStateManager
-import me.accountbook.data.manager.sync.TagboxSyncManager
-import me.accountbook.data.manager.sync.TagboxUpdateManager
-import me.accountbook.data.repository.AccountRepository
-import me.accountbook.data.repository.AppDatabaseRepository
-import me.accountbook.data.repository.TableTimestampRepository
-import me.accountbook.data.repository.TagboxRepository
+import me.accountbook.data.updater.tagbox.TagboxUpdateManager
+import me.accountbook.data.updater.tagbox.TagboxCatchUpdater
+import me.accountbook.data.sync.domain.SyncStateManager
+import me.accountbook.data.sync.tagbox.TagboxSyncManager
+import me.accountbook.data.sync.tagbox.TagboxSyncUpdate
+import me.accountbook.data.local.repository.appdatabase.AccountRepository
+import me.accountbook.data.local.repository.appdatabase.AppDatabaseRepository
+import me.accountbook.data.local.repository.keyValueStore.TableTimestampRepository
+import me.accountbook.data.local.repository.appdatabase.TagboxRepository
 import me.accountbook.database.Account
 import me.accountbook.database.Tagbox
 import me.accountbook.network.manager.RepositoryManager
-import me.accountbook.ui.common.components.viewmodel.SyncPointViewModel
 import me.accountbook.ui.home.viewmodel.HomeScreenViewModel
 import me.accountbook.ui.home.viewmodel.TagboxDetailViewModel
 import me.accountbook.ui.home.viewmodel.TagboxEditViewModel
@@ -44,12 +40,12 @@ val commonModule = module {
     single { AccountRepository(get()) }
     single { TableTimestampRepository(get()) }
 
-    single { TagboxManagerImpl() }
+    single { TagboxUpdateManager() }
 
     single { SyncStateManager() }
     single { TagboxSyncManager() }
-    single { TagboxListUpdater() }
-    single { TagboxUpdateManager() }
+    single { TagboxCatchUpdater() }
+    single { TagboxSyncUpdate() }
 
     viewModel { TagboxFormBarViewModel() }
     viewModel { TagboxEditViewModel() }
